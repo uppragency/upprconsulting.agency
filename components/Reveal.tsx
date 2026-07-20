@@ -4,16 +4,16 @@ import { useEffect, useRef } from 'react';
 
 export default function Reveal({
   children,
-  as: Tag = 'div',
+  as = 'div',
   className,
   id,
 }: {
   children: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements;
+  as?: 'div' | 'section';
   className?: string;
   id?: string;
 }) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -35,8 +35,10 @@ export default function Reveal({
     return () => observer.disconnect();
   }, []);
 
+  const Tag = as;
+
   return (
-    <Tag ref={ref as any} data-reveal="" className={className} id={id}>
+    <Tag ref={ref} data-reveal="" className={className} id={id}>
       {children}
     </Tag>
   );
