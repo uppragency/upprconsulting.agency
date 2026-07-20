@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import Reveal from '@/components/Reveal';
+import HeroGraphic from '@/components/HeroGraphic';
 
 // FAKE DATA — cifre plauzibile pentru lansare inițială. Înlocuiește cu date reale
 // (clienți, testimoniale, statistici) înainte de a face site-ul public pe domeniul final.
@@ -36,50 +38,39 @@ export default function HomePage() {
       <Nav />
       <main>
         {/* 1. HERO */}
-        <section className="container" style={{ paddingTop: '4rem' }}>
-          <span className="badge">Audit livrat de o echipă reală, nu de un algoritm</span>
-          <h1 style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', marginTop: '1.25rem', maxWidth: 760 }}>
-            Vezi exact ce oprește businessul tău să convertească.
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: 580, marginTop: '1.25rem' }}>
+        <section className="container hero">
+          <div className="hero-aurora" aria-hidden="true">
+            <div className="aurora-blob" style={{ width: '50vw', height: '50vw', top: '-15vw', left: '10vw' }} />
+            <div className="aurora-blob" style={{ width: '40vw', height: '40vw', bottom: '-15vw', right: '5vw', animationDelay: '-10s' }} />
+          </div>
+
+          <span className="badge hero-in">Audit livrat de o echipă reală, nu de un algoritm</span>
+
+          <h1 className="hero-in">Vezi exact ce oprește businessul tău să convertească.</h1>
+
+          <p className="hero-sub hero-in">
             4 audituri complete și 2 video-uri personalizate despre identitatea vizuală, website-ul și social media
             businessului tău, livrate în contul tău în 48 de ore. O singură plată, 50 EUR.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+
+          <div className="hero-actions hero-in">
             <Link href="/formular" className="btn-primary">
               Comandă auditul — 50 EUR
             </Link>
-            <a href="#ce-primesti" style={{ color: 'var(--text-muted)', alignSelf: 'center', textDecoration: 'underline' }}>
+            <a href="#ce-primesti" className="btn-outline">
               Vezi ce primești
             </a>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '1.5rem' }}>
+
+          <p className="hero-in" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '1.5rem' }}>
             {/* FAKE DATA */}
             Peste 30 de audituri livrate în ultimele 60 de zile
           </p>
 
-          <div className="gradient-border" style={{ marginTop: '2.5rem', maxWidth: 460 }}>
-            <div className="card live-widget">
-              <p style={{ marginBottom: '0.75rem' }}>
-                <span className="dot" />AUDIT_PIPELINE.status <span style={{ color: 'var(--text-muted)' }}>LIVE</span>
-              </p>
-              <div className="live-step">
-                <span>Comandă primită</span>
-                <span style={{ color: 'var(--violet-3)' }}>100%</span>
-              </div>
-              <div className="live-step">
-                <span>Analiză în curs</span>
-                <span style={{ color: 'var(--violet-3)' }}>72%</span>
-              </div>
-              <div className="live-step">
-                <span>Video-uri înregistrate</span>
-                <span style={{ color: 'var(--text-muted)' }}>pending</span>
-              </div>
-              <div className="live-step">
-                <span>Livrat în cont</span>
-                <span style={{ color: 'var(--text-muted)' }}>&lt; 48h</span>
-              </div>
-            </div>
+          <div className="scroll-indicator hero-in">
+            <span className="line" />
+            <div className="scroll-mouse"><span /></div>
+            <span>Vezi cum funcționează</span>
           </div>
         </section>
 
@@ -92,17 +83,47 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* 2.5 LIVE PIPELINE */}
+        <Reveal as="section" className="container">
+          <div className="grid-2" style={{ alignItems: 'center' }}>
+            <HeroGraphic />
+            <div className="gradient-border">
+              <div className="card live-widget">
+                <p style={{ marginBottom: '0.75rem' }}>
+                  <span className="dot" />AUDIT_PIPELINE.status <span style={{ color: 'var(--text-muted)' }}>LIVE</span>
+                </p>
+                <div className="live-step">
+                  <span>Comandă primită</span>
+                  <span style={{ color: 'var(--violet-3)' }}>100%</span>
+                </div>
+                <div className="live-step">
+                  <span>Analiză în curs</span>
+                  <span style={{ color: 'var(--violet-3)' }}>72%</span>
+                </div>
+                <div className="live-step">
+                  <span>Video-uri înregistrate</span>
+                  <span style={{ color: 'var(--text-muted)' }}>pending</span>
+                </div>
+                <div className="live-step">
+                  <span>Livrat în cont</span>
+                  <span style={{ color: 'var(--text-muted)' }}>&lt; 48h</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
         {/* 3. PHILOSOPHY */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ FILOSOFIA ]</span>
           <p style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', lineHeight: 1.4, maxWidth: 820 }}>
             UPPR Consulting e stratul de claritate peste identitatea vizuală și digitală a businessului tău.
             Nu ghicești ce nu funcționează, primești un diagnostic complet, explicat, în 48 de ore.
           </p>
-        </section>
+        </Reveal>
 
         {/* 4. THE MATH HAS CHANGED */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ CE SE SCHIMBĂ ]</span>
           <h2 className="section-title">Nu știi ce nu funcționează, până cineva nu-ți arată.</h2>
           <p className="section-sub">
@@ -134,10 +155,10 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* 5. WHERE TRAFFIC GOES */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ CE VEDE UN CLIENT ]</span>
           <h2 className="section-title">Fiecare vizitator care pleacă nedumerit e o vânzare pierdută.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
@@ -156,10 +177,10 @@ export default function HomePage() {
               <p style={{ color: '#4ade80', fontSize: '0.85rem', marginTop: '0.75rem' }}>✓ Știi exact ce a funcționat.</p>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* 6. HOW OPTIONS STACK UP */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ CUM SE COMPARĂ ]</span>
           <h2 className="section-title">Trei moduri de a afla ce nu funcționează. Unul e construit pentru tine.</h2>
           <div className="card" style={{ marginTop: '2rem', overflowX: 'auto' }}>
@@ -180,30 +201,43 @@ export default function HomePage() {
               </tbody>
             </table>
           </div>
-        </section>
+        </Reveal>
 
         {/* 7. HOW WE START */}
-        <section className="container" id="cum-functioneaza">
-          <span className="eyebrow">[ CUM FUNCȚIONEAZĂ ]</span>
-          <h2 className="section-title">De la formular la audit livrat, în 48 de ore.</h2>
-          <div className="grid-auto" style={{ marginTop: '2rem' }}>
-            {[
-              { pas: '01', titlu: 'Completezi formularul', desc: 'Datele tale și o scurtă descriere a businessului, 2 minute.' },
-              { pas: '02', titlu: 'Plătești o singură dată', desc: '50 EUR prin Stripe, plată securizată, fără abonament.' },
-              { pas: '03', titlu: 'Echipa analizează', desc: 'Cele 4 audituri și cele 2 video-uri se pregătesc în maximum 48 de ore.' },
-              { pas: '04', titlu: 'Primești totul în cont', desc: 'Acces instant în dashboard, fiecare livrabil apare pe măsură ce e gata.' },
-            ].map((s) => (
-              <div key={s.pas} className="card">
-                <span className="eyebrow">{s.pas}</span>
-                <h3 style={{ fontSize: '1rem', marginTop: '0.5rem' }}>{s.titlu}</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{s.desc}</p>
-              </div>
-            ))}
+        <Reveal as="section" className="container" id="cum-functioneaza">
+          <div className="process-section" style={{ padding: 'clamp(2rem, 5vw, 3.5rem)' }}>
+            <span className="badge" style={{ marginBottom: '1.5rem' }}>Procesul nostru</span>
+            <div className="process-header">
+              <h2>
+                <span className="process-title-italic">De la comandă la</span>
+                <span className="process-title-bold">Audit livrat rapid</span>
+              </h2>
+              <p className="process-header-note">
+                Ținem lucrurile simple, fără birocrație — de la formular la livrarea în cont, în maximum 48 de ore.
+              </p>
+            </div>
+
+            <div className="grid-auto" style={{ marginTop: '3rem' }}>
+              {[
+                { pas: '/01', titlu: 'Completezi formularul', desc: 'Datele tale și o scurtă descriere a businessului, 2 minute.', icon: '✎' },
+                { pas: '/02', titlu: 'Plătești o singură dată', desc: '50 EUR prin Stripe, plată securizată, fără abonament.', icon: '⚙' },
+                { pas: '/03', titlu: 'Echipa analizează', desc: 'Cele 4 audituri și cele 2 video-uri se pregătesc în maximum 48 de ore.', icon: '◎' },
+                { pas: '/04', titlu: 'Primești totul în cont', desc: 'Acces instant în dashboard, fiecare livrabil apare pe măsură ce e gata.', icon: '⇢' },
+              ].map((s) => (
+                <div key={s.pas} className="card process-card">
+                  <span className="eyebrow">{s.pas}</span>
+                  <h3 style={{ fontSize: '1.15rem', marginTop: '0.5rem' }}>{s.titlu}</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{s.desc}</p>
+                  <div className="process-icon-glow" />
+                  <div className="process-icon">{s.icon}</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* 8. WHAT WE DO */}
-        <section className="container" id="ce-primesti">
+        <Reveal as="section" className="container" id="ce-primesti">
           <span className="eyebrow">[ CE PRIMEȘTI ]</span>
           <h2 className="section-title">Patru audituri complete, un singur preț.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
@@ -216,10 +250,10 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </section>
+        </Reveal>
 
         {/* 9. BEYOND: VIDEOS */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ PE LÂNGĂ AUDITURI ]</span>
           <h2 className="section-title">Explicat pe voce, nu doar pe hârtie.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
@@ -237,10 +271,10 @@ export default function HomePage() {
               Vrei să și implementezi recomandările de marketing și retenție? <a href="https://uppr.agency" target="_blank" rel="noreferrer" style={{ color: 'var(--violet-3)' }}>UPPR Agency</a>, aceeași echipă, poate prelua execuția.
             </p>
           </div>
-        </section>
+        </Reveal>
 
         {/* 10. WHY UPPR */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ DE CE UPPR CONSULTING ]</span>
           <h2 className="section-title">Avantajul UPPR.</h2>
           <div className="grid-auto" style={{ marginTop: '2rem' }}>
@@ -252,29 +286,48 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </section>
+        </Reveal>
 
-        {/* 11. RECEIPTS */}
-        <section className="container">
-          <span className="eyebrow">[ REZULTATE, NU ADJECTIVE ]</span>
-          <h2 className="section-title">Cifre din primele 60 de zile.</h2>
-          {/* FAKE DATA — întreaga secțiune, până la primele rezultate reale */}
-          <div className="grid-auto" style={{ marginTop: '2rem' }}>
-            <div className="card"><p className="stat-value">31</p><p className="stat-label">audituri livrate</p></div>
-            <div className="card"><p className="stat-value">44h</p><p className="stat-label">timp mediu de livrare</p></div>
-            <div className="card"><p className="stat-value">96%</p><p className="stat-label">clienți care recomandă mai departe</p></div>
-          </div>
-          <div className="card" style={{ marginTop: '1.25rem' }}>
-            <p style={{ fontSize: '1.05rem', lineHeight: 1.6 }}>
-              „Am primit auditul în 2 zile și mi-a arătat exact de ce site-ul meu nu convertea. Am schimbat 3 lucruri și
-              am văzut diferența în aceeași săptămână."
+        {/* 11. RECENZII */}
+        {/* FAKE DATA — întreaga secțiune, până la primele recenzii reale */}
+        <Reveal as="section" className="container">
+          <div className="reviews-header">
+            <span className="badge">Recenzii</span>
+            <h2>Ce spun clienții.</h2>
+            <p className="section-sub">
+              Feedback real de la clienți care au aflat exact ce nu funcționa în identitatea lor vizuală și digitală.
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.75rem' }}>— client UPPR Consulting</p>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+              <Link href="/formular" className="btn-primary">Comandă auditul</Link>
+              <a href="#ce-primesti" className="btn-outline">Vezi ce primești</a>
+            </div>
           </div>
-        </section>
+
+          <div className="grid-2" style={{ marginTop: '2.5rem' }}>
+            {[
+              { nume: 'Ana Ionescu', rol: 'Fondator, studio de design interior', citat: 'Auditul mi-a arătat în 2 zile ce nu vedeam de luni de zile: site-ul meu nu spunea nimic despre ce mă diferențiază. Am schimbat homepage-ul și am simțit diferența imediat.' },
+              { nume: 'Mihai Dobre', rol: 'Manager, clinică stomatologică', citat: 'Video-ul despre website a fost cel mai util. Mi-a explicat pas cu pas de ce oamenii abandonau formularul de programare.' },
+              { nume: 'Cristina Popa', rol: 'Fondator, brand de cosmetice naturale', citat: 'Auditul de identitate vizuală a scos la iveală inconsistențe pe care nu le observasem între site și Instagram. Acum totul e aliniat.' },
+            ].map((r) => (
+              <div key={r.nume} className="card">
+                <div className="review-card-head">
+                  <div className="avatar-initials">
+                    {r.nume.split(' ').map((n) => n[0]).join('')}
+                  </div>
+                  <div>
+                    <h4>{r.nume}</h4>
+                    <span>{r.rol}</span>
+                  </div>
+                </div>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: 1.6 }}>„{r.citat}"</p>
+                <p className="stars" style={{ marginTop: '1rem' }}>5.0 ★★★★★</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
 
         {/* 12. STRAIGHT FROM DASHBOARD */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ DIRECT DIN CONT ]</span>
           <h2 className="section-title">Așa arată contul tău după plată.</h2>
           <p className="section-sub">Livrabilele apar pe măsură ce sunt gata, nu trebuie să aștepți toate 6 deodată.</p>
@@ -288,10 +341,10 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </section>
+        </Reveal>
 
         {/* 13. IS THIS A FIT */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ E POTRIVIT PENTRU TINE? ]</span>
           <h2 className="section-title">Construit pentru unele businessuri. Nu pentru toate.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
@@ -312,10 +365,10 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* 14. CTA formular */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <div className="gradient-border">
             <div className="card" style={{ textAlign: 'center' }}>
               <span className="eyebrow">[ AUDIT COMPLET, 50 EUR ]</span>
@@ -333,10 +386,10 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* 15. UPSELL / cross-link */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ MERGI MAI DEPARTE ]</span>
           <div className="card">
             <h2 style={{ fontSize: '1.25rem' }}>Vrei ca cineva să și implementeze recomandările?</h2>
@@ -348,10 +401,10 @@ export default function HomePage() {
               Vezi UPPR Agency
             </a>
           </div>
-        </section>
+        </Reveal>
 
         {/* 16. FAQ */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <span className="eyebrow">[ ÎNTREBĂRI FRECVENTE ]</span>
           <h2 className="section-title">Răspunsuri clare, înainte să comanzi.</h2>
           <div style={{ marginTop: '1.5rem' }}>
@@ -369,10 +422,10 @@ export default function HomePage() {
               </details>
             ))}
           </div>
-        </section>
+        </Reveal>
 
         {/* 17. FINAL CTA */}
-        <section className="container">
+        <Reveal as="section" className="container">
           <div className="card" style={{ textAlign: 'center' }}>
             <h2 style={{ fontSize: '1.75rem' }}>Businessul tău vorbește. Întrebarea e ce transmite.</h2>
             <p style={{ color: 'var(--text-muted)', marginTop: '0.75rem' }}>
@@ -382,7 +435,7 @@ export default function HomePage() {
               Comandă auditul — 50 EUR
             </Link>
           </div>
-        </section>
+        </Reveal>
       </main>
       <Footer />
     </>
