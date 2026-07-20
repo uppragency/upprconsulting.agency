@@ -43,28 +43,31 @@ export default function HomePage() {
             <div className="aurora-blob" style={{ width: '50vw', height: '50vw', top: '-15vw', left: '10vw' }} />
             <div className="aurora-blob" style={{ width: '40vw', height: '40vw', bottom: '-15vw', right: '5vw', animationDelay: '-10s' }} />
           </div>
+          <div className="grid-floor" aria-hidden="true" />
 
-          <span className="badge hero-in">Audit livrat de o echipă reală, nu de un algoritm</span>
+          <span className="badge hero-in">Auditul care arată ce distruge AI-ul ieftin</span>
 
-          <h1 className="hero-in">Vezi exact ce oprește businessul tău să convertească.</h1>
+          <h1 className="hero-in glitch" data-text="AI-ul îți face site-ul ieftin. Îți omoară businessul lent.">
+            AI-ul îți face site-ul ieftin. Îți omoară businessul lent.
+          </h1>
 
           <p className="hero-sub hero-in">
-            4 audituri complete și 2 video-uri personalizate despre identitatea vizuală, website-ul și social media
-            businessului tău, livrate în contul tău în 48 de ore. O singură plată, 50 EUR.
+            Conținut generat automat, site construit rapid cu AI, postări scrise de un algoritm. Costă puțin azi.
+            Pierzi vizite, audiență și followeri, lună de lună, până nu mai rămâne nimic de salvat.
           </p>
 
           <div className="hero-actions hero-in">
             <Link href="/formular" className="btn-primary">
-              Comandă auditul — 50 EUR
+              Vezi ce pierzi — 50 EUR
             </Link>
             <a href="#ce-primesti" className="btn-outline">
               Vezi ce primești
             </a>
           </div>
 
-          <p className="hero-in" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '1.5rem' }}>
+          <p className="hero-in cursor-blink" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', marginTop: '1.5rem' }}>
             {/* FAKE DATA */}
-            Peste 30 de audituri livrate în ultimele 60 de zile
+            &gt; 30 audituri livrate · 60 de zile
           </p>
 
           <div className="scroll-indicator hero-in">
@@ -115,39 +118,41 @@ export default function HomePage() {
 
         {/* 3. PHILOSOPHY */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ FILOSOFIA ]</span>
+          <span className="eyebrow">FILOSOFIA</span>
           <p style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', lineHeight: 1.4, maxWidth: 820 }}>
-            UPPR Consulting e stratul de claritate peste identitatea vizuală și digitală a businessului tău.
-            Nu ghicești ce nu funcționează, primești un diagnostic complet, explicat, în 48 de ore.
+            AI-ul poate genera un site în 10 minute și o postare în 10 secunde. Nu poate să-ți spună de ce
+            oamenii pleacă fără să cumpere. UPPR Consulting e stratul uman care verifică ce automatizarea a stricat,
+            înainte să-ți piardă audiența definitiv.
           </p>
         </Reveal>
 
         {/* 4. THE MATH HAS CHANGED */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ CE SE SCHIMBĂ ]</span>
-          <h2 className="section-title">Nu știi ce nu funcționează, până cineva nu-ți arată.</h2>
+          <span className="eyebrow">CE SE SCHIMBĂ</span>
+          <h2 className="section-title">Ieftin acum. Gol peste un an.</h2>
           <p className="section-sub">
-            Fiecare zi în care identitatea vizuală și site-ul tău nu sunt aliniate cu ce vrei să transmiți e o zi
-            în care pierzi clienți care nici nu apucă să te contacteze.
+            Fiecare pagină generată de AI, fiecare postare scrisă de un algoritm, arată puțin mai fals decât ceva
+            făcut de un om. Vizitatorii simt asta, chiar dacă nu-ți spun de ce pleacă.
           </p>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
             <div className="card">
-              <span className="eyebrow" style={{ marginBottom: '0.5rem' }}>pierderea</span>
-              <h3 style={{ fontSize: '1.1rem' }}>Problemele se acumulează tăcut</h3>
+              <span className="eyebrow" style={{ marginBottom: '0.5rem' }}>costul ascuns</span>
+              <h3 style={{ fontSize: '1.1rem' }}>AI-ul erodează încrederea, nu o construiește</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                Fără un audit extern, inconsistențele de brand și fricțiunile din site rămân invizibile pentru tine,
-                dar foarte vizibile pentru clienți.
+                Conținut generic, imagini care nu se potrivesc, ton fără personalitate. Fiecare vizitator care
+                observă asta e un follower sau un client care nu se mai întoarce.
               </p>
               <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.5rem' }}>
                 {/* FAKE DATA */}
-                <div><p className="stat-value">68%</p><p className="stat-label">vizitatori pierduți la prima impresie</p></div>
+                <div><p className="stat-value">−41%</p><p className="stat-label">audiență pierdută în 6 luni, conturi majoritar AI</p></div>
               </div>
             </div>
             <div className="card">
-              <span className="eyebrow" style={{ marginBottom: '0.5rem' }}>claritatea</span>
-              <h3 style={{ fontSize: '1.1rem' }}>Un audit clar se plătește singur</h3>
+              <span className="eyebrow" style={{ marginBottom: '0.5rem' }}>compensarea</span>
+              <h3 style={{ fontSize: '1.1rem' }}>Un audit uman oprește scurgerea</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                Cu recomandările potrivite, corectezi în câteva săptămâni ce te-a costat luni de conversii pierdute.
+                Vezi exact ce a rămas nefiresc, ce sună generic, ce nu se aliniază cu brandul tău real.
+                Corectezi înainte să pierzi tot ce ai construit.
               </p>
               <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.5rem' }}>
                 {/* FAKE DATA */}
@@ -159,29 +164,29 @@ export default function HomePage() {
 
         {/* 5. WHERE TRAFFIC GOES */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ CE VEDE UN CLIENT ]</span>
-          <h2 className="section-title">Fiecare vizitator care pleacă nedumerit e o vânzare pierdută.</h2>
+          <span className="eyebrow">CE VEDE UN CLIENT</span>
+          <h2 className="section-title">Diferența dintre generic și real, vizitatorii o simt în 3 secunde.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
             <div className="card">
-              <h3 style={{ fontSize: '1rem' }}>Fără audit</h3>
+              <h3 style={{ fontSize: '1rem' }}>Site & conținut generate AI</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.75rem' }}>
-                Vizitator ajunge → nu înțelege oferta din prima privire → pleacă fără să te contacteze.
+                Vizitator ajunge → recunoaște tonul generic, imaginile fără sens → pleacă, fără să realizeze de ce.
               </p>
-              <p style={{ color: '#f87171', fontSize: '0.85rem', marginTop: '0.75rem' }}>✕ Nu știi de ce ai pierdut clientul.</p>
+              <p style={{ color: '#f87171', fontSize: '0.85rem', marginTop: '0.75rem' }}>✕ Audiența scade lent, lună de lună.</p>
             </div>
             <div className="card">
-              <h3 style={{ fontSize: '1rem' }}>Cu audit</h3>
+              <h3 style={{ fontSize: '1rem' }}>Verificat de un audit uman</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.75rem' }}>
-                Vizitator ajunge → mesaj și identitate vizuală clare → ia decizia de a te contacta.
+                Vizitator ajunge → mesaj și identitate vizuală reale, coerente → ia decizia de a te contacta.
               </p>
-              <p style={{ color: '#4ade80', fontSize: '0.85rem', marginTop: '0.75rem' }}>✓ Știi exact ce a funcționat.</p>
+              <p style={{ color: '#4ade80', fontSize: '0.85rem', marginTop: '0.75rem' }}>✓ Audiența rămâne și crește.</p>
             </div>
           </div>
         </Reveal>
 
         {/* 6. HOW OPTIONS STACK UP */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ CUM SE COMPARĂ ]</span>
+          <span className="eyebrow">CUM SE COMPARĂ</span>
           <h2 className="section-title">Trei moduri de a afla ce nu funcționează. Unul e construit pentru tine.</h2>
           <div className="card" style={{ marginTop: '2rem', overflowX: 'auto' }}>
             <table className="compare-table">
@@ -238,7 +243,7 @@ export default function HomePage() {
 
         {/* 8. WHAT WE DO */}
         <Reveal as="section" className="container" id="ce-primesti">
-          <span className="eyebrow">[ CE PRIMEȘTI ]</span>
+          <span className="eyebrow">CE PRIMEȘTI</span>
           <h2 className="section-title">Patru audituri complete, un singur preț.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
             {AUDITURI.map((item) => (
@@ -254,7 +259,7 @@ export default function HomePage() {
 
         {/* 9. BEYOND: VIDEOS */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ PE LÂNGĂ AUDITURI ]</span>
+          <span className="eyebrow">PE LÂNGĂ AUDITURI</span>
           <h2 className="section-title">Explicat pe voce, nu doar pe hârtie.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
             {VIDEO.map((item) => (
@@ -275,7 +280,7 @@ export default function HomePage() {
 
         {/* 10. WHY UPPR */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ DE CE UPPR CONSULTING ]</span>
+          <span className="eyebrow">DE CE UPPR CONSULTING</span>
           <h2 className="section-title">Avantajul UPPR.</h2>
           <div className="grid-auto" style={{ marginTop: '2rem' }}>
             {AVANTAJE.map((a) => (
@@ -328,7 +333,7 @@ export default function HomePage() {
 
         {/* 12. STRAIGHT FROM DASHBOARD */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ DIRECT DIN CONT ]</span>
+          <span className="eyebrow">DIRECT DIN CONT</span>
           <h2 className="section-title">Așa arată contul tău după plată.</h2>
           <p className="section-sub">Livrabilele apar pe măsură ce sunt gata, nu trebuie să aștepți toate 6 deodată.</p>
           <div className="card" style={{ marginTop: '2rem', maxWidth: 480 }}>
@@ -345,7 +350,7 @@ export default function HomePage() {
 
         {/* 13. IS THIS A FIT */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ E POTRIVIT PENTRU TINE? ]</span>
+          <span className="eyebrow">E POTRIVIT PENTRU TINE?</span>
           <h2 className="section-title">Construit pentru unele businessuri. Nu pentru toate.</h2>
           <div className="grid-2" style={{ marginTop: '2rem' }}>
             <div className="card">
@@ -371,7 +376,7 @@ export default function HomePage() {
         <Reveal as="section" className="container">
           <div className="gradient-border">
             <div className="card" style={{ textAlign: 'center' }}>
-              <span className="eyebrow">[ AUDIT COMPLET, 50 EUR ]</span>
+              <span className="eyebrow">AUDIT COMPLET, 50 EUR</span>
               <h2 style={{ fontSize: '1.5rem', marginTop: '0.5rem' }}>Vezi exact ce ai de reparat.</h2>
               <ul className="check-list" style={{ display: 'inline-grid', textAlign: 'left', marginTop: '1.25rem' }}>
                 <li className="check-good">4 audituri complete (social, brand, website, UI/UX)</li>
@@ -390,7 +395,7 @@ export default function HomePage() {
 
         {/* 15. UPSELL / cross-link */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ MERGI MAI DEPARTE ]</span>
+          <span className="eyebrow">MERGI MAI DEPARTE</span>
           <div className="card">
             <h2 style={{ fontSize: '1.25rem' }}>Vrei ca cineva să și implementeze recomandările?</h2>
             <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>
@@ -405,7 +410,7 @@ export default function HomePage() {
 
         {/* 16. FAQ */}
         <Reveal as="section" className="container">
-          <span className="eyebrow">[ ÎNTREBĂRI FRECVENTE ]</span>
+          <span className="eyebrow">ÎNTREBĂRI FRECVENTE</span>
           <h2 className="section-title">Răspunsuri clare, înainte să comanzi.</h2>
           <div style={{ marginTop: '1.5rem' }}>
             {[
