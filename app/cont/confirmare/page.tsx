@@ -1,17 +1,26 @@
 import Link from 'next/link';
+import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
 
-export default function ConfirmarePage() {
+export default function ConfirmationPage() {
   return (
-    <main className="container" style={{ maxWidth: 560, paddingTop: '5rem', textAlign: 'center' }}>
-      <p className="label">Plată confirmată</p>
-      <h1 style={{ fontSize: '2rem', marginTop: '0.75rem' }}>Comanda ta e în lucru</h1>
-      <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>
-        Primești cele 4 audituri și cele 2 video-uri personalizate în contul tău în maximum 48 de ore.
-        Îți trimitem un email la fiecare livrabil nou.
-      </p>
-      <Link href="/cont" className="btn-primary" style={{ marginTop: '2rem' }}>
-        Mergi la contul tău
-      </Link>
-    </main>
+    <>
+      <div className="gradient-bar" />
+      <Nav />
+      <section className="container" style={{ maxWidth: 560, padding: '80px 24px', textAlign: 'center' }}>
+        <p className="form-eyebrow" style={{ textAlign: 'center' }}>Payment confirmed</p>
+        <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em', marginTop: 8 }}>
+          Your order is in progress
+        </h1>
+        <p style={{ color: 'var(--text-muted)', marginTop: 16 }}>
+          You'll get the 4 audits and 2 personalized videos in your account within 48 hours.
+        </p>
+        <Link href="/cont" className="btn-primary" style={{ marginTop: 32 }}>
+          Go to your account
+        </Link>
+      </section>
+      <Footer />
+      <div className="gradient-bar" />
+    </>
   );
 }

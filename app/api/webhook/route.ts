@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
       await admin.from('clients').update({ status: 'paid' }).eq('id', clientId);
 
-      // Seed cele 6 livrabile, pending
+      // Seed the 6 deliverables, pending
       await admin.from('deliverables').insert(
         DELIVERABLE_TYPES.map((type) => ({ client_id: clientId, type, status: 'pending' }))
       );

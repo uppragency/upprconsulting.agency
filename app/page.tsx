@@ -1,448 +1,258 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import Reveal from '@/components/Reveal';
-import HeroGraphic from '@/components/HeroGraphic';
+import ScrollFade from '@/components/ScrollFade';
 
-// FAKE DATA — cifre plauzibile pentru lansare inițială. Înlocuiește cu date reale
-// (clienți, testimoniale, statistici) înainte de a face site-ul public pe domeniul final.
-
-const CLIENTI_MARQUEE = [
-  'STUDIO NOVA', 'ATELIER VERDE', 'CAFÉ LUMEN', 'NORDPRINT', 'HALO STUDIO', 'BRICK & CO',
+const ADVANTAGES = [
+  { title: '48-hour delivery', desc: "No waiting weeks. Order today, get your audits in your account within 2 days.", icon: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.2 2" /></> },
+  { title: 'Real team, not templates', desc: 'Every audit is done by a person actually looking at your business, not auto-generated.', icon: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /></> },
+  { title: 'Actionable recommendations', desc: "You don't just get a diagnosis. You get concrete next steps, in priority order.", icon: <><path d="M5 19l1.2-4.2L15 6l3 3-8.8 8.8z" /><path d="M13.2 7.8L17.2 11.8" /></> },
+  { title: 'No subscription', desc: "One payment, 50 EUR. No monthly contract just to find out what's not working.", icon: <><path d="M4 8h13l-3-3" /><path d="M20 16H7l3 3" /></> },
+  { title: 'Explained, not just written', desc: 'The 2 personalized videos show you exactly where to look and why it matters.', icon: <><rect x="3" y="7" width="12" height="10" rx="2" /><path d="M15 10l6-3v10l-6-3z" /></> },
+  { title: 'Connected to execution', desc: 'If you want it implemented too, the same team (UPPR Agency) can take over marketing and retention.', icon: <><rect x="4" y="4" width="8" height="8" rx="2.5" /><rect x="12" y="12" width="8" height="8" rx="2.5" /><path d="M12 8h3a2 2 0 0 1 2 2v2" /></> },
 ];
 
-const AUDITURI = [
-  { titlu: 'Audit social media', descriere: 'Ce funcționează și ce te costă engagement pe conturile tale, cu recomandări concrete de conținut.' },
-  { titlu: 'Audit identitate vizuală', descriere: 'Consistență, percepție și puncte slabe în logo, culori, tipografie, aplicate în toate materialele tale.' },
-  { titlu: 'Audit website', descriere: 'Structură, viteză, conversie și ce oprește vizitatorii să cumpere sau să te contacteze.' },
-  { titlu: 'Audit UI/UX', descriere: 'Fricțiuni în experiența de navigare, de la homepage la formular sau checkout.' },
-];
-
-const VIDEO = [
-  { titlu: 'Video 30 min — Website', descriere: 'Analiză live a site-ului tău, explicată pas cu pas, cu exemple concrete de îmbunătățit.' },
-  { titlu: 'Video 30 min — Identitate vizuală & social media', descriere: 'Ce transmite brandul tău acum, ce ar trebui să transmită și cum ajungi acolo.' },
-];
-
-const AVANTAJE = [
-  { icon: '⏱', titlu: 'Livrare în 48 de ore', descriere: 'Nu aștepți săptămâni. Comanzi azi, ai auditurile în cont în maximum 2 zile.' },
-  { icon: '◎', titlu: 'Echipă reală, nu șabloane', descriere: 'Fiecare audit e făcut de o persoană care se uită efectiv la businessul tău, nu generat automat.' },
-  { icon: '✎', titlu: 'Recomandări acționabile', descriere: 'Nu primești doar diagnostic. Primești pașii concreți de urmat, în ordinea priorității.' },
-  { icon: '⇄', titlu: 'Fără abonament', descriere: 'O singură plată, 50 EUR. Nu te înscrii într-un contract lunar ca să afli ce nu funcționează.' },
-  { icon: '🎥', titlu: 'Explicat, nu doar scris', descriere: 'Cele 2 video-uri personalizate îți arată exact unde te uiți și de ce contează.' },
-  { icon: '🔗', titlu: 'Legătură cu execuția', descriere: 'Dacă vrei să și implementezi, aceeași echipă (UPPR Agency) poate prelua partea de marketing și retenție.' },
+const AUDITS = [
+  { title: 'Social media audit', desc: "What's working and what's costing you engagement, with concrete content recommendations.", icon: <><circle cx="12" cy="8" r="3" /><path d="M5 20c0-4 3-6 7-6s7 2 7 6" /></> },
+  { title: 'Visual identity audit', desc: 'Consistency, perception, and weak points in your logo, colors, and typography, applied across all your materials.', icon: <><circle cx="12" cy="12" r="8" /><path d="M12 4v16M4 12h16" /></> },
+  { title: 'Website audit', desc: "Structure, speed, conversion, and what's stopping visitors from buying or contacting you.", icon: <><rect x="4" y="5" width="16" height="12" rx="1.5" /><path d="M4 9h16" /></> },
+  { title: 'UI/UX audit', desc: 'Friction points in the navigation experience, from homepage to form or checkout.', icon: <><rect x="4" y="4" width="7" height="16" rx="1.5" /><rect x="13" y="4" width="7" height="9" rx="1.5" /></> },
 ];
 
 export default function HomePage() {
   return (
     <>
+      <div className="gradient-bar" />
       <Nav />
-      <main>
-        {/* 1. HERO */}
-        <section className="container hero">
-          <div className="hero-aurora" aria-hidden="true">
-            <div className="aurora-blob" style={{ width: '50vw', height: '50vw', top: '-15vw', left: '10vw' }} />
-            <div className="aurora-blob" style={{ width: '40vw', height: '40vw', bottom: '-15vw', right: '5vw', animationDelay: '-10s' }} />
-          </div>
-          <div className="grid-floor" aria-hidden="true" />
 
-          <span className="badge hero-in">Auditul care arată ce distruge AI-ul ieftin</span>
+      {/* HERO */}
+      <section className="hero" style={{ maxWidth: 1180, margin: '0 auto' }}>
+        <div className="orb" style={{ top: -140, left: -100, width: 380, height: 380, background: 'oklch(0.65 0.16 300 / 0.14)', animation: 'uppr-float-a 18s ease-in-out infinite' }} />
+        <div className="orb" style={{ bottom: -160, right: -100, width: 420, height: 420, background: 'oklch(0.68 0.15 20 / 0.12)', animation: 'uppr-float-b 22s ease-in-out infinite' }} />
+        <div className="sweep-line" style={{ top: '45%' }} />
 
-          <h1 className="hero-in glitch" data-text="AI-ul îți face site-ul ieftin. Îți omoară businessul lent.">
-            AI-ul îți face site-ul ieftin. Îți omoară businessul lent.
-          </h1>
-
-          <p className="hero-sub hero-in">
-            Conținut generat automat, site construit rapid cu AI, postări scrise de un algoritm. Costă puțin azi.
-            Pierzi vizite, audiență și followeri, lună de lună, până nu mai rămâne nimic de salvat.
+        <div className="hero-inner">
+          <span className="badge">The audit that shows you what slow is costing you</span>
+          <h1>AI makes your website cheap.<br />It kills your business slowly.</h1>
+          <p className="hero-sub">
+            Auto-generated content, a website built fast with AI, posts written by an algorithm. Costs little today.
+            You lose visitors, audience, and followers, month after month, until there's nothing left to save.
           </p>
+          <Link href="/formular" className="btn-primary">Order audit</Link>
+          <span style={{ fontSize: 13.5, color: 'var(--text-muted)' }}>One payment, no subscription</span>
+        </div>
+      </section>
 
-          <div className="hero-actions hero-in">
-            <Link href="/formular" className="btn-primary">
-              Vezi ce pierzi — 50 EUR
-            </Link>
-            <a href="#ce-primesti" className="btn-outline">
-              Vezi ce primești
-            </a>
-          </div>
-
-          <p className="hero-in cursor-blink" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', marginTop: '1.5rem' }}>
-            {/* FAKE DATA */}
-            &gt; 30 audituri livrate · 60 de zile
-          </p>
-
-          <div className="scroll-indicator hero-in">
-            <span className="line" />
-            <div className="scroll-mouse"><span /></div>
-            <span>Vezi cum funcționează</span>
-          </div>
-        </section>
-
-        {/* 2. MARQUEE */}
-        <div className="marquee">
-          <div className="marquee-track">
-            {[...CLIENTI_MARQUEE, ...CLIENTI_MARQUEE].map((nume, i) => (
-              <span key={i} className="marquee-item">{nume}</span>
-            ))}
+      {/* WHAT'S CHANGING */}
+      <ScrollFade>
+        <div className="dark-section-wrap" style={{ paddingBottom: 0 }}>
+          <div className="dark-section">
+            <div className="orb" style={{ top: -120, right: -100, width: 360, height: 360, background: 'oklch(0.6 0.22 305 / 0.3)', animation: 'uppr-float-b 19s ease-in-out infinite' }} />
+            <div className="dark-section-inner">
+              <span className="badge badge-dark">What's changing</span>
+              <h2 style={{ color: 'white', fontSize: 'clamp(1.75rem, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '18px 0 14px' }}>
+                Cheap now. Empty in a year.
+              </h2>
+              <p style={{ color: 'var(--text-muted-dark)', fontSize: 16, lineHeight: 1.6, maxWidth: 620, margin: '0 0 40px' }}>
+                Every AI-generated page, every algorithm-written post, looks a little more fake than something made
+                by a human. Visitors feel it, even if they can't tell you why they left.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+                <div className="stat-card">
+                  <span className="badge badge-dark">The hidden cost</span>
+                  <h3>AI erodes trust, it doesn't build it</h3>
+                  <p>Generic content, mismatched images, tone with no personality. Every visitor who notices is a follower or customer who doesn't come back.</p>
+                  {/* FAKE DATA */}
+                  <p className="stat-value">−41%</p>
+                  <p className="stat-label">audience lost in 6 months, majority-AI accounts</p>
+                </div>
+                <div className="stat-card">
+                  <span className="badge badge-dark">The fix</span>
+                  <h3>A human audit stops the bleeding</h3>
+                  <p>See exactly what feels off, what sounds generic, what doesn't align with your real brand. Fix it before you lose everything you've built.</p>
+                  {/* FAKE DATA */}
+                  <p className="stat-value">3×</p>
+                  <p className="stat-label">average return reported by clients</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </ScrollFade>
 
-        {/* 2.5 LIVE PIPELINE */}
-        <Reveal as="section" className="container">
-          <div className="grid-2" style={{ alignItems: 'center' }}>
-            <HeroGraphic />
-            <div className="gradient-border">
-              <div className="card live-widget">
-                <p style={{ marginBottom: '0.75rem' }}>
-                  <span className="dot" />AUDIT_PIPELINE.status <span style={{ color: 'var(--text-muted)' }}>LIVE</span>
-                </p>
-                <div className="live-step">
-                  <span>Comandă primită</span>
-                  <span style={{ color: 'var(--violet-3)' }}>100%</span>
-                </div>
-                <div className="live-step">
-                  <span>Analiză în curs</span>
-                  <span style={{ color: 'var(--violet-3)' }}>72%</span>
-                </div>
-                <div className="live-step">
-                  <span>Video-uri înregistrate</span>
-                  <span style={{ color: 'var(--text-muted)' }}>pending</span>
-                </div>
-                <div className="live-step">
-                  <span>Livrat în cont</span>
-                  <span style={{ color: 'var(--text-muted)' }}>&lt; 48h</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* 3. PHILOSOPHY */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">FILOSOFIA</span>
-          <p style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', lineHeight: 1.4, maxWidth: 820 }}>
-            AI-ul poate genera un site în 10 minute și o postare în 10 secunde. Nu poate să-ți spună de ce
-            oamenii pleacă fără să cumpere. UPPR Consulting e stratul uman care verifică ce automatizarea a stricat,
-            înainte să-ți piardă audiența definitiv.
+      {/* PHILOSOPHY */}
+      <ScrollFade>
+        <section className="container" style={{ padding: '80px 24px' }}>
+          <span className="badge">Philosophy</span>
+          <p className="philosophy-text" style={{ marginTop: 20 }}>
+            AI can generate a website in 10 minutes and a post in 10 seconds. It can't tell you why people leave
+            without buying. UPPR Consulting is the human layer that checks what automation broke, before it
+            costs you your audience for good.
           </p>
-        </Reveal>
+        </section>
+      </ScrollFade>
 
-        {/* 4. THE MATH HAS CHANGED */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">CE SE SCHIMBĂ</span>
-          <h2 className="section-title">Ieftin acum. Gol peste un an.</h2>
-          <p className="section-sub">
-            Fiecare pagină generată de AI, fiecare postare scrisă de un algoritm, arată puțin mai fals decât ceva
-            făcut de un om. Vizitatorii simt asta, chiar dacă nu-ți spun de ce pleacă.
-          </p>
-          <div className="grid-2" style={{ marginTop: '2rem' }}>
-            <div className="card">
-              <span className="eyebrow" style={{ marginBottom: '0.5rem' }}>costul ascuns</span>
-              <h3 style={{ fontSize: '1.1rem' }}>AI-ul erodează încrederea, nu o construiește</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                Conținut generic, imagini care nu se potrivesc, ton fără personalitate. Fiecare vizitator care
-                observă asta e un follower sau un client care nu se mai întoarce.
-              </p>
-              <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.5rem' }}>
-                {/* FAKE DATA */}
-                <div><p className="stat-value">−41%</p><p className="stat-label">audiență pierdută în 6 luni, conturi majoritar AI</p></div>
-              </div>
-            </div>
-            <div className="card">
-              <span className="eyebrow" style={{ marginBottom: '0.5rem' }}>compensarea</span>
-              <h3 style={{ fontSize: '1.1rem' }}>Un audit uman oprește scurgerea</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                Vezi exact ce a rămas nefiresc, ce sună generic, ce nu se aliniază cu brandul tău real.
-                Corectezi înainte să pierzi tot ce ai construit.
-              </p>
-              <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.5rem' }}>
-                {/* FAKE DATA */}
-                <div><p className="stat-value">3×</p><p className="stat-label">retur mediu raportat de clienți</p></div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* 5. WHERE TRAFFIC GOES */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">CE VEDE UN CLIENT</span>
-          <h2 className="section-title">Diferența dintre generic și real, vizitatorii o simt în 3 secunde.</h2>
-          <div className="grid-2" style={{ marginTop: '2rem' }}>
-            <div className="card">
-              <h3 style={{ fontSize: '1rem' }}>Site & conținut generate AI</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.75rem' }}>
-                Vizitator ajunge → recunoaște tonul generic, imaginile fără sens → pleacă, fără să realizeze de ce.
-              </p>
-              <p style={{ color: '#f87171', fontSize: '0.85rem', marginTop: '0.75rem' }}>✕ Audiența scade lent, lună de lună.</p>
-            </div>
-            <div className="card">
-              <h3 style={{ fontSize: '1rem' }}>Verificat de un audit uman</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.75rem' }}>
-                Vizitator ajunge → mesaj și identitate vizuală reale, coerente → ia decizia de a te contacta.
-              </p>
-              <p style={{ color: '#4ade80', fontSize: '0.85rem', marginTop: '0.75rem' }}>✓ Audiența rămâne și crește.</p>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* 6. HOW OPTIONS STACK UP */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">CUM SE COMPARĂ</span>
-          <h2 className="section-title">Trei moduri de a afla ce nu funcționează. Unul e construit pentru tine.</h2>
-          <div className="card" style={{ marginTop: '2rem', overflowX: 'auto' }}>
-            <table className="compare-table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Îți dai singur seama</th>
-                  <th>Freelancer random</th>
-                  <th className="highlight">UPPR Consulting</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>Timp până la rezultat</td><td>Nedefinit</td><td>1-2 săptămâni</td><td className="highlight">48 de ore</td></tr>
-                <tr><td>Nivel de detaliu</td><td>Subiectiv</td><td>Variabil</td><td className="highlight">4 audituri structurate</td></tr>
-                <tr><td>Explicat sau doar scris</td><td>—</td><td>De obicei doar text</td><td className="highlight">2 video-uri personalizate</td></tr>
-                <tr><td>Cost</td><td>Timpul tău</td><td>Variabil, des peste 200 EUR</td><td className="highlight">50 EUR, o singură plată</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </Reveal>
-
-        {/* 7. HOW WE START */}
-        <Reveal as="section" className="container" id="cum-functioneaza">
-          <div className="process-section" style={{ padding: 'clamp(2rem, 5vw, 3.5rem)' }}>
-            <span className="badge" style={{ marginBottom: '1.5rem' }}>Procesul nostru</span>
-            <div className="process-header">
-              <h2>
-                <span className="process-title-italic">De la comandă la</span>
-                <span className="process-title-bold">Audit livrat rapid</span>
+      {/* HOW IT COMPARES */}
+      <ScrollFade>
+        <div className="dark-section-wrap" style={{ paddingTop: 0 }}>
+          <div className="dark-section">
+            <div className="orb" style={{ bottom: -140, left: -100, width: 380, height: 380, background: 'oklch(0.62 0.2 305 / 0.28)', animation: 'uppr-float-a 20s ease-in-out infinite' }} />
+            <div className="dark-section-inner">
+              <span className="badge badge-dark">How it compares</span>
+              <h2 style={{ color: 'white', fontSize: 'clamp(1.75rem, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '18px 0 40px', maxWidth: 700 }}>
+                Three ways to find out what's not working. One is built for you.
               </h2>
-              <p className="process-header-note">
-                Ținem lucrurile simple, fără birocrație — de la formular la livrarea în cont, în maximum 48 de ore.
-              </p>
+              <div style={{ background: 'var(--bg-card-dark)', border: '1px solid var(--border-dark)', borderRadius: 18, overflow: 'hidden', overflowX: 'auto' }}>
+                <table className="compare-table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>You figure it out yourself</th>
+                      <th>Random freelancer</th>
+                      <th className="highlight">UPPR Consulting</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Time to result</td><td>Undefined</td><td>1-2 weeks</td><td className="highlight">48 hours</td></tr>
+                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Level of detail</td><td>Subjective</td><td>Variable</td><td className="highlight">4 structured audits</td></tr>
+                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Explained or just written</td><td>—</td><td>Usually just text</td><td className="highlight">2 personalized videos</td></tr>
+                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Cost</td><td>Your time</td><td>Variable, often over 200 EUR</td><td className="highlight">50 EUR, one payment</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
+        </div>
+      </ScrollFade>
 
-            <div className="grid-auto" style={{ marginTop: '3rem' }}>
-              {[
-                { pas: '/01', titlu: 'Completezi formularul', desc: 'Datele tale și o scurtă descriere a businessului, 2 minute.', icon: '✎' },
-                { pas: '/02', titlu: 'Plătești o singură dată', desc: '50 EUR prin Stripe, plată securizată, fără abonament.', icon: '⚙' },
-                { pas: '/03', titlu: 'Echipa analizează', desc: 'Cele 4 audituri și cele 2 video-uri se pregătesc în maximum 48 de ore.', icon: '◎' },
-                { pas: '/04', titlu: 'Primești totul în cont', desc: 'Acces instant în dashboard, fiecare livrabil apare pe măsură ce e gata.', icon: '⇢' },
-              ].map((s) => (
-                <div key={s.pas} className="card process-card">
-                  <span className="eyebrow">{s.pas}</span>
-                  <h3 style={{ fontSize: '1.15rem', marginTop: '0.5rem' }}>{s.titlu}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{s.desc}</p>
-                  <div className="process-icon-glow" />
-                  <div className="process-icon">{s.icon}</div>
+      {/* ADVANTAGES — dark block */}
+      <ScrollFade>
+      <div className="dark-section-wrap">
+        <div className="dark-section" id="avantaje">
+          <div className="orb" style={{ top: -150, left: -120, width: 420, height: 420, background: 'oklch(0.6 0.22 305 / 0.35)', animation: 'uppr-float-a 17s ease-in-out infinite' }} />
+          <div className="orb" style={{ bottom: -160, right: -120, width: 440, height: 440, background: 'oklch(0.65 0.2 20 / 0.28)', animation: 'uppr-float-b 21s ease-in-out infinite' }} />
+          <div className="sweep-line" style={{ top: '30%', background: 'linear-gradient(90deg, transparent, oklch(0.75 0.16 300 / 0.4), transparent)' }} />
+
+          <div className="dark-section-inner">
+            <div className="section-header">
+              <span className="badge badge-dark">UPPR advantage</span>
+              <h2 style={{ color: 'white' }}>The UPPR advantage.</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
+              {ADVANTAGES.map((a) => (
+                <div key={a.title} className="dark-card">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="oklch(0.7 0.17 300)" strokeWidth="1.6">{a.icon}</svg>
+                  <h3>{a.title}</h3>
+                  <p>{a.desc}</p>
                 </div>
               ))}
             </div>
           </div>
-        </Reveal>
+        </div>
+      </div>
+      </ScrollFade>
 
-        {/* 8. WHAT WE DO */}
-        <Reveal as="section" className="container" id="ce-primesti">
-          <span className="eyebrow">CE PRIMEȘTI</span>
-          <h2 className="section-title">Patru audituri complete, un singur preț.</h2>
-          <div className="grid-2" style={{ marginTop: '2rem' }}>
-            {AUDITURI.map((item) => (
-              <div key={item.titlu} className="gradient-border">
-                <div className="card" style={{ height: '100%' }}>
-                  <h3 style={{ fontSize: '1.05rem' }}>{item.titlu}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{item.descriere}</p>
-                </div>
+      {/* VIDEO EXPLAINER */}
+      <ScrollFade>
+      <section style={{ overflow: 'hidden' }}>
+        <div className="orb" style={{ top: -100, right: '10%', width: 340, height: 340, background: 'oklch(0.65 0.16 300 / 0.1)', animation: 'uppr-float-b 19s ease-in-out infinite' }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1, padding: '40px 24px 100px', display: 'grid', gridTemplateColumns: 'minmax(0, 0.85fr) minmax(0, 1.15fr)', gap: 64, alignItems: 'start' }}>
+          <div>
+            <span className="badge">How it works</span>
+            <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.02em', margin: '22px 0 36px' }}>Explained out loud, not just on paper.</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
+              <div className="video-item">
+                <h4>30-min video — Website</h4>
+                <p>A live walkthrough of your site, explained step by step, with concrete examples of what to improve.</p>
               </div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* 9. BEYOND: VIDEOS */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">PE LÂNGĂ AUDITURI</span>
-          <h2 className="section-title">Explicat pe voce, nu doar pe hârtie.</h2>
-          <div className="grid-2" style={{ marginTop: '2rem' }}>
-            {VIDEO.map((item) => (
-              <div key={item.titlu} className="gradient-border">
-                <div className="card" style={{ height: '100%' }}>
-                  <h3 style={{ fontSize: '1.05rem' }}>{item.titlu}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{item.descriere}</p>
-                </div>
+              <div className="video-item">
+                <h4>30-min video — Visual identity &amp; social media</h4>
+                <p>What your brand communicates now, what it should communicate, and how to get there.</p>
               </div>
-            ))}
-          </div>
-          <div className="card" style={{ marginTop: '1rem' }}>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              Vrei să și implementezi recomandările de marketing și retenție? <a href="https://uppr.agency" target="_blank" rel="noreferrer" style={{ color: 'var(--violet-3)' }}>UPPR Agency</a>, aceeași echipă, poate prelua execuția.
-            </p>
-          </div>
-        </Reveal>
-
-        {/* 10. WHY UPPR */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">DE CE UPPR CONSULTING</span>
-          <h2 className="section-title">Avantajul UPPR.</h2>
-          <div className="grid-auto" style={{ marginTop: '2rem' }}>
-            {AVANTAJE.map((a) => (
-              <div key={a.titlu} className="card">
-                <span style={{ fontSize: '1.25rem' }}>{a.icon}</span>
-                <h3 style={{ fontSize: '1rem', marginTop: '0.5rem' }}>{a.titlu}</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>{a.descriere}</p>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* 11. RECENZII */}
-        {/* FAKE DATA — întreaga secțiune, până la primele recenzii reale */}
-        <Reveal as="section" className="container">
-          <div className="reviews-header">
-            <span className="badge">Recenzii</span>
-            <h2>Ce spun clienții.</h2>
-            <p className="section-sub">
-              Feedback real de la clienți care au aflat exact ce nu funcționa în identitatea lor vizuală și digitală.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
-              <Link href="/formular" className="btn-primary">Comandă auditul</Link>
-              <a href="#ce-primesti" className="btn-outline">Vezi ce primești</a>
             </div>
           </div>
+          <div className="video-card">
+            <div className="video-thumb">
+              <div className="video-play">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#111"><path d="M6 4l14 8-14 8z" /></svg>
+              </div>
+            </div>
+            <div className="video-caption">personalized video, 30 minutes</div>
+          </div>
+        </div>
+      </section>
+      </ScrollFade>
 
-          <div className="grid-2" style={{ marginTop: '2.5rem' }}>
-            {[
-              { nume: 'Ana Ionescu', rol: 'Fondator, studio de design interior', citat: 'Auditul mi-a arătat în 2 zile ce nu vedeam de luni de zile: site-ul meu nu spunea nimic despre ce mă diferențiază. Am schimbat homepage-ul și am simțit diferența imediat.' },
-              { nume: 'Mihai Dobre', rol: 'Manager, clinică stomatologică', citat: 'Video-ul despre website a fost cel mai util. Mi-a explicat pas cu pas de ce oamenii abandonau formularul de programare.' },
-              { nume: 'Cristina Popa', rol: 'Fondator, brand de cosmetice naturale', citat: 'Auditul de identitate vizuală a scos la iveală inconsistențe pe care nu le observasem între site și Instagram. Acum totul e aliniat.' },
-            ].map((r) => (
-              <div key={r.nume} className="card">
-                <div className="review-card-head">
-                  <div className="avatar-initials">
-                    {r.nume.split(' ').map((n) => n[0]).join('')}
-                  </div>
-                  <div>
-                    <h4>{r.nume}</h4>
-                    <span>{r.rol}</span>
-                  </div>
+      {/* AUDITS */}
+      <ScrollFade>
+      <section id="audituri" style={{ overflow: 'hidden' }}>
+        <div className="orb" style={{ bottom: -120, left: '8%', width: 360, height: 360, background: 'oklch(0.68 0.15 20 / 0.1)', animation: 'uppr-float-a 20s ease-in-out infinite' }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, padding: '40px 24px 110px', textAlign: 'center' }}>
+          <span className="badge">What you get</span>
+          <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.02em', margin: '22px 0 14px' }}>Four complete audits, one price.</h2>
+
+          <div className="list-card">
+            {AUDITS.map((a) => (
+              <div key={a.title} className="list-row">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="oklch(0.55 0.18 300)" strokeWidth="1.7">{a.icon}</svg>
+                <div>
+                  <h4>{a.title}</h4>
+                  <p>{a.desc}</p>
                 </div>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: 1.6 }}>„{r.citat}"</p>
-                <p className="stars" style={{ marginTop: '1rem' }}>5.0 ★★★★★</p>
               </div>
             ))}
           </div>
-        </Reveal>
+        </div>
+      </section>
+      </ScrollFade>
 
-        {/* 12. STRAIGHT FROM DASHBOARD */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">DIRECT DIN CONT</span>
-          <h2 className="section-title">Așa arată contul tău după plată.</h2>
-          <p className="section-sub">Livrabilele apar pe măsură ce sunt gata, nu trebuie să aștepți toate 6 deodată.</p>
-          <div className="card" style={{ marginTop: '2rem', maxWidth: 480 }}>
-            {['Audit social media', 'Audit identitate vizuală', 'Audit website', 'Audit UI/UX', 'Video — Website', 'Video — Identitate vizuală'].map((d, i) => (
-              <div key={d} className="live-step">
-                <span style={{ fontSize: '0.9rem' }}>{d}</span>
-                <span className="label" style={{ color: i < 2 ? 'var(--violet-3)' : 'var(--text-muted)' }}>
-                  {i < 2 ? 'Livrat' : 'În lucru'}
+      {/* STRAIGHT FROM YOUR ACCOUNT */}
+      <ScrollFade>
+        <section className="container" style={{ maxWidth: 1000, padding: '20px 24px 110px', textAlign: 'center' }}>
+          <span className="badge">Straight from your account</span>
+          <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.02em', margin: '22px 0 14px' }}>This is what your account looks like after payment.</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 16, maxWidth: 480, margin: '0 auto' }}>
+            Deliverables show up as they're ready, you don't have to wait for all 6 at once.
+          </p>
+
+          <div className="list-card" style={{ maxWidth: 560, margin: '40px auto 0', textAlign: 'left' }}>
+            {[
+              { title: 'Social media audit', done: true },
+              { title: 'Visual identity audit', done: true },
+              { title: 'Website audit', done: false },
+              { title: 'UI/UX audit', done: false },
+              { title: 'Video — Website', done: false },
+              { title: 'Video — Visual identity', done: false },
+            ].map((d) => (
+              <div key={d.title} className="dash-row" style={{ padding: '20px 30px' }}>
+                <span style={{ fontSize: 15, fontWeight: 600 }}>{d.title}</span>
+                <span className={`dash-status ${d.done ? 'done' : 'pending'}`}>
+                  {d.done ? 'Delivered' : 'In progress'}
                 </span>
               </div>
             ))}
           </div>
-        </Reveal>
+        </section>
+      </ScrollFade>
 
-        {/* 13. IS THIS A FIT */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">E POTRIVIT PENTRU TINE?</span>
-          <h2 className="section-title">Construit pentru unele businessuri. Nu pentru toate.</h2>
-          <div className="grid-2" style={{ marginTop: '2rem' }}>
-            <div className="card">
-              <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>probabil nu e potrivit</h3>
-              <ul className="check-list">
-                <li className="check-bad">Nu ai încă un website sau conturi social active</li>
-                <li className="check-bad">Cauți doar un logo nou, fără context de business</li>
-                <li className="check-bad">Vrei implementare inclusă, nu doar diagnostic</li>
-              </ul>
-            </div>
-            <div className="card">
-              <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>e potrivit</h3>
-              <ul className="check-list">
-                <li className="check-good">Ai un website și prezență social activă</li>
-                <li className="check-good">Simți că ceva nu convertește, dar nu știi exact ce</li>
-                <li className="check-good">Vrei un diagnostic clar înainte să investești în schimbări</li>
-              </ul>
-            </div>
-          </div>
-        </Reveal>
+      {/* FINAL CTA */}
+      <ScrollFade>
+      <section style={{ overflow: 'hidden', borderTop: '1px solid var(--border)' }}>
+        <div className="orb" style={{ top: -80, left: '30%', width: 300, height: 300, background: 'oklch(0.62 0.2 305 / 0.1)', animation: 'uppr-float-a 16s ease-in-out infinite' }} />
+        <div className="orb" style={{ bottom: -100, right: '15%', width: 320, height: 320, background: 'oklch(0.68 0.16 20 / 0.1)', animation: 'uppr-float-b 20s ease-in-out infinite' }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: 700, padding: '100px 24px 90px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}>
+          <span className="nav-mark" style={{ width: 40, height: 40, borderRadius: 10 }} />
+          <h2 style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-0.02em' }}>See exactly what needs fixing.</h2>
+          <p style={{ fontSize: 17, color: 'var(--text-muted)' }}>
+            4 audits, 2 personalized videos, 48-hour delivery — one payment of 50 EUR.
+          </p>
+          <Link href="/formular" className="btn-primary" style={{ marginTop: 8 }}>Order the audit — 50 EUR</Link>
+        </div>
+      </section>
+      </ScrollFade>
 
-        {/* 14. CTA formular */}
-        <Reveal as="section" className="container">
-          <div className="gradient-border">
-            <div className="card" style={{ textAlign: 'center' }}>
-              <span className="eyebrow">AUDIT COMPLET, 50 EUR</span>
-              <h2 style={{ fontSize: '1.5rem', marginTop: '0.5rem' }}>Vezi exact ce ai de reparat.</h2>
-              <ul className="check-list" style={{ display: 'inline-grid', textAlign: 'left', marginTop: '1.25rem' }}>
-                <li className="check-good">4 audituri complete (social, brand, website, UI/UX)</li>
-                <li className="check-good">2 video-uri personalizate, 30 de minute fiecare</li>
-                <li className="check-good">Livrare în maximum 48 de ore</li>
-                <li className="check-good">O singură plată, fără abonament</li>
-              </ul>
-              <div>
-                <Link href="/formular" className="btn-primary" style={{ marginTop: '1.5rem' }}>
-                  Comandă auditul — 50 EUR
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* 15. UPSELL / cross-link */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">MERGI MAI DEPARTE</span>
-          <div className="card">
-            <h2 style={{ fontSize: '1.25rem' }}>Vrei ca cineva să și implementeze recomandările?</h2>
-            <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-              UPPR Agency, aceeași echipă din spatele UPPR Consulting, rulează marketing prin email și SMS
-              pentru afaceri mici și mijlocii.
-            </p>
-            <a href="https://uppr.agency" target="_blank" rel="noreferrer" className="btn-primary" style={{ marginTop: '1.25rem' }}>
-              Vezi UPPR Agency
-            </a>
-          </div>
-        </Reveal>
-
-        {/* 16. FAQ */}
-        <Reveal as="section" className="container">
-          <span className="eyebrow">ÎNTREBĂRI FRECVENTE</span>
-          <h2 className="section-title">Răspunsuri clare, înainte să comanzi.</h2>
-          <div style={{ marginTop: '1.5rem' }}>
-            {[
-              { q: 'Ce primesc exact pentru cei 50 EUR?', a: '4 audituri scrise (social media, identitate vizuală, website, UI/UX) și 2 video-uri personalizate de 30 de minute, unul despre website, unul despre identitate vizuală și social media.' },
-              { q: 'Cât durează livrarea?', a: 'Maximum 48 de ore de la confirmarea plății. Livrabilele apar în contul tău pe măsură ce sunt gata, nu trebuie să aștepți toate 6 deodată.' },
-              { q: 'Video-urile sunt generice sau personalizate?', a: 'Sunt personalizate, înregistrate special pentru businessul tău, nu materiale generice trimise tuturor clienților.' },
-              { q: 'Ce fac cu auditul după ce îl primesc?', a: 'Conține recomandări concrete, în ordinea priorității. Le poți implementa singur, cu echipa ta, sau poți lucra cu UPPR Agency pentru execuție.' },
-              { q: 'Există abonament sau plăți recurente?', a: 'Nu. O singură plată de 50 EUR, fără reînnoire automată.' },
-              { q: 'Ce se întâmplă dacă nu sunt mulțumit?', a: 'Scrie-ne, analizăm fiecare caz individual. Detaliile complete sunt în politica de rambursare.' },
-            ].map((item) => (
-              <details key={item.q} className="faq-item">
-                <summary>{item.q}</summary>
-                <p>{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* 17. FINAL CTA */}
-        <Reveal as="section" className="container">
-          <div className="card" style={{ textAlign: 'center' }}>
-            <h2 style={{ fontSize: '1.75rem' }}>Businessul tău vorbește. Întrebarea e ce transmite.</h2>
-            <p style={{ color: 'var(--text-muted)', marginTop: '0.75rem' }}>
-              48 de ore, un audit complet, fără abonament.
-            </p>
-            <Link href="/formular" className="btn-primary" style={{ marginTop: '1.5rem' }}>
-              Comandă auditul — 50 EUR
-            </Link>
-          </div>
-        </Reveal>
-      </main>
       <Footer />
+      <div className="gradient-bar" />
     </>
   );
 }

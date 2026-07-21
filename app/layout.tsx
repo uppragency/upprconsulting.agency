@@ -1,20 +1,16 @@
 import type { Metadata } from 'next';
-import Aurora from '@/components/Aurora';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'UPPR Consulting — Audit identitate vizuală, website și social media',
+  title: 'UPPR Consulting — Visual identity, website & social media audit',
   description:
-    'Primești 4 audituri complete și 2 video-uri personalizate despre identitatea vizuală și website-ul tău, livrate în 48 de ore. 50 EUR, o singură plată.',
+    'Get 4 complete audits and 2 personalized videos about your visual identity and website, delivered within 48 hours. 50 EUR, one payment.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro">
-      <body>
-        <Aurora />
-        {children}
-      </body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }

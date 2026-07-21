@@ -2,16 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function Reveal({
+export default function ScrollFade({
   children,
-  as = 'div',
   className,
-  id,
+  style,
 }: {
   children: React.ReactNode;
-  as?: 'div' | 'section';
   className?: string;
-  id?: string;
+  style?: React.CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -22,24 +20,19 @@ export default function Reveal({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
+          entry.target.classList.toggle('is-visible', entry.isIntersecting);
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  const Tag = as;
-
   return (
-    <Tag ref={ref} data-reveal="" className={className} id={id}>
+    <div ref={ref} data-reveal="" className={className} style={style}>
       {children}
-    </Tag>
+    </div>
   );
 }

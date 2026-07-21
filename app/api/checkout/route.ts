@@ -11,15 +11,15 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: 'Trebuie să fii autentificat.' }, { status: 401 });
+    return NextResponse.json({ error: 'You must be signed in.' }, { status: 401 });
   }
 
   const body = await request.json();
-  const { businessName, contactName, email, phone, descriere } = body;
+  const { businessName, contactName, email, phone, description } = body;
 
   const admin = createServiceRoleClient();
 
-  // Creează clientul
+  // Create the client record
   const { data: client, error: clientError } = await admin
     .from('clients')
     .insert({
@@ -27,24 +27,24 @@ export async function POST(request: Request) {
       contact_name: contactName,
       email,
       phone,
-      project_description: descriere,
+      project_description: description,
       status: 'pending_payment',
     })
     .select()
     .single();
 
   if (clientError || !client) {
-    return NextResponse.json({ error: 'Nu am putut salva datele.' }, { status: 500 });
+    return NextResponse.json({ error: 'Could not save your details.' }, { status: 500 });
   }
 
-  // Leagă profilul (creat automat de Supabase la signUp) de client
+  // Link the profile (auto-created by Supabase on signUp) to the client
   const { error: profileError } = await admin
     .from('profiles')
     .update({ client_id: client.id, role: 'client' })
     .eq('id', user.id);
 
   if (profileError) {
-    return NextResponse.json({ error: 'Nu am putut lega contul de comandă.' }, { status: 500 });
+    return NextResponse.json({ error: 'Could not link your account to the order.' }, { status: 500 });
   }
 
   const origin = request.headers.get('origin') ?? 'https://upprconsulting.agency';
@@ -58,8 +58,8 @@ export async function POST(request: Request) {
           currency: 'eur',
           unit_amount: 5000,
           product_data: {
-            name: 'Audit complet UPPR Consulting',
-            description: '4 audituri (social media, identitate vizuală, website, UI/UX) + 2 video-uri personalizate.',
+            name: 'UPPR Consulting — Full Audit',
+            description: '4 audits (social media, visual identity, website, UI/UX) + 2 personalized videos.',
           },
         },
         quantity: 1,

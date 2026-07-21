@@ -2,20 +2,22 @@ import Link from 'next/link';
 
 export default function Nav() {
   return (
-    <nav className="nav">
-      <div className="nav-inner">
+    <div className="nav-wrap">
+      <header className="nav">
         <Link href="/" className="nav-logo">
+          <span className="nav-mark" />
           UPPR Consulting
         </Link>
-        <div className="nav-links">
-          <Link href="/#ce-primesti">Ce primești</Link>
-          <Link href="/#cum-functioneaza">Cum funcționează</Link>
-          <Link href="/cont">Cont</Link>
-          <Link href="/formular" className="btn-primary" style={{ padding: '0.6rem 1.25rem', fontSize: '0.9rem' }}>
-            Comandă audit
-          </Link>
-        </div>
-      </div>
-    </nav>
+        <nav className="nav-links">
+          <a href="/#avantaje">Advantages</a>
+          <a href="/#audituri">Audits</a>
+          <Link href="/formular">Pricing</Link>
+          <Link href="/cont">Account</Link>
+        </nav>
+        <Link href="/formular" className="btn-primary small">
+          Order audit
+        </Link>
+      </header>
+    </div>
   );
 }

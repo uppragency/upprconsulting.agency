@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
 
   if (!user && request.nextUrl.pathname.startsWith('/cont')) {
     const url = request.nextUrl.clone();
-    url.pathname = '/formular';
+    url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 

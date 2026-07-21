@@ -1,13 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
+import LogoutButton from '@/components/LogoutButton';
 
 const LABELS: Record<string, string> = {
-  social_audit: 'Audit social media',
-  brand_audit: 'Audit identitate vizuală',
-  website_audit: 'Audit website',
-  uiux_audit: 'Audit UI/UX',
-  video_website: 'Video 30 min — Website',
-  video_brand: 'Video 30 min — Identitate vizuală & social media',
+  social_audit: 'Social media audit',
+  brand_audit: 'Visual identity audit',
+  website_audit: 'Website audit',
+  uiux_audit: 'UI/UX audit',
+  video_website: '30-min video — Website',
+  video_brand: '30-min video — Visual identity & social media',
 };
 
 export default async function ContPage() {
@@ -17,7 +20,7 @@ export default async function ContPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect('/formular');
+  if (!user) redirect('/login');
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -27,12 +30,20 @@ export default async function ContPage() {
 
   if (!profile?.client_id) {
     return (
-      <main className="container" style={{ paddingTop: '4rem' }}>
-        <h1 style={{ fontSize: '1.5rem' }}>Comanda ta se procesează</h1>
-        <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-          Revino peste câteva minute. Dacă ai plătit deja și mesajul persistă, scrie-ne.
-        </p>
-      </main>
+      <>
+        <div className="gradient-bar" />
+        <Nav />
+        <section className="container" style={{ padding: '60px 24px' }}>
+          <div className="dash-header">
+            <h1 style={{ fontSize: 24 }}>Your order is being processed</h1>
+            <LogoutButton />
+          </div>
+          <p style={{ color: 'var(--text-muted)', marginTop: 12 }}>
+            Check back in a few minutes. If you've already paid and this message persists, get in touch.
+          </p>
+        </section>
+        <Footer />
+      </>
     );
   }
 
@@ -47,41 +58,49 @@ export default async function ContPage() {
     .select('type, status, content_text, content_url, delivered_at')
     .eq('client_id', profile.client_id);
 
-  const livrate = deliverables?.filter((d) => d.status === 'delivered') ?? [];
-  const inAsteptare = deliverables?.filter((d) => d.status === 'pending') ?? [];
+  const delivered = deliverables?.filter((d) => d.status === 'delivered') ?? [];
 
   return (
-    <main className="container" style={{ paddingTop: '3.5rem', paddingBottom: '4rem' }}>
-      <p className="label">Contul tău</p>
-      <h1 style={{ fontSize: '2rem', marginTop: '0.5rem' }}>
-        {client?.business_name ?? 'Bun venit'}
-      </h1>
-      <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-        {client?.status === 'paid' && !livrate.length
-          ? 'Comanda ta e în lucru. Livrare în maximum 48 de ore.'
-          : `${livrate.length} din ${deliverables?.length ?? 6} livrabile disponibile.`}
-      </p>
-
-      <div style={{ display: 'grid', gap: '0.75rem', marginTop: '2rem' }}>
-        {deliverables?.map((d) => (
-          <div key={d.type} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h3 style={{ fontSize: '1rem' }}>{LABELS[d.type] ?? d.type}</h3>
-              {d.status === 'delivered' && d.content_url && (
-                <a href={d.content_url} target="_blank" rel="noreferrer" style={{ color: 'var(--violet-3)', fontSize: '0.9rem' }}>
-                  Deschide livrabilul
-                </a>
-              )}
-            </div>
-            <span
-              className="label"
-              style={{ color: d.status === 'delivered' ? 'var(--violet-3)' : 'var(--text-muted)' }}
-            >
-              {d.status === 'delivered' ? 'Livrat' : 'În lucru'}
-            </span>
+    <>
+      <div className="gradient-bar" />
+      <Nav />
+      <section className="container" style={{ padding: '60px 24px 100px' }}>
+        <div className="dash-header">
+          <div>
+            <p className="form-eyebrow">Your account</p>
+            <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em' }}>
+              {client?.business_name ?? 'Welcome'}
+            </h1>
           </div>
-        ))}
-      </div>
-    </main>
+          <LogoutButton />
+        </div>
+
+        <p style={{ color: 'var(--text-muted)', marginTop: 12 }}>
+          {client?.status === 'paid' && !delivered.length
+            ? 'Your order is in progress. Delivery within 48 hours.'
+            : `${delivered.length} of ${deliverables?.length ?? 6} deliverables available.`}
+        </p>
+
+        <div className="list-card" style={{ marginTop: 40, maxWidth: 640 }}>
+          {deliverables?.map((d) => (
+            <div key={d.type} className="dash-row">
+              <div>
+                <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>{LABELS[d.type] ?? d.type}</h4>
+                {d.status === 'delivered' && d.content_url && (
+                  <a href={d.content_url} target="_blank" rel="noreferrer" style={{ fontSize: 14 }}>
+                    Open deliverable
+                  </a>
+                )}
+              </div>
+              <span className={`dash-status ${d.status === 'delivered' ? 'done' : 'pending'}`}>
+                {d.status === 'delivered' ? 'Delivered' : 'In progress'}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+      <Footer />
+      <div className="gradient-bar" />
+    </>
   );
 }
