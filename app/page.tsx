@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ScrollFade from '@/components/ScrollFade';
+import BeforeAfterToggle from '@/components/BeforeAfterToggle';
 
 const ADVANTAGES = [
   { title: '48-hour delivery', desc: "No waiting weeks. Order today, get your audits in your account within 2 days.", icon: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.2 2" /></> },
@@ -43,41 +44,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* WHAT'S CHANGING */}
+      {/* WHAT'S CHANGING — Before/After toggle */}
       <ScrollFade>
-        <div className="dark-section-wrap" style={{ paddingBottom: 0 }}>
-          <div className="dark-section">
-            <div className="orb" style={{ top: -120, right: -100, width: 360, height: 360, background: 'oklch(0.6 0.22 305 / 0.3)', animation: 'uppr-float-b 19s ease-in-out infinite' }} />
-            <div className="dark-section-inner">
-              <span className="badge badge-dark">What's changing</span>
-              <h2 style={{ color: 'white', fontSize: 'clamp(1.75rem, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '18px 0 14px' }}>
-                Cheap now. Empty in a year.
-              </h2>
-              <p style={{ color: 'var(--text-muted-dark)', fontSize: 16, lineHeight: 1.6, maxWidth: 620, margin: '0 0 40px' }}>
-                Every AI-generated page, every algorithm-written post, looks a little more fake than something made
-                by a human. Visitors feel it, even if they can't tell you why they left.
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-                <div className="stat-card">
-                  <span className="badge badge-dark">The hidden cost</span>
-                  <h3>AI erodes trust, it doesn't build it</h3>
-                  <p>Generic content, mismatched images, tone with no personality. Every visitor who notices is a follower or customer who doesn't come back.</p>
-                  {/* FAKE DATA */}
-                  <p className="stat-value">−41%</p>
-                  <p className="stat-label">audience lost in 6 months, majority-AI accounts</p>
-                </div>
-                <div className="stat-card">
-                  <span className="badge badge-dark">The fix</span>
-                  <h3>A human audit stops the bleeding</h3>
-                  <p>See exactly what feels off, what sounds generic, what doesn't align with your real brand. Fix it before you lose everything you've built.</p>
-                  {/* FAKE DATA */}
-                  <p className="stat-value">3×</p>
-                  <p className="stat-label">average return reported by clients</p>
-                </div>
-              </div>
-            </div>
+        <section className="container" style={{ padding: '64px 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <span className="badge">What's changing</span>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '18px 0 14px' }}>
+              Cheap now. Empty in a year.
+            </h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: 16, lineHeight: 1.6, maxWidth: 620, margin: '0 auto' }}>
+              Every AI-generated page, every algorithm-written post, looks a little more fake than something made
+              by a human. Visitors feel it, even if they can't tell you why they left.
+            </p>
           </div>
-        </div>
+          <BeforeAfterToggle />
+        </section>
       </ScrollFade>
 
       {/* PHILOSOPHY */}
@@ -136,8 +117,15 @@ export default function HomePage() {
               <span className="badge badge-dark">UPPR advantage</span>
               <h2 style={{ color: 'white' }}>The UPPR advantage.</h2>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
-              {ADVANTAGES.map((a) => (
+            <div className="bento-grid">
+              <div className="bento-hero">
+                <p className="bento-number">48H</p>
+                <div>
+                  <h3>Delivery, not a promise</h3>
+                  <p>Order today, get your audits and videos in your account within 48 hours. No waiting weeks for a call back.</p>
+                </div>
+              </div>
+              {ADVANTAGES.slice(1).map((a) => (
                 <div key={a.title} className="dark-card">
                   <div className="icon-chip">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="oklch(0.78 0.15 300)" strokeWidth="1.6">{a.icon}</svg>
