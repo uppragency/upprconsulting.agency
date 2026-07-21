@@ -44,7 +44,7 @@ export default async function ContPage() {
   const { data: client } = await supabase.from('clients').select('business_name, status').eq('id', profile.client_id).single();
   const { data: deliverables } = await supabase
     .from('deliverables')
-    .select('type, status, content_text, content_url, delivered_at')
+    .select('id, type, status, content_text, content_url, delivered_at')
     .eq('client_id', profile.client_id);
 
   const delivered = deliverables?.filter((d) => d.status === 'delivered') ?? [];
@@ -73,7 +73,7 @@ export default async function ContPage() {
                 <div>
                   <span style={{ fontSize: 14, fontWeight: 500, display: 'block' }}>{LABELS[d.type] ?? d.type}</span>
                   {d.status === 'delivered' && d.content_url && (
-                    <a href={d.content_url} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: '#e2fa5c' }}>
+                    <a href={`/api/deliverables/${d.id}/download`} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: '#e2fa5c' }}>
                       Open deliverable
                     </a>
                   )}

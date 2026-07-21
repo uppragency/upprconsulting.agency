@@ -117,7 +117,7 @@ export default function HomePage() {
               You lose visitors, audience, and followers, month after month, until there's nothing left to save.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8 }}>
-              <Link href="/formular" className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500 }}>
+              <Link href="/order" className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500 }}>
                 Order audit
               </Link>
               <span style={{ fontSize: 14, color: '#55565e' }}>One payment, no subscription</span>
@@ -426,7 +426,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Link href="/formular" className="btn-accent" style={{ background: ACCENT, color: '#232326', padding: 16, borderRadius: 99, fontSize: 16, fontWeight: 600, textAlign: 'center' }}>
+            <Link href="/order" className="btn-accent" style={{ background: ACCENT, color: '#232326', padding: 16, borderRadius: 99, fontSize: 16, fontWeight: 600, textAlign: 'center' }}>
               Order the audit — €50
             </Link>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>No credit card stored · No recurring charge · Nothing to cancel</span>
@@ -458,7 +458,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '96px 32px', display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'center', textAlign: 'center' }}>
           <h2 style={{ margin: 0, fontSize: 52, lineHeight: 1.06, letterSpacing: '-0.035em', fontWeight: 600 }}>See exactly what needs fixing.</h2>
           <p style={{ margin: 0, fontSize: 18, color: 'rgba(255,255,255,0.7)' }}>4 audits, 2 personalized videos, 48-hour delivery — one payment of €50.</p>
-          <Link href="/formular" className="btn-accent" style={{ background: ACCENT, color: '#232326', padding: '16px 32px', borderRadius: 99, fontSize: 16, fontWeight: 600, marginTop: 8 }}>
+          <Link href="/order" className="btn-accent" style={{ background: ACCENT, color: '#232326', padding: '16px 32px', borderRadius: 99, fontSize: 16, fontWeight: 600, marginTop: 8 }}>
             Order the audit — €50
           </Link>
         </div>

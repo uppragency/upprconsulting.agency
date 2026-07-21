@@ -48,15 +48,18 @@ export default function Nav() {
           <a href="/#audits" className="nav-link" style={{ color: '#55565e', padding: '8px 14px', borderRadius: 99 }}>
             Audits
           </a>
+          <Link href="/blog" className="nav-link" style={{ color: '#55565e', padding: '8px 14px', borderRadius: 99 }}>
+            Blog
+          </Link>
           <a href="/#pricing" className="nav-link" style={{ color: '#55565e', padding: '8px 14px', borderRadius: 99 }}>
             Pricing
           </a>
-          <a href="/#account" className="nav-link" style={{ color: '#55565e', padding: '8px 14px', borderRadius: 99 }}>
-            Account
-          </a>
+          <Link href="/account" className="nav-link" style={{ color: '#55565e', padding: '8px 14px', borderRadius: 99 }}>
+            My Audits
+          </Link>
         </div>
         <Link
-          href="/formular"
+          href="/order"
           className="btn-dark"
           style={{ background: '#232326', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 8 }}
         >

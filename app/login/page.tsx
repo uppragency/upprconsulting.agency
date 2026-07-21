@@ -24,7 +24,7 @@ export default function LoginPage() {
       const supabase = createClient();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      router.push('/cont');
+      router.push('/account');
       router.refresh();
     } catch {
       setError('Incorrect email or password.');
@@ -79,7 +79,7 @@ export default function LoginPage() {
           </form>
 
           <p style={{ textAlign: 'center', marginTop: 20, fontSize: 14 }}>
-            Haven't ordered yet? <a href="/formular">Order the audit</a>
+            Haven't ordered yet? <a href="/order">Order the audit</a>
           </p>
         </div>
       </section>

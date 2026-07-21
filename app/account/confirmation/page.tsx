@@ -13,7 +13,7 @@ export default function ConfirmationPage() {
           You'll get the 4 audits and 2 personalized videos in your account within 48 hours.
         </p>
         <Link
-          href="/cont"
+          href="/account"
           className="btn-dark"
           style={{ display: 'inline-block', marginTop: 32, background: '#232326', color: '#fff', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500 }}
         >

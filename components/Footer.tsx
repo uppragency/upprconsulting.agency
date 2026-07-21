@@ -28,8 +28,8 @@ export default function Footer() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 14 }}>
           <span style={{ fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Company</span>
-          <Link href="/formular" className="footer-link" style={{ color: '#55565e' }}>Order audit</Link>
-          <Link href="/cont" className="footer-link" style={{ color: '#55565e' }}>Your account</Link>
+          <Link href="/order" className="footer-link" style={{ color: '#55565e' }}>Order audit</Link>
+          <Link href="/account" className="footer-link" style={{ color: '#55565e' }}>Your account</Link>
           <Link href="/legal/termeni" className="footer-link" style={{ color: '#55565e' }}>Terms &amp; conditions</Link>
           <Link href="/legal/confidentialitate" className="footer-link" style={{ color: '#55565e' }}>Privacy</Link>
         </div>

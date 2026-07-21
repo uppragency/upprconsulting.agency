@@ -65,8 +65,8 @@ export async function POST(request: Request) {
         quantity: 1,
       },
     ],
-    success_url: `${origin}/cont/confirmare?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/formular`,
+    success_url: `${origin}/account/confirmation?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/order`,
     customer_email: email,
     metadata: { client_id: client.id },
   });
