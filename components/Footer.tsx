@@ -3,48 +3,46 @@ import NewsletterForm from './NewsletterForm';
 
 export default function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer-cols">
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <span className="nav-mark" style={{ width: 24, height: 24, borderRadius: 7 }} />
-            <span style={{ fontSize: 17, fontWeight: 700 }}>UPPR Consulting</span>
+    <footer style={{ background: '#fbfaf8', borderTop: '1px solid rgba(35,35,38,0.08)' }}>
+      <div
+        className="grid-4-responsive"
+        style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 32px 40px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1.2fr', gap: 48 }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 28, height: 28, background: '#232326', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 13 }}>
+              U
+            </div>
+            <span style={{ fontWeight: 600, fontSize: 16 }}>UPPR Consulting</span>
           </div>
-          <p style={{ fontSize: 14.5, lineHeight: 1.6, color: 'var(--text-muted)', maxWidth: 300, margin: '0 0 20px' }}>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: '#55565e', maxWidth: 300 }}>
             The audit that shows you exactly what's not working in your website, brand, and social media, before it costs you your audience.
           </p>
-          <div className="footer-social">
-            <a href="https://uppr.agency" target="_blank" rel="noreferrer" aria-label="UPPR Agency">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M14 8h3V4h-3c-2.2 0-4 1.8-4 4v3H7v4h3v9h4v-9h3l1-4h-4V8c0-.6.4-1 1-1z" /></svg>
-            </a>
-            <a href="#" aria-label="Instagram">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><rect x="3" y="3" width="18" height="18" rx="4" /></svg>
-            </a>
-            <a href="#" aria-label="LinkedIn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M4 4l16 8-16 8V4z" /></svg>
-            </a>
-          </div>
         </div>
-        <div>
-          <h4>Services</h4>
-          <a href="/#audituri">Social media audit</a>
-          <a href="/#audituri">Visual identity audit</a>
-          <a href="/#audituri">Website audit</a>
-          <a href="/#audituri">UI/UX audit</a>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 14 }}>
+          <span style={{ fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Services</span>
+          <a href="/#audits" className="footer-link" style={{ color: '#55565e' }}>Social media audit</a>
+          <a href="/#audits" className="footer-link" style={{ color: '#55565e' }}>Visual identity audit</a>
+          <a href="/#audits" className="footer-link" style={{ color: '#55565e' }}>Website audit</a>
+          <a href="/#audits" className="footer-link" style={{ color: '#55565e' }}>UI/UX audit</a>
         </div>
-        <div>
-          <h4>Company</h4>
-          <Link href="/formular">Order audit</Link>
-          <Link href="/cont">Your account</Link>
-          <Link href="/legal/termeni">Terms &amp; conditions</Link>
-          <Link href="/legal/confidentialitate">Privacy</Link>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 14 }}>
+          <span style={{ fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Company</span>
+          <Link href="/formular" className="footer-link" style={{ color: '#55565e' }}>Order audit</Link>
+          <Link href="/cont" className="footer-link" style={{ color: '#55565e' }}>Your account</Link>
+          <Link href="/legal/termeni" className="footer-link" style={{ color: '#55565e' }}>Terms &amp; conditions</Link>
+          <Link href="/legal/confidentialitate" className="footer-link" style={{ color: '#55565e' }}>Privacy</Link>
         </div>
-        <div>
-          <h4>Newsletter</h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <span style={{ fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Newsletter</span>
           <NewsletterForm />
         </div>
       </div>
-      <div className="footer-bottom">© 2026 UPPR Consulting. All rights reserved.</div>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px 32px' }}>
+        <div style={{ borderTop: '1px solid rgba(35,35,38,0.08)', paddingTop: 24, fontSize: 13, color: '#8a8b92' }}>
+          © 2026 UPPR Consulting. All rights reserved.
+        </div>
+      </div>
     </footer>
   );
 }

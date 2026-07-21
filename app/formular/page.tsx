@@ -25,11 +25,7 @@ export default function FormularPage() {
     try {
       const supabase = createClient();
 
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
       if (signUpError) throw signUpError;
       if (!signUpData.user) throw new Error('Could not create your account.');
 
@@ -52,48 +48,65 @@ export default function FormularPage() {
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    background: '#fbfaf8',
+    border: '1px solid rgba(35,35,38,0.12)',
+    borderRadius: 10,
+    padding: '12px 14px',
+    fontSize: 15,
+    fontFamily: 'var(--font-body)',
+    color: '#232326',
+  };
+
+  const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 8, fontSize: 14, color: '#55565e' };
+
   return (
     <>
-      <div className="gradient-bar" />
       <Nav />
-      <section style={{ display: 'flex', justifyContent: 'center', padding: '60px 24px 110px', position: 'relative', overflow: 'hidden' }}>
-        <div className="orb" style={{ top: -60, right: '20%', width: 280, height: 280, background: 'oklch(0.6 0.18 300 / 0.09)', animation: 'uppr-float-a 18s ease-in-out infinite' }} />
+      <section style={{ display: 'flex', justifyContent: 'center', padding: '64px 24px 110px' }}>
+        <div style={{ width: '100%', maxWidth: 560, background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 24, padding: 44, boxShadow: '0 24px 48px -24px rgba(35,35,38,0.18)' }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e', margin: '0 0 12px' }}>Order audit</p>
+          <h2 style={{ margin: 0, fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>Your details</h2>
+          <p style={{ margin: '10px 0 32px', fontSize: 15, lineHeight: 1.55, color: '#55565e' }}>
+            After payment, you get instant access to your account. Delivery within 48 hours.
+          </p>
 
-        <div className="form-card">
-          <p className="form-eyebrow">Order audit</p>
-          <h2>Your details</h2>
-          <p>After payment, you get instant access to your account. Delivery within 48 hours.</p>
-
-          <form onSubmit={handleSubmit} className="form-fields">
-            <label>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+            <label style={labelStyle}>
               Business name
-              <input name="business_name" type="text" required />
+              <input name="business_name" type="text" required style={inputStyle} />
             </label>
-            <label>
+            <label style={labelStyle}>
               Your name
-              <input name="contact_name" type="text" required />
+              <input name="contact_name" type="text" required style={inputStyle} />
             </label>
-            <label>
+            <label style={labelStyle}>
               Email
-              <input name="email" type="email" required />
+              <input name="email" type="email" required style={inputStyle} />
             </label>
-            <label>
+            <label style={labelStyle}>
               Phone
-              <input name="phone" type="tel" required />
+              <input name="phone" type="tel" required style={inputStyle} />
             </label>
-            <label>
+            <label style={labelStyle}>
               Tell us briefly about your project
-              <textarea name="description" rows={4} required />
+              <textarea name="description" rows={4} required style={inputStyle} />
             </label>
-            <label>
+            <label style={labelStyle}>
               Account password
-              <input name="password" type="password" minLength={8} required />
+              <input name="password" type="password" minLength={8} required style={inputStyle} />
             </label>
 
-            {error && <p style={{ color: '#dc2626', fontSize: '0.9rem' }}>{error}</p>}
+            {error && <p style={{ color: '#c0533f', fontSize: 14 }}>{error}</p>}
 
-            <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: 8, width: '100%' }}>
-              {loading ? 'Processing...' : 'Continue to payment — 50 EUR'}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-dark"
+              style={{ marginTop: 8, width: '100%', background: '#232326', color: '#fff', border: 'none', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-body)' }}
+            >
+              {loading ? 'Processing...' : 'Continue to payment — €50'}
             </button>
           </form>
 
@@ -103,7 +116,6 @@ export default function FormularPage() {
         </div>
       </section>
       <Footer />
-      <div className="gradient-bar" />
     </>
   );
 }

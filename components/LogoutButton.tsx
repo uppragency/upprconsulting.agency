@@ -20,8 +20,16 @@ export default function LogoutButton() {
     <button
       onClick={handleLogout}
       disabled={loading}
-      className="link-muted"
-      style={{ background: 'none', border: 'none', cursor: 'pointer', font: 'inherit' }}
+      style={{
+        background: 'rgba(255,255,255,0.08)',
+        border: '1px solid rgba(255,255,255,0.15)',
+        color: '#fff',
+        borderRadius: 99,
+        padding: '9px 18px',
+        fontSize: 14,
+        fontFamily: 'var(--font-body)',
+        cursor: 'pointer',
+      }}
     >
       {loading ? 'Signing out...' : 'Sign out'}
     </button>
