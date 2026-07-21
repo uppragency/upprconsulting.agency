@@ -26,7 +26,7 @@ export default function HomePage() {
       <Nav />
 
       {/* HERO */}
-      <section className="hero" style={{ maxWidth: 1180, margin: '0 auto' }}>
+      <section className="hero" style={{ maxWidth: 1500, margin: '0 auto' }}>
         <div className="orb" style={{ top: -140, left: -100, width: 380, height: 380, background: 'oklch(0.65 0.16 300 / 0.14)', animation: 'uppr-float-a 18s ease-in-out infinite' }} />
         <div className="orb" style={{ bottom: -160, right: -100, width: 420, height: 420, background: 'oklch(0.68 0.15 20 / 0.12)', animation: 'uppr-float-b 22s ease-in-out infinite' }} />
         <div className="sweep-line" style={{ top: '45%' }} />
@@ -94,35 +94,33 @@ export default function HomePage() {
 
       {/* HOW IT COMPARES */}
       <ScrollFade>
-        <div className="dark-section-wrap" style={{ paddingTop: 0 }}>
-          <div className="dark-section">
-            <div className="orb" style={{ bottom: -140, left: -100, width: 380, height: 380, background: 'oklch(0.62 0.2 305 / 0.28)', animation: 'uppr-float-a 20s ease-in-out infinite' }} />
-            <div className="dark-section-inner">
-              <span className="badge badge-dark">How it compares</span>
-              <h2 style={{ color: 'white', fontSize: 'clamp(1.75rem, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '18px 0 40px', maxWidth: 700 }}>
-                Three ways to find out what's not working. One is built for you.
-              </h2>
-              <div style={{ background: 'var(--bg-card-dark)', border: '1px solid var(--border-dark)', borderRadius: 18, overflow: 'hidden', overflowX: 'auto' }}>
-                <table className="compare-table">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>You figure it out yourself</th>
-                      <th>Random freelancer</th>
-                      <th className="highlight">UPPR Consulting</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Time to result</td><td>Undefined</td><td>1-2 weeks</td><td className="highlight">48 hours</td></tr>
-                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Level of detail</td><td>Subjective</td><td>Variable</td><td className="highlight">4 structured audits</td></tr>
-                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Explained or just written</td><td>—</td><td>Usually just text</td><td className="highlight">2 personalized videos</td></tr>
-                    <tr><td style={{ color: 'white', fontWeight: 600 }}>Cost</td><td>Your time</td><td>Variable, often over 200 EUR</td><td className="highlight">50 EUR, one payment</td></tr>
-                  </tbody>
-                </table>
-              </div>
+        <section className="container" style={{ padding: '20px 24px 96px', position: 'relative', overflow: 'hidden' }}>
+          <div className="orb" style={{ top: -80, right: '5%', width: 320, height: 320, background: 'oklch(0.62 0.2 305 / 0.08)', animation: 'uppr-float-a 20s ease-in-out infinite' }} />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <span className="badge">How it compares</span>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', margin: '18px 0 40px', maxWidth: 700 }}>
+              Three ways to find out what's not working. One is built for you.
+            </h2>
+            <div className="compare-light-wrap">
+              <table className="compare-table-light">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>You figure it out yourself</th>
+                    <th>Random freelancer</th>
+                    <th className="highlight-col">UPPR Consulting</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="row-label">Time to result</td><td>Undefined</td><td>1-2 weeks</td><td className="highlight-col">48 hours</td></tr>
+                  <tr><td className="row-label">Level of detail</td><td>Subjective</td><td>Variable</td><td className="highlight-col">4 structured audits</td></tr>
+                  <tr><td className="row-label">Explained or just written</td><td>—</td><td>Usually just text</td><td className="highlight-col">2 personalized videos</td></tr>
+                  <tr><td className="row-label">Cost</td><td>Your time</td><td>Variable, often over 200 EUR</td><td className="highlight-col">50 EUR, one payment</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
+        </section>
       </ScrollFade>
 
       {/* ADVANTAGES — dark block */}
@@ -141,7 +139,9 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
               {ADVANTAGES.map((a) => (
                 <div key={a.title} className="dark-card">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="oklch(0.7 0.17 300)" strokeWidth="1.6">{a.icon}</svg>
+                  <div className="icon-chip">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="oklch(0.78 0.15 300)" strokeWidth="1.6">{a.icon}</svg>
+                  </div>
                   <h3>{a.title}</h3>
                   <p>{a.desc}</p>
                 </div>
