@@ -1,19 +1,12 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import LogoutButton from '@/components/LogoutButton';
+import ChecklistItem from '@/components/ChecklistItem';
+import { DeliverableIcon, DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
 
-const LABELS: Record<string, string> = {
-  social_audit: 'Social media audit',
-  brand_audit: 'Visual identity audit',
-  website_audit: 'Website audit',
-  uiux_audit: 'UI/UX audit',
-  video_website: '30-min video — Website',
-  video_brand: '30-min video — Visual identity & social media',
-};
-
-export default async function ContPage() {
+export default async function AccountPage() {
   const supabase = createClient();
   const {
     data: { user },
@@ -27,33 +20,87 @@ export default async function ContPage() {
     return (
       <>
         <Nav />
-        <section style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 32px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-            <h1 style={{ fontSize: 24, fontWeight: 600 }}>Your order is being processed</h1>
+        <section style={{ maxWidth: 700, margin: '0 auto', padding: '96px 32px', textAlign: 'center' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: 24 }}>
+            ⏳
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 600, margin: 0 }}>Your order is being processed</h1>
+          <p style={{ color: '#55565e', marginTop: 12, fontSize: 15, lineHeight: 1.6 }}>
+            This usually takes a moment right after payment. If it's been more than a few minutes and this message
+            persists, write to us and we'll sort it out.
+          </p>
+          <div style={{ marginTop: 24, display: 'flex', gap: 12, justifyContent: 'center' }}>
+            <a href="mailto:office@uppr.agency" className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '11px 22px', borderRadius: 99, fontSize: 14 }}>
+              Contact us
+            </a>
             <LogoutButton />
           </div>
-          <p style={{ color: '#55565e', marginTop: 12 }}>
-            Check back in a few minutes. If you've already paid and this message persists, get in touch.
-          </p>
         </section>
         <Footer />
       </>
     );
   }
 
-  const { data: client } = await supabase.from('clients').select('business_name, status').eq('id', profile.client_id).single();
+  const { data: client } = await supabase
+    .from('clients')
+    .select('business_name, status, created_at, health_score')
+    .eq('id', profile.client_id)
+    .single();
+
+  const { data: order } = await supabase
+    .from('orders')
+    .select('amount_cents, currency, paid_at, stripe_checkout_session_id')
+    .eq('client_id', profile.client_id)
+    .eq('status', 'paid')
+    .order('paid_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   const { data: deliverables } = await supabase
     .from('deliverables')
-    .select('id, type, status, content_text, content_url, delivered_at')
+    .select('id, type, status, content_text, content_url, admin_note, delivered_at')
     .eq('client_id', profile.client_id);
 
+  const { data: checklist } = await supabase
+    .from('checklist_items')
+    .select('id, label, done')
+    .eq('client_id', profile.client_id)
+    .order('created_at');
+
+  // Average checklist completion across all clients (aggregate only, no individual data exposed)
+  const service = createServiceRoleClient();
+  const { data: allChecklist } = await service.from('checklist_items').select('client_id, done');
+  let avgCompletion: number | null = null;
+  if (allChecklist?.length) {
+    const byClient: Record<string, { total: number; done: number }> = {};
+    allChecklist.forEach((i: any) => {
+      if (!byClient[i.client_id]) byClient[i.client_id] = { total: 0, done: 0 };
+      byClient[i.client_id].total += 1;
+      if (i.done) byClient[i.client_id].done += 1;
+    });
+    const ratios = Object.values(byClient)
+      .filter((c) => c.total > 0)
+      .map((c) => c.done / c.total);
+    if (ratios.length) avgCompletion = Math.round((ratios.reduce((a, b) => a + b, 0) / ratios.length) * 100);
+  }
+
   const delivered = deliverables?.filter((d) => d.status === 'delivered') ?? [];
+  const allDelivered = deliverables?.length === 6 && delivered.length === 6;
+  const orderDate = order?.paid_at ?? client?.created_at;
+  const amount = order ? (order.amount_cents / 100).toFixed(0) : '50';
+
+  const isNew = (deliveredAt: string | null) => {
+    if (!deliveredAt) return false;
+    return Date.now() - new Date(deliveredAt).getTime() < 24 * 60 * 60 * 1000;
+  };
+
+  const doneChecklist = checklist?.filter((c) => c.done).length ?? 0;
 
   return (
     <>
       <Nav />
       <section style={{ background: '#232326', color: '#fff' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 32px 96px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 32px 56px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
             <div>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#e2fa5c' }}>Your account</span>
@@ -61,37 +108,190 @@ export default async function ContPage() {
             </div>
             <LogoutButton />
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.7)', marginTop: 14, fontSize: 16 }}>
-            {client?.status === 'paid' && !delivered.length
-              ? 'Your order is in progress. Delivery within 48 hours.'
-              : `${delivered.length} of ${deliverables?.length ?? 6} deliverables available.`}
+
+          {/* PROGRESS DOTS */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 32 }}>
+            {(deliverables ?? []).map((d) => (
+              <div
+                key={d.id}
+                title={DELIVERABLE_LABELS[d.type]}
+                style={{
+                  flex: 1,
+                  height: 8,
+                  borderRadius: 99,
+                  background: d.status === 'delivered' ? '#e2fa5c' : 'rgba(255,255,255,0.12)',
+                }}
+              />
+            ))}
+          </div>
+          <p style={{ margin: '10px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
+            {delivered.length} of {deliverables?.length ?? 6} delivered
           </p>
 
-          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 8, marginTop: 40, maxWidth: 640 }}>
-            {deliverables?.map((d) => (
-              <div key={d.type} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '14px 18px' }}>
-                <div>
-                  <span style={{ fontSize: 14, fontWeight: 500, display: 'block' }}>{LABELS[d.type] ?? d.type}</span>
-                  {d.status === 'delivered' && d.content_url && (
-                    <a href={`/api/deliverables/${d.id}/download`} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: '#e2fa5c' }}>
-                      Open deliverable
-                    </a>
-                  )}
-                </div>
+          {/* TIMELINE */}
+          <div style={{ display: 'flex', gap: 24, marginTop: 32, flexWrap: 'wrap' }}>
+            {[
+              { label: 'Order placed', done: true, date: orderDate },
+              { label: 'Analysis in progress', done: true, date: null },
+              { label: 'All delivered', done: allDelivered, date: allDelivered ? delivered.map((d) => d.delivered_at).sort().reverse()[0] : null },
+            ].map((step, i) => (
+              <div key={step.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    background: step.done ? '#e2fa5c' : 'rgba(255,255,255,0.1)',
+                    color: step.done ? '#232326' : 'rgba(255,255,255,0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     fontSize: 11,
-                    padding: '4px 10px',
-                    borderRadius: 99,
-                    background: d.status === 'delivered' ? 'rgba(226,250,92,0.15)' : 'rgba(255,255,255,0.08)',
-                    color: d.status === 'delivered' ? '#e2fa5c' : 'rgba(255,255,255,0.6)',
+                    fontWeight: 700,
+                    flexShrink: 0,
                   }}
                 >
-                  {d.status === 'delivered' ? 'Delivered' : 'In progress'}
+                  {step.done ? '✓' : i + 1}
                 </span>
+                <div>
+                  <div style={{ fontSize: 13.5, fontWeight: 600 }}>{step.label}</div>
+                  {step.date && (
+                    <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.5)' }}>
+                      {new Date(step.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 96px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 24 }} className="grid-2-responsive">
+          {/* LEFT: deliverables */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {deliverables?.map((d) => (
+              <div key={d.id} style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <DeliverableIcon type={d.type} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 15, fontWeight: 600 }}>{DELIVERABLE_LABELS[d.type]}</span>
+                      {d.status === 'delivered' && isNew(d.delivered_at) && (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, background: '#e2fa5c', color: '#232326', padding: '2px 8px', borderRadius: 99 }}>NEW</span>
+                      )}
+                      <span
+                        style={{
+                          marginLeft: 'auto',
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: 11,
+                          padding: '4px 10px',
+                          borderRadius: 99,
+                          background: d.status === 'delivered' ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
+                          color: d.status === 'delivered' ? '#6a7d0a' : '#55565e',
+                        }}
+                      >
+                        {d.status === 'delivered' ? 'Delivered' : 'In progress'}
+                      </span>
+                    </div>
+
+                    {d.content_text && (
+                      <p style={{ margin: '8px 0 0', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>{d.content_text}</p>
+                    )}
+
+                    {d.admin_note && (
+                      <div style={{ marginTop: 10, background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#3a3a40' }}>
+                        <strong>Note from the team:</strong> {d.admin_note}
+                      </div>
+                    )}
+
+                    {d.status === 'delivered' && d.content_url && (
+                      <a href={`/api/deliverables/${d.id}/download`} target="_blank" rel="noreferrer" style={{ fontSize: 13, display: 'inline-block', marginTop: 10 }}>
+                        Open deliverable →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* CHECKLIST */}
+            {checklist && checklist.length > 0 && (
+              <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24, marginTop: 12 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
+                  <span style={{ fontSize: 16, fontWeight: 600 }}>Your action checklist</span>
+                  <span style={{ fontSize: 13, color: '#55565e' }}>{doneChecklist}/{checklist.length} done</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {checklist.map((item) => (
+                    <ChecklistItem key={item.id} item={item} />
+                  ))}
+                </div>
+                {avgCompletion !== null && (
+                  <p style={{ marginTop: 14, fontSize: 12.5, color: '#8a8b92' }}>
+                    You've checked {doneChecklist}/{checklist.length} recommendations. The average across clients is {avgCompletion}%.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* WHAT'S NEXT */}
+            {allDelivered && (
+              <div style={{ background: '#232326', color: '#fff', borderRadius: 16, padding: 24, marginTop: 12 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#e2fa5c' }}>What's next</span>
+                <h3 style={{ margin: '10px 0 8px', fontSize: 19, fontWeight: 600 }}>Want it implemented, not just diagnosed?</h3>
+                <p style={{ margin: '0 0 16px', fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>
+                  UPPR Agency, the same team, can take over the marketing and retention work your audit surfaced.
+                </p>
+                <a href="https://uppr.agency" target="_blank" rel="noreferrer" style={{ background: '#e2fa5c', color: '#232326', padding: '10px 20px', borderRadius: 99, fontSize: 14, fontWeight: 600, display: 'inline-block' }}>
+                  Visit UPPR Agency
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: sidebar */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {client?.health_score !== null && client?.health_score !== undefined && (
+              <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Digital health score</span>
+                <div style={{ fontSize: 48, fontWeight: 700, letterSpacing: '-0.03em', margin: '8px 0' }}>{client.health_score}<span style={{ fontSize: 20, color: '#8a8b92' }}>/100</span></div>
+                <p style={{ margin: 0, fontSize: 12.5, color: '#8a8b92' }}>Set by your auditor, based on your report.</p>
+              </div>
+            )}
+
+            <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Order summary</span>
+              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#55565e' }}>Date</span>
+                  <span>{orderDate ? new Date(orderDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#55565e' }}>Amount paid</span>
+                  <span>€{amount}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#55565e' }}>Reference</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11.5 }}>
+                    {order?.stripe_checkout_session_id ? order.stripe_checkout_session_id.slice(-10) : '—'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 16, padding: 24 }}>
+              <span style={{ fontSize: 15, fontWeight: 600 }}>Questions about your audit?</span>
+              <p style={{ margin: '8px 0 16px', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>
+                Write to us any time, we'll get back to you.
+              </p>
+              <a href="mailto:office@uppr.agency" className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '10px 18px', borderRadius: 99, fontSize: 13.5, display: 'inline-block' }}>
+                Email us
+              </a>
+            </div>
           </div>
         </div>
       </section>

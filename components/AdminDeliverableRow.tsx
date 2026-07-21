@@ -15,10 +15,12 @@ const LABELS: Record<string, string> = {
 export default function AdminDeliverableRow({
   deliverable,
 }: {
-  deliverable: { id: string; type: string; status: string; content_url: string | null };
+  deliverable: { id: string; type: string; status: string; content_url: string | null; admin_note: string | null };
 }) {
   const [link, setLink] = useState('');
+  const [note, setNote] = useState(deliverable.admin_note ?? '');
   const [loading, setLoading] = useState(false);
+  const [noteLoading, setNoteLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -59,6 +61,20 @@ export default function AdminDeliverableRow({
     } finally {
       setLoading(false);
       e.target.value = '';
+    }
+  }
+
+  async function handleNoteSave() {
+    setNoteLoading(true);
+    try {
+      await fetch('/api/admin/deliverables/note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deliverableId: deliverable.id, note }),
+      });
+      router.refresh();
+    } finally {
+      setNoteLoading(false);
     }
   }
 
@@ -120,6 +136,26 @@ export default function AdminDeliverableRow({
         </label>
       </div>
       {error && <p style={{ color: '#c0533f', fontSize: 12.5, marginTop: 8 }}>{error}</p>}
+
+      <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(35,35,38,0.08)' }}>
+        <label style={{ fontSize: 12.5, color: '#55565e', display: 'block', marginBottom: 6 }}>Private note, shown to the client under this deliverable</label>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={2}
+            style={{ flex: 1, border: '1px solid rgba(35,35,38,0.12)', borderRadius: 10, padding: '9px 12px', fontSize: 13, fontFamily: 'var(--font-body)', resize: 'vertical' }}
+          />
+          <button
+            type="button"
+            onClick={handleNoteSave}
+            disabled={noteLoading}
+            style={{ border: '1px solid rgba(35,35,38,0.12)', background: '#fff', borderRadius: 10, padding: '9px 14px', fontSize: 13, cursor: 'pointer', alignSelf: 'flex-start' }}
+          >
+            {noteLoading ? 'Saving...' : 'Save note'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

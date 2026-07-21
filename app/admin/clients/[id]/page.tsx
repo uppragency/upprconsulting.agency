@@ -5,6 +5,8 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import LogoutButton from '@/components/LogoutButton';
 import AdminDeliverableRow from '@/components/AdminDeliverableRow';
+import AdminChecklistManager from '@/components/AdminChecklistManager';
+import AdminHealthScore from '@/components/AdminHealthScore';
 
 export default async function AdminClientPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -22,9 +24,15 @@ export default async function AdminClientPage({ params }: { params: { id: string
 
   const { data: deliverables } = await supabase
     .from('deliverables')
-    .select('id, type, status, content_url')
+    .select('id, type, status, content_url, admin_note')
     .eq('client_id', params.id)
     .order('type');
+
+  const { data: checklist } = await supabase
+    .from('checklist_items')
+    .select('id, label, done')
+    .eq('client_id', params.id)
+    .order('created_at');
 
   return (
     <>
@@ -51,6 +59,11 @@ export default async function AdminClientPage({ params }: { params: { id: string
           {deliverables?.map((d) => (
             <AdminDeliverableRow key={d.id} deliverable={d} />
           ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }} className="grid-2-responsive">
+          <AdminHealthScore clientId={client.id} initialScore={client.health_score} />
+          <AdminChecklistManager clientId={client.id} items={checklist ?? []} />
         </div>
       </section>
       <Footer />
