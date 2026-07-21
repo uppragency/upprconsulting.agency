@@ -19,7 +19,8 @@ export async function POST(request: Request) {
 
   const admin = createServiceRoleClient();
 
-  // Create the client record
+  // Create the client record, linked directly to the authenticated user
+  // (this allows one account to place multiple orders over time)
   const { data: client, error: clientError } = await admin
     .from('clients')
     .insert({
@@ -29,6 +30,7 @@ export async function POST(request: Request) {
       phone,
       project_description: description,
       status: 'pending_payment',
+      user_id: user.id,
     })
     .select()
     .single();
@@ -37,15 +39,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Could not save your details.' }, { status: 500 });
   }
 
-  // Link the profile (auto-created by Supabase on signUp) to the client
-  const { error: profileError } = await admin
-    .from('profiles')
-    .update({ client_id: client.id, role: 'client' })
-    .eq('id', user.id);
-
-  if (profileError) {
-    return NextResponse.json({ error: 'Could not link your account to the order.' }, { status: 500 });
-  }
+  // Keep profiles.client_id pointing at the most recent order, for any legacy lookups
+  await admin.from('profiles').update({ client_id: client.id, role: 'client' }).eq('id', user.id);
 
   const origin = request.headers.get('origin') ?? 'https://upprconsulting.agency';
 

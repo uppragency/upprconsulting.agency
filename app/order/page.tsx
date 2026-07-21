@@ -1,13 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
-export default function FormularPage() {
+export default function OrderPage() {
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setLoggedIn(true);
+        setUserEmail(data.user.email ?? null);
+      }
+      setCheckingSession(false);
+    });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -15,8 +29,6 @@ export default function FormularPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const email = String(formData.get('email'));
-    const password = String(formData.get('password'));
     const businessName = String(formData.get('business_name'));
     const contactName = String(formData.get('contact_name'));
     const phone = String(formData.get('phone'));
@@ -24,13 +36,19 @@ export default function FormularPage() {
 
     try {
       const supabase = createClient();
+      let email = userEmail;
 
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
-      if (signUpError) throw signUpError;
-      if (!signUpData.user) throw new Error('Could not create your account.');
+      if (!loggedIn) {
+        email = String(formData.get('email'));
+        const password = String(formData.get('password'));
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      if (signInError) throw signInError;
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+        if (signUpError) throw signUpError;
+        if (!signUpData.user) throw new Error('Could not create your account.');
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
+      }
 
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -61,15 +79,21 @@ export default function FormularPage() {
 
   const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 8, fontSize: 14, color: '#55565e' };
 
+  if (checkingSession) return null;
+
   return (
     <>
       <Nav />
       <section style={{ display: 'flex', justifyContent: 'center', padding: '64px 24px 110px' }}>
         <div style={{ width: '100%', maxWidth: 560, background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 24, padding: 44, boxShadow: '0 24px 48px -24px rgba(35,35,38,0.18)' }}>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e', margin: '0 0 12px' }}>Order audit</p>
-          <h2 style={{ margin: 0, fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>Your details</h2>
+          <h2 style={{ margin: 0, fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>
+            {loggedIn ? 'A new order' : 'Your details'}
+          </h2>
           <p style={{ margin: '10px 0 32px', fontSize: 15, lineHeight: 1.55, color: '#55565e' }}>
-            After payment, you get instant access to your account. Delivery within 48 hours.
+            {loggedIn
+              ? `Ordering as ${userEmail}. This will appear as a new order in your account.`
+              : 'After payment, you get instant access to your account. Delivery within 48 hours.'}
           </p>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
@@ -81,10 +105,12 @@ export default function FormularPage() {
               Your name
               <input name="contact_name" type="text" required style={inputStyle} />
             </label>
-            <label style={labelStyle}>
-              Email
-              <input name="email" type="email" required style={inputStyle} />
-            </label>
+            {!loggedIn && (
+              <label style={labelStyle}>
+                Email
+                <input name="email" type="email" required style={inputStyle} />
+              </label>
+            )}
             <label style={labelStyle}>
               Phone
               <input name="phone" type="tel" required style={inputStyle} />
@@ -93,10 +119,12 @@ export default function FormularPage() {
               Tell us briefly about your project
               <textarea name="description" rows={4} required style={inputStyle} />
             </label>
-            <label style={labelStyle}>
-              Account password
-              <input name="password" type="password" minLength={8} required style={inputStyle} />
-            </label>
+            {!loggedIn && (
+              <label style={labelStyle}>
+                Account password
+                <input name="password" type="password" minLength={8} required style={inputStyle} />
+              </label>
+            )}
 
             {error && <p style={{ color: '#c0533f', fontSize: 14 }}>{error}</p>}
 
@@ -110,9 +138,11 @@ export default function FormularPage() {
             </button>
           </form>
 
-          <p style={{ textAlign: 'center', marginTop: 20, fontSize: 14 }}>
-            Already have an account? <a href="/login">Sign in</a>
-          </p>
+          {!loggedIn && (
+            <p style={{ textAlign: 'center', marginTop: 20, fontSize: 14 }}>
+              Already have an account? <a href="/login">Sign in</a>
+            </p>
+          )}
         </div>
       </section>
       <Footer />

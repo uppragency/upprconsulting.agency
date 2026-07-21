@@ -1,12 +1,13 @@
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import LogoutButton from '@/components/LogoutButton';
 import ChecklistItem from '@/components/ChecklistItem';
 import { DeliverableIcon, DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams: { order?: string } }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -14,9 +15,13 @@ export default async function AccountPage() {
 
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase.from('profiles').select('client_id').eq('id', user.id).single();
+  const { data: allOrders } = await supabase
+    .from('clients')
+    .select('id, business_name, status, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
 
-  if (!profile?.client_id) {
+  if (!allOrders?.length) {
     return (
       <>
         <Nav />
@@ -41,33 +46,31 @@ export default async function AccountPage() {
     );
   }
 
-  const { data: client } = await supabase
-    .from('clients')
-    .select('business_name, status, created_at, health_score')
-    .eq('id', profile.client_id)
-    .single();
+  const selected = allOrders.find((o) => o.id === searchParams.order) ?? allOrders[0];
+  const client = selected;
 
   const { data: order } = await supabase
     .from('orders')
     .select('amount_cents, currency, paid_at, stripe_checkout_session_id')
-    .eq('client_id', profile.client_id)
+    .eq('client_id', client.id)
     .eq('status', 'paid')
     .order('paid_at', { ascending: false })
     .limit(1)
     .maybeSingle();
 
+  const { data: clientFull } = await supabase.from('clients').select('health_score').eq('id', client.id).single();
+
   const { data: deliverables } = await supabase
     .from('deliverables')
     .select('id, type, status, content_text, content_url, admin_note, delivered_at')
-    .eq('client_id', profile.client_id);
+    .eq('client_id', client.id);
 
   const { data: checklist } = await supabase
     .from('checklist_items')
     .select('id, label, done')
-    .eq('client_id', profile.client_id)
+    .eq('client_id', client.id)
     .order('created_at');
 
-  // Average checklist completion across all clients (aggregate only, no individual data exposed)
   const service = createServiceRoleClient();
   const { data: allChecklist } = await service.from('checklist_items').select('client_id, done');
   let avgCompletion: number | null = null;
@@ -86,7 +89,7 @@ export default async function AccountPage() {
 
   const delivered = deliverables?.filter((d) => d.status === 'delivered') ?? [];
   const allDelivered = deliverables?.length === 6 && delivered.length === 6;
-  const orderDate = order?.paid_at ?? client?.created_at;
+  const orderDate = order?.paid_at ?? client.created_at;
   const amount = order ? (order.amount_cents / 100).toFixed(0) : '50';
 
   const isNew = (deliveredAt: string | null) => {
@@ -104,9 +107,17 @@ export default async function AccountPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
             <div>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#e2fa5c' }}>Your account</span>
-              <h1 style={{ margin: '10px 0 0', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>{client?.business_name ?? 'Welcome'}</h1>
+              <h1 style={{ margin: '10px 0 0', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>{client.business_name}</h1>
             </div>
-            <LogoutButton />
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <Link
+                href="/order"
+                style={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}
+              >
+                Order another audit
+              </Link>
+              <LogoutButton />
+            </div>
           </div>
 
           {/* PROGRESS DOTS */}
@@ -115,12 +126,7 @@ export default async function AccountPage() {
               <div
                 key={d.id}
                 title={DELIVERABLE_LABELS[d.type]}
-                style={{
-                  flex: 1,
-                  height: 8,
-                  borderRadius: 99,
-                  background: d.status === 'delivered' ? '#e2fa5c' : 'rgba(255,255,255,0.12)',
-                }}
+                style={{ flex: 1, height: 8, borderRadius: 99, background: d.status === 'delivered' ? '#e2fa5c' : 'rgba(255,255,255,0.12)' }}
               />
             ))}
           </div>
@@ -168,6 +174,46 @@ export default async function AccountPage() {
       </section>
 
       <section style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 96px' }}>
+        {allOrders.length > 1 && (
+          <div style={{ marginBottom: 32 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Order history</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
+              {allOrders.map((o) => (
+                <Link
+                  key={o.id}
+                  href={`/account?order=${o.id}`}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    background: o.id === client.id ? '#fbfaf8' : '#fff',
+                    border: o.id === client.id ? '1px solid #232326' : '1px solid rgba(35,35,38,0.1)',
+                    borderRadius: 12,
+                    padding: '12px 18px',
+                    fontSize: 14,
+                  }}
+                >
+                  <span>
+                    {o.business_name} · {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 11,
+                      padding: '4px 10px',
+                      borderRadius: 99,
+                      background: o.status === 'paid' ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
+                      color: o.status === 'paid' ? '#6a7d0a' : '#55565e',
+                    }}
+                  >
+                    {o.status === 'paid' ? 'Paid' : 'Awaiting payment'}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 24 }} className="grid-2-responsive">
           {/* LEFT: deliverables */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -198,9 +244,7 @@ export default async function AccountPage() {
                       </span>
                     </div>
 
-                    {d.content_text && (
-                      <p style={{ margin: '8px 0 0', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>{d.content_text}</p>
-                    )}
+                    {d.content_text && <p style={{ margin: '8px 0 0', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>{d.content_text}</p>}
 
                     {d.admin_note && (
                       <div style={{ marginTop: 10, background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#3a3a40' }}>
@@ -218,7 +262,6 @@ export default async function AccountPage() {
               </div>
             ))}
 
-            {/* CHECKLIST */}
             {checklist && checklist.length > 0 && (
               <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24, marginTop: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
@@ -238,7 +281,6 @@ export default async function AccountPage() {
               </div>
             )}
 
-            {/* WHAT'S NEXT */}
             {allDelivered && (
               <div style={{ background: '#232326', color: '#fff', borderRadius: 16, padding: 24, marginTop: 12 }}>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#e2fa5c' }}>What's next</span>
@@ -255,10 +297,13 @@ export default async function AccountPage() {
 
           {/* RIGHT: sidebar */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {client?.health_score !== null && client?.health_score !== undefined && (
+            {clientFull?.health_score !== null && clientFull?.health_score !== undefined && (
               <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Digital health score</span>
-                <div style={{ fontSize: 48, fontWeight: 700, letterSpacing: '-0.03em', margin: '8px 0' }}>{client.health_score}<span style={{ fontSize: 20, color: '#8a8b92' }}>/100</span></div>
+                <div style={{ fontSize: 48, fontWeight: 700, letterSpacing: '-0.03em', margin: '8px 0' }}>
+                  {clientFull.health_score}
+                  <span style={{ fontSize: 20, color: '#8a8b92' }}>/100</span>
+                </div>
                 <p style={{ margin: 0, fontSize: 12.5, color: '#8a8b92' }}>Set by your auditor, based on your report.</p>
               </div>
             )}
@@ -285,9 +330,7 @@ export default async function AccountPage() {
 
             <div style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 16, padding: 24 }}>
               <span style={{ fontSize: 15, fontWeight: 600 }}>Questions about your audit?</span>
-              <p style={{ margin: '8px 0 16px', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>
-                Write to us any time, we'll get back to you.
-              </p>
+              <p style={{ margin: '8px 0 16px', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>Write to us any time, we'll get back to you.</p>
               <a href="mailto:office@uppr.agency" className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '10px 18px', borderRadius: 99, fontSize: 13.5, display: 'inline-block' }}>
                 Email us
               </a>
