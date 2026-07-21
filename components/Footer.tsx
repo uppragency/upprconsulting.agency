@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NewsletterForm from './NewsletterForm';
 
 export default function Footer() {
   return (
@@ -37,6 +38,10 @@ export default function Footer() {
           <Link href="/cont">Your account</Link>
           <Link href="/legal/termeni">Terms &amp; conditions</Link>
           <Link href="/legal/confidentialitate">Privacy</Link>
+        </div>
+        <div>
+          <h4>Newsletter</h4>
+          <NewsletterForm />
         </div>
       </div>
       <div className="footer-bottom">© 2026 UPPR Consulting. All rights reserved.</div>
