@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
-export default function OrderPage() {
+function OrderForm() {
+  const searchParams = useSearchParams();
+  const refCode = searchParams.get('ref');
   const [loading, setLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -53,7 +56,7 @@ export default function OrderPage() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ businessName, contactName, email, phone, description }),
+        body: JSON.stringify({ businessName, contactName, email, phone, description, referralCode: refCode }),
       });
 
       const data = await res.json();
@@ -95,6 +98,12 @@ export default function OrderPage() {
               ? `Ordering as ${userEmail}. This will appear as a new order in your account.`
               : 'After payment, you get instant access to your account. Delivery within 48 hours.'}
           </p>
+
+          {refCode && (
+            <p style={{ margin: '-16px 0 24px', fontSize: 13.5, color: '#6a7d0a', background: 'rgba(226,250,92,0.2)', padding: '8px 14px', borderRadius: 10 }}>
+              Referral code applied — 15% off this order.
+            </p>
+          )}
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
             <label style={labelStyle}>
@@ -147,5 +156,13 @@ export default function OrderPage() {
       </section>
       <Footer />
     </>
+  );
+}
+
+export default function OrderPage() {
+  return (
+    <Suspense fallback={null}>
+      <OrderForm />
+    </Suspense>
   );
 }

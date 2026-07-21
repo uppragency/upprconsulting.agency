@@ -15,9 +15,17 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { businessName, contactName, email, phone, description } = body;
+  const { businessName, contactName, email, phone, description, referralCode } = body;
 
   const admin = createServiceRoleClient();
+
+  let discountApplied = false;
+  if (referralCode) {
+    const { data: referrer } = await admin.from('profiles').select('id').eq('referral_code', referralCode).maybeSingle();
+    if (referrer) discountApplied = true;
+  }
+
+  const unitAmount = discountApplied ? 4250 : 5000;
 
   // Create the client record, linked directly to the authenticated user
   // (this allows one account to place multiple orders over time)
@@ -31,6 +39,7 @@ export async function POST(request: Request) {
       project_description: description,
       status: 'pending_payment',
       user_id: user.id,
+      referred_by_code: discountApplied ? referralCode : null,
     })
     .select()
     .single();
@@ -51,10 +60,12 @@ export async function POST(request: Request) {
       {
         price_data: {
           currency: 'eur',
-          unit_amount: 5000,
+          unit_amount: unitAmount,
           product_data: {
             name: 'UPPR Consulting — Full Audit',
-            description: '4 audits (social media, visual identity, website, UI/UX) + 2 personalized videos.',
+            description: discountApplied
+              ? '4 audits (social media, visual identity, website, UI/UX) + 2 personalized videos. Referral discount applied.'
+              : '4 audits (social media, visual identity, website, UI/UX) + 2 personalized videos.',
           },
         },
         quantity: 1,
@@ -69,7 +80,7 @@ export async function POST(request: Request) {
   await admin.from('orders').insert({
     client_id: client.id,
     stripe_checkout_session_id: session.id,
-    amount_cents: 5000,
+    amount_cents: unitAmount,
     currency: 'eur',
     status: 'created',
   });

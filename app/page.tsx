@@ -237,7 +237,7 @@ export default function HomePage() {
           </h2>
         </div>
         <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 20, overflow: 'hidden', overflowX: 'auto' }}>
-          <div className="compare-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr', borderBottom: '1px solid rgba(35,35,38,0.08)', minWidth: 640 }}>
+          <div className="compare-grid compare-header-row" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr', borderBottom: '1px solid rgba(35,35,38,0.08)', minWidth: 640 }}>
             <div style={{ padding: '20px 24px' }} />
             <div style={{ padding: '20px 24px', fontSize: 14, fontWeight: 600, color: '#55565e' }}>You figure it out yourself</div>
             <div style={{ padding: '20px 24px', fontSize: 14, fontWeight: 600, color: '#55565e' }}>Random freelancer</div>
@@ -249,9 +249,9 @@ export default function HomePage() {
           {compareRows.map((r) => (
             <div key={r.label} className="compare-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr', borderBottom: '1px solid rgba(35,35,38,0.06)', minWidth: 640 }}>
               <div style={{ padding: '18px 24px', fontSize: 14, fontWeight: 600 }}>{r.label}</div>
-              <div style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.diy}</div>
-              <div style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.freelancer}</div>
-              <div style={{ padding: '18px 24px', fontSize: 14, fontWeight: 500, background: '#232326', color: '#fff' }}>{r.uppr}</div>
+              <div data-label="You figure it out yourself" style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.diy}</div>
+              <div data-label="Random freelancer" style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.freelancer}</div>
+              <div data-label="UPPR Consulting" style={{ padding: '18px 24px', fontSize: 14, fontWeight: 500, background: '#232326', color: '#fff' }}>{r.uppr}</div>
             </div>
           ))}
         </div>

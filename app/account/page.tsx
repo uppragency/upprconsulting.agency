@@ -5,7 +5,9 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import LogoutButton from '@/components/LogoutButton';
 import ChecklistItem from '@/components/ChecklistItem';
-import { DeliverableIcon, DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
+import DeliverablesPanel from '@/components/DeliverablesPanel';
+import ShareCertificate from '@/components/ShareCertificate';
+import { DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
 
 export default async function AccountPage({ searchParams }: { searchParams: { order?: string } }) {
   const supabase = createClient();
@@ -62,7 +64,7 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
 
   const { data: deliverables } = await supabase
     .from('deliverables')
-    .select('id, type, status, content_text, content_url, admin_note, delivered_at')
+    .select('id, type, status, content_text, content_url, admin_note, delivered_at, read_by_client')
     .eq('client_id', client.id);
 
   const { data: checklist } = await supabase
@@ -92,11 +94,6 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
   const orderDate = order?.paid_at ?? client.created_at;
   const amount = order ? (order.amount_cents / 100).toFixed(0) : '50';
 
-  const isNew = (deliveredAt: string | null) => {
-    if (!deliveredAt) return false;
-    return Date.now() - new Date(deliveredAt).getTime() < 24 * 60 * 60 * 1000;
-  };
-
   const doneChecklist = checklist?.filter((c) => c.done).length ?? 0;
 
   return (
@@ -110,6 +107,12 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
               <h1 style={{ margin: '10px 0 0', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>{client.business_name}</h1>
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <Link
+                href="/account/settings"
+                style={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}
+              >
+                Settings
+              </Link>
               <Link
                 href="/order"
                 style={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}
@@ -217,50 +220,7 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 24 }} className="grid-2-responsive">
           {/* LEFT: deliverables */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {deliverables?.map((d) => (
-              <div key={d.id} style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 20 }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <DeliverableIcon type={d.type} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 15, fontWeight: 600 }}>{DELIVERABLE_LABELS[d.type]}</span>
-                      {d.status === 'delivered' && isNew(d.delivered_at) && (
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, background: '#e2fa5c', color: '#232326', padding: '2px 8px', borderRadius: 99 }}>NEW</span>
-                      )}
-                      <span
-                        style={{
-                          marginLeft: 'auto',
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: 11,
-                          padding: '4px 10px',
-                          borderRadius: 99,
-                          background: d.status === 'delivered' ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
-                          color: d.status === 'delivered' ? '#6a7d0a' : '#55565e',
-                        }}
-                      >
-                        {d.status === 'delivered' ? 'Delivered' : 'In progress'}
-                      </span>
-                    </div>
-
-                    {d.content_text && <p style={{ margin: '8px 0 0', fontSize: 13.5, color: '#55565e', lineHeight: 1.5 }}>{d.content_text}</p>}
-
-                    {d.admin_note && (
-                      <div style={{ marginTop: 10, background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#3a3a40' }}>
-                        <strong>Note from the team:</strong> {d.admin_note}
-                      </div>
-                    )}
-
-                    {d.status === 'delivered' && d.content_url && (
-                      <a href={`/api/deliverables/${d.id}/download`} target="_blank" rel="noreferrer" style={{ fontSize: 13, display: 'inline-block', marginTop: 10 }}>
-                        Open deliverable →
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+            <DeliverablesPanel deliverables={deliverables ?? []} />
 
             {checklist && checklist.length > 0 && (
               <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24, marginTop: 12 }}>
@@ -307,6 +267,13 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
                 <p style={{ margin: 0, fontSize: 12.5, color: '#8a8b92' }}>Set by your auditor, based on your report.</p>
               </div>
             )}
+
+            <ShareCertificate
+              businessName={client.business_name}
+              healthScore={clientFull?.health_score ?? null}
+              deliveredCount={delivered.length}
+              totalCount={deliverables?.length ?? 6}
+            />
 
             <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24 }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Order summary</span>

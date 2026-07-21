@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import MobileMenu from './MobileMenu';
 
 export default function Nav() {
   return (
@@ -19,8 +20,10 @@ export default function Nav() {
           boxShadow: '0 12px 40px -16px rgba(35,35,38,0.25)',
         }}
       >
+        {/* Desktop logo, full pill with icon + name */}
         <Link
           href="/"
+          className="nav-logo-full"
           style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#232326', borderRadius: 99, padding: '7px 16px 7px 8px' }}
         >
           <span
@@ -41,7 +44,13 @@ export default function Nav() {
           </span>
           <span style={{ fontWeight: 600, fontSize: 14, letterSpacing: '-0.01em', color: '#fff' }}>UPPR Consulting</span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+
+        {/* Mobile logo, plain text only, ready to become a photo banner later */}
+        <Link href="/" className="nav-logo-mobile" style={{ fontWeight: 700, fontSize: 17, letterSpacing: '-0.01em', color: '#232326', padding: '0 6px' }}>
+          UPPR
+        </Link>
+
+        <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
           <a href="/#advantages" className="nav-link" style={{ color: '#55565e', padding: '8px 14px', borderRadius: 99 }}>
             Advantages
           </a>
@@ -58,13 +67,16 @@ export default function Nav() {
             My Audits
           </Link>
         </div>
+
         <Link
           href="/order"
-          className="btn-dark"
+          className="btn-dark nav-order-btn"
           style={{ background: '#232326', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 8 }}
         >
           Order audit <span style={{ fontFamily: 'var(--font-mono)' }}>→</span>
         </Link>
+
+        <MobileMenu />
       </div>
     </nav>
   );
