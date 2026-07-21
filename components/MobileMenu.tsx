@@ -1,10 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -12,6 +18,14 @@ export default function MobileMenu() {
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  const links = [
+    { href: '/#advantages', label: 'Advantages', internal: false },
+    { href: '/#audits', label: 'Audits', internal: false },
+    { href: '/blog', label: 'Blog', internal: true },
+    { href: '/#pricing', label: 'Pricing', internal: false },
+    { href: '/account', label: 'My Audits', internal: true },
+  ];
 
   return (
     <>
@@ -27,19 +41,29 @@ export default function MobileMenu() {
         <span />
       </button>
 
-      <div className={`mobile-menu-overlay${open ? ' open' : ''}`} onClick={() => setOpen(false)} />
-
-      <div className={`mobile-menu-panel${open ? ' open' : ''}`}>
-        <Link href="/blog" className="mobile-menu-link" onClick={() => setOpen(false)}>
-          Blog
-        </Link>
-        <Link href="/account" className="mobile-menu-link" onClick={() => setOpen(false)}>
-          My Audits
-        </Link>
-        <Link href="/order" className="mobile-menu-link mobile-menu-link-cta" onClick={() => setOpen(false)}>
-          Order audit →
-        </Link>
-      </div>
+      {mounted &&
+        createPortal(
+          <>
+            <div className={`mobile-menu-overlay${open ? ' open' : ''}`} onClick={() => setOpen(false)} />
+            <div className={`mobile-menu-panel${open ? ' open' : ''}`}>
+              {links.map((l) =>
+                l.internal ? (
+                  <Link key={l.href} href={l.href} className="mobile-menu-link" onClick={() => setOpen(false)}>
+                    {l.label}
+                  </Link>
+                ) : (
+                  <a key={l.href} href={l.href} className="mobile-menu-link" onClick={() => setOpen(false)}>
+                    {l.label}
+                  </a>
+                )
+              )}
+              <Link href="/order" className="mobile-menu-link mobile-menu-link-cta" onClick={() => setOpen(false)}>
+                Order audit →
+              </Link>
+            </div>
+          </>,
+          document.body
+        )}
     </>
   );
 }
