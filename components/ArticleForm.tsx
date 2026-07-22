@@ -112,8 +112,11 @@ export default function ArticleForm({ article }: { article?: Article }) {
           <input style={inputStyle} value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} />
         </label>
         <label style={labelStyle}>
-          Custom OG image URL (leave blank to auto-generate one)
+          Cover image URL (shown at the top of the article and used as the social share image)
           <input style={inputStyle} value={ogImage} onChange={(e) => setOgImage(e.target.value)} placeholder="https://..." />
+          <span style={{ fontSize: 12, color: '#8a8b92' }}>
+            Leave blank to auto-generate a text-based social share image instead. Alt text is set automatically from the article title.
+          </span>
         </label>
       </div>
 

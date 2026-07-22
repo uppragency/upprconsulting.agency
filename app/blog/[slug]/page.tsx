@@ -91,6 +91,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           {new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} · {estimateReadingTime(article.content)} min read
         </span>
 
+        {article.og_image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={article.og_image}
+            alt={article.title}
+            style={{ width: '100%', maxHeight: 420, objectFit: 'cover', borderRadius: 16, margin: '28px 0 0' }}
+          />
+        )}
+
         <div className="article-prose" style={{ marginTop: 32 }} dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </article>
 
