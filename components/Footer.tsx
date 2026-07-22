@@ -1,13 +1,7 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
-import LogoutButton from './LogoutButton';
+import FooterAccountSection from './FooterAccountSection';
 
-export default async function Footer() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+export default function Footer() {
   return (
     <footer style={{ background: '#fbfaf8', borderTop: '1px solid rgba(35,35,38,0.08)' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 32px 40px' }}>
@@ -43,28 +37,11 @@ export default async function Footer() {
             <Link href="/order" className="footer-link" style={{ color: '#55565e' }}>Order audit</Link>
             <Link href="/blog" className="footer-link" style={{ color: '#55565e' }}>Blog</Link>
             <Link href="/glossary" className="footer-link" style={{ color: '#55565e' }}>Glossary</Link>
+            <Link href="/faq" className="footer-link" style={{ color: '#55565e' }}>FAQ</Link>
             <Link href="/contact" className="footer-link" style={{ color: '#55565e' }}>Contact</Link>
           </div>
 
-          {/* My Account */}
-          <div className="footer-my-account" style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 14 }}>
-            <span style={{ fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>My Account</span>
-            {user ? (
-              <>
-                <Link href="/account" className="footer-link" style={{ color: '#55565e' }}>View orders</Link>
-                <Link href="/account/settings" className="footer-link" style={{ color: '#55565e' }}>Settings &amp; password</Link>
-                <Link href="/order" className="footer-link" style={{ color: '#55565e' }}>Order another audit</Link>
-                <div style={{ marginTop: 4 }}>
-                  <LogoutButton variant="light" />
-                </div>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="footer-link" style={{ color: '#55565e' }}>Sign in</Link>
-                <Link href="/order" className="footer-link" style={{ color: '#55565e' }}>Order &amp; create account</Link>
-              </>
-            )}
-          </div>
+          <FooterAccountSection />
         </div>
       </div>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px 32px' }}>

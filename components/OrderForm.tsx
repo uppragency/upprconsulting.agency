@@ -15,9 +15,32 @@ function OrderForm() {
   const [error, setError] = useState<string | null>(null);
   const [payerType, setPayerType] = useState<'individual' | 'company'>('individual');
   const [discountCode, setDiscountCode] = useState<string | null>(null);
+  const [showNudge, setShowNudge] = useState(false);
 
   useEffect(() => {
     fetch('/api/track/order-view', { method: 'POST' }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('order-nudge-shown')) return;
+
+    function handleMouseLeave(e: MouseEvent) {
+      if (e.clientY <= 0) {
+        setShowNudge(true);
+        sessionStorage.setItem('order-nudge-shown', '1');
+        document.removeEventListener('mouseleave', handleMouseLeave);
+      }
+    }
+
+    // Give people a moment to actually read the form before this can trigger
+    const timer = setTimeout(() => {
+      document.addEventListener('mouseleave', handleMouseLeave);
+    }, 8000);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
   }, []);
 
   useEffect(() => {
@@ -112,6 +135,23 @@ function OrderForm() {
 
   return (
     <>
+      {showNudge && (
+        <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 150, width: 'min(420px, calc(100vw - 32px))' }}>
+          <div style={{ background: '#232326', color: '#fff', borderRadius: 14, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 20px 50px -12px rgba(0,0,0,0.4)' }}>
+            <span style={{ fontSize: 20 }}>👋</span>
+            <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.5, color: 'rgba(255,255,255,0.85)', flex: 1 }}>
+              No rush, nothing is charged until you actually submit payment. Feel free to look around first.
+            </p>
+            <button
+              onClick={() => setShowNudge(false)}
+              aria-label="Dismiss"
+              style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: 16, padding: 0, flexShrink: 0 }}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
       <section style={{ display: 'flex', justifyContent: 'center', padding: '64px 24px 110px' }}>
         <div
           className="grid-2-responsive"

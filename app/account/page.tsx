@@ -8,6 +8,7 @@ import ChecklistItem from '@/components/ChecklistItem';
 import DeliverablesPanel from '@/components/DeliverablesPanel';
 import ShareCertificate from '@/components/ShareCertificate';
 import ResumePaymentButton from '@/components/ResumePaymentButton';
+import TestimonialPrompt from '@/components/TestimonialPrompt';
 import ConfettiBurst from '@/components/ConfettiBurst';
 import GuidedTour from '@/components/GuidedTour';
 import { DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
@@ -96,6 +97,12 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
   const allDelivered = deliverables?.length === 6 && delivered.length === 6;
   const orderDate = order?.paid_at ?? client.created_at;
   const amount = order ? (order.amount_cents / 100).toFixed(0) : '50';
+
+  let hasTestimonial = false;
+  if (allDelivered) {
+    const { data: existingTestimonial } = await supabase.from('testimonials').select('id').eq('client_id', client.id).maybeSingle();
+    hasTestimonial = !!existingTestimonial;
+  }
 
   const doneChecklist = checklist?.filter((c) => c.done).length ?? 0;
 
@@ -269,6 +276,12 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
                     You've checked {doneChecklist}/{checklist.length} recommendations. The average across clients is {avgCompletion}%.
                   </p>
                 )}
+              </div>
+            )}
+
+            {allDelivered && !hasTestimonial && (
+              <div style={{ marginTop: 12 }}>
+                <TestimonialPrompt clientId={client.id} />
               </div>
             )}
 

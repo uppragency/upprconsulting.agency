@@ -6,7 +6,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   const admin = await requireAdmin();
   if (!admin) return NextResponse.json({ error: 'Not allowed.' }, { status: 403 });
 
-  const { title, content, metaTitle, metaDescription, ogImage, tags, status } = await request.json();
+  const { title, content, metaTitle, metaDescription, ogImage, tags, relatedSlugs, status } = await request.json();
   const service = createServiceRoleClient();
 
   const { data: existing } = await service.from('articles').select('status, published_at').eq('id', params.id).single();
@@ -21,6 +21,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       meta_description: metaDescription || null,
       og_image: ogImage || null,
       tags: tags ?? [],
+      related_slugs: relatedSlugs?.length ? relatedSlugs : null,
       status,
       updated_at: new Date().toISOString(),
       ...(isFirstPublish ? { published_at: new Date().toISOString() } : {}),

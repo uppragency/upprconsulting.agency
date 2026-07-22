@@ -54,11 +54,31 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     .eq('status', 'published')
     .neq('id', article.id)
     .order('published_at', { ascending: false })
-    .limit(20);
+    .limit(30);
 
-  const related = (relatedRaw ?? [])
-    .filter((a) => a.tags?.some((t: string) => article.tags?.includes(t)))
-    .slice(0, 3);
+  const pool = relatedRaw ?? [];
+  let related: { slug: string; title: string; tags: string[] }[] = [];
+
+  // 1. Manually curated picks, set by an admin, take priority
+  if (article.related_slugs?.length) {
+    related = article.related_slugs
+      .map((slug: string) => pool.find((a) => a.slug === slug))
+      .filter(Boolean) as typeof related;
+  }
+
+  // 2. Fill remaining slots with tag-matched articles
+  if (related.length < 3) {
+    const usedSlugs = new Set(related.map((a) => a.slug));
+    const tagMatches = pool.filter((a) => !usedSlugs.has(a.slug) && a.tags?.some((t: string) => article.tags?.includes(t)));
+    related = [...related, ...tagMatches].slice(0, 3);
+  }
+
+  // 3. Still short? Fill with the most recent other articles, so a related section is rarely empty
+  if (related.length < 3) {
+    const usedSlugs = new Set(related.map((a) => a.slug));
+    const recentFill = pool.filter((a) => !usedSlugs.has(a.slug));
+    related = [...related, ...recentFill].slice(0, 3);
+  }
 
   const contentHtml = linkifyGlossaryTerms(article.content);
 

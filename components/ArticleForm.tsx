@@ -10,6 +10,7 @@ type Article = {
   meta_title: string | null;
   meta_description: string | null;
   og_image: string | null;
+  related_slugs: string[] | null;
   tags: string[];
   status: 'draft' | 'published';
 };
@@ -21,6 +22,7 @@ export default function ArticleForm({ article }: { article?: Article }) {
   const [metaDescription, setMetaDescription] = useState(article?.meta_description ?? '');
   const [ogImage, setOgImage] = useState(article?.og_image ?? '');
   const [tagsInput, setTagsInput] = useState((article?.tags ?? []).join(', '));
+  const [relatedInput, setRelatedInput] = useState((article?.related_slugs ?? []).join(', '));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -42,11 +44,15 @@ export default function ArticleForm({ article }: { article?: Article }) {
     return tagsInput.split(',').map((t) => t.trim()).filter(Boolean);
   }
 
+  function getRelatedSlugs() {
+    return relatedInput.split(',').map((s) => s.trim()).filter(Boolean);
+  }
+
   async function save(status: 'draft' | 'published') {
     setLoading(true);
     setError(null);
     try {
-      const body = { title, content, metaTitle, metaDescription, ogImage, tags: getTags(), status };
+      const body = { title, content, metaTitle, metaDescription, ogImage, tags: getTags(), relatedSlugs: getRelatedSlugs(), status };
       const res = await fetch(article ? `/api/admin/blog/${article.id}` : '/api/admin/blog', {
         method: article ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,6 +105,11 @@ export default function ArticleForm({ article }: { article?: Article }) {
       <label style={labelStyle}>
         Tags (comma-separated)
         <input style={inputStyle} value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} placeholder="website, branding, case study" />
+      </label>
+
+      <label style={labelStyle}>
+        Related articles (comma-separated slugs, optional — takes priority over automatic tag matching)
+        <input style={inputStyle} value={relatedInput} onChange={(e) => setRelatedInput(e.target.value)} placeholder="does-your-website-need-a-redesign, website-audit-checklist" />
       </label>
 
       <div style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 12, padding: 18, display: 'flex', flexDirection: 'column', gap: 16 }}>

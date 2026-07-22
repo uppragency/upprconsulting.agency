@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const admin = await requireAdmin();
   if (!admin) return NextResponse.json({ error: 'Not allowed.' }, { status: 403 });
 
-  const { title, content, metaTitle, metaDescription, ogImage, tags, status } = await request.json();
+  const { title, content, metaTitle, metaDescription, ogImage, tags, relatedSlugs, status } = await request.json();
   if (!title || !content) {
     return NextResponse.json({ error: 'Title and content are required.' }, { status: 400 });
   }
@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       meta_description: metaDescription || null,
       og_image: ogImage || null,
       tags: tags ?? [],
+      related_slugs: relatedSlugs?.length ? relatedSlugs : null,
       status: status ?? 'draft',
       published_at: status === 'published' ? new Date().toISOString() : null,
     })
