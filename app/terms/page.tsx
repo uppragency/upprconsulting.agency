@@ -35,10 +35,9 @@ export default function TermsPage() {
 
           <h2>3. Refunds</h2>
           <p>
-            If you are not satisfied with your audit, contact us within 14 days of delivery at
-            {' '}office@uppr.agency. We review every case individually. If the audit was not delivered, or was
-            substantially incomplete, we will issue a full refund. If work has been delivered and reviewed, we may
-            offer a partial refund or a revision at our discretion.
+            The audit is a personalized product, work begins as soon as your order is placed. All sales are final;
+            we do not offer refunds under any circumstances. See our full{' '}
+            <a href="/refund-policy">refund policy</a> for details and what we do instead if something goes wrong.
           </p>
 
           <h2>4. Accounts</h2>

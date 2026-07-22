@@ -25,8 +25,25 @@ export default function DemoPage() {
       <Nav />
 
       {/* Hero */}
-      <section className="container" style={{ maxWidth: 800, padding: '80px 24px 40px', textAlign: 'center' }}>
-        <span className="badge">See it before you buy it</span>
+      <section style={{ margin: '0 auto', maxWidth: 800, padding: '80px 24px 40px', textAlign: 'center' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            fontFamily: 'var(--font-mono)',
+            fontSize: 12,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            color: '#55565e',
+            background: '#fff',
+            border: '1px solid rgba(35,35,38,0.1)',
+            padding: '6px 14px',
+            borderRadius: 99,
+          }}
+        >
+          See it before you buy it
+        </div>
         <h1 style={{ margin: '18px 0 14px', fontSize: 'clamp(1.75rem, 5vw, 42px)', fontWeight: 600, letterSpacing: '-0.03em' }}>
           What an audit from UPPR Consulting actually looks like.
         </h1>
@@ -36,8 +53,8 @@ export default function DemoPage() {
       </section>
 
       {/* PART ONE — for the client */}
-      <section className="container" style={{ maxWidth: 1000, padding: '20px 24px 60px' }}>
-        <span className="eyebrow" style={{ display: 'block', marginBottom: 12 }}>What you get</span>
+      <section style={{ margin: '0 auto', maxWidth: 1000, padding: '20px 24px 60px' }}>
+        <span style={{ display: 'block', marginBottom: 12, fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>What you get</span>
         <div className="grid-2-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 48 }}>
           {WHAT_YOU_GET.map((a) => (
             <div key={a.title} style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 22 }}>
@@ -56,14 +73,14 @@ export default function DemoPage() {
           </p>
         </div>
 
-        <span className="eyebrow" style={{ display: 'block', marginBottom: 20 }}>Sample findings</span>
+        <span style={{ display: 'block', marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>Sample findings</span>
         <AuditDemoTabs />
       </section>
 
       {/* PART TWO — the dashboard */}
       <section style={{ background: '#232326', color: '#fff' }}>
-        <div className="container" style={{ maxWidth: 1000, padding: '64px 24px' }}>
-          <span className="eyebrow" style={{ display: 'block', marginBottom: 12, color: '#e2fa5c' }}>Your account</span>
+        <div style={{ margin: '0 auto', maxWidth: 1000, padding: '64px 24px' }}>
+          <span style={{ display: 'block', marginBottom: 12, fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#e2fa5c' }}>Your account</span>
           <h2 style={{ margin: '0 0 32px', fontSize: 'clamp(1.5rem, 4vw, 32px)', fontWeight: 600, letterSpacing: '-0.02em' }}>
             Everything lands in one dashboard.
           </h2>
@@ -108,7 +125,7 @@ export default function DemoPage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="container" style={{ maxWidth: 640, padding: '64px 24px 100px', textAlign: 'center' }}>
+      <section style={{ margin: '0 auto', maxWidth: 640, padding: '64px 24px 100px', textAlign: 'center' }}>
         <h2 style={{ margin: '0 0 12px', fontSize: 'clamp(1.5rem, 4vw, 32px)', fontWeight: 600, letterSpacing: '-0.02em' }}>
           That was a preview. Your audit is specific to you.
         </h2>

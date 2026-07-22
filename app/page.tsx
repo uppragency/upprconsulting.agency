@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import FaqAccordion from '@/components/FaqAccordion';
+import { FAQS } from '@/lib/faqs';
+import { createClient } from '@/lib/supabase/server';
 
 const ACCENT = '#e2fa5c';
 
@@ -96,9 +98,28 @@ const included = [
   'Access to your own client dashboard',
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = createClient();
+  const { data: recentPosts } = await supabase
+    .from('articles')
+    .select('title, slug, meta_description')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(3);
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Nav />
 
       {/* HERO */}
@@ -457,6 +478,24 @@ export default function HomePage() {
         </div>
         <FaqAccordion />
       </section>
+
+      {/* RECENT IN BLOG */}
+      {recentPosts && recentPosts.length > 0 && (
+        <section style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px 96px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>Recent in blog</span>
+            <Link href="/blog" style={{ fontSize: 14, fontWeight: 600 }}>All articles →</Link>
+          </div>
+          <div className="grid-3-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+            {recentPosts.map((p) => (
+              <Link key={p.slug} href={`/blog/${p.slug}`} style={{ display: 'block', background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24 }}>
+                <h3 style={{ margin: '0 0 8px', fontSize: 17, fontWeight: 600, letterSpacing: '-0.01em' }}>{p.title}</h3>
+                {p.meta_description && <p style={{ margin: 0, fontSize: 14, color: '#55565e', lineHeight: 1.5 }}>{p.meta_description}</p>}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* FINAL CTA */}
       <section style={{ background: '#232326', color: '#fff' }}>

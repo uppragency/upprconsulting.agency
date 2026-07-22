@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { INDUSTRIES } from '@/lib/industries';
 import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -10,8 +11,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     '', '/blog', '/glossary', '/order', '/login', '/calculator',
     '/contact', '/roadmap', '/changelog', '/sitemap', '/status', '/terms', '/privacy',
+    '/industries', '/compare', '/refund-policy',
   ].map((path) => ({
     url: `${base}${path}`,
+    lastModified: new Date(),
+  }));
+
+  const industryRoutes = INDUSTRIES.map((i) => ({
+    url: `${base}/industries/${i.slug}`,
     lastModified: new Date(),
   }));
 
@@ -20,5 +27,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(a.updated_at),
   }));
 
-  return [...staticRoutes, ...articleRoutes];
+  return [...staticRoutes, ...industryRoutes, ...articleRoutes];
 }

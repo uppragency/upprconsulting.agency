@@ -62,6 +62,16 @@ function DeliverableCard({ d }: { d: Deliverable }) {
                 Open deliverable →
               </a>
             )}
+            {d.status === 'delivered' && (
+              <a
+                href={`mailto:?subject=${encodeURIComponent(`${DELIVERABLE_LABELS[d.type]} — UPPR Consulting`)}&body=${encodeURIComponent(
+                  `Sharing our "${DELIVERABLE_LABELS[d.type]}" audit deliverable.\n\nSign in to view it: https://upprconsulting.agency/login`
+                )}`}
+                style={{ fontSize: 13, color: '#55565e' }}
+              >
+                ✉️ Email to team
+              </a>
+            )}
             {d.status === 'delivered' && <ReadCheckbox deliverableId={d.id} initialRead={d.read_by_client} />}
           </div>
         </div>

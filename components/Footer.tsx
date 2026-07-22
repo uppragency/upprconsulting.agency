@@ -33,6 +33,8 @@ export default async function Footer() {
             <a href="/#audits" className="footer-link" style={{ color: '#55565e' }}>Website audit</a>
             <a href="/#audits" className="footer-link" style={{ color: '#55565e' }}>UI/UX audit</a>
             <Link href="/calculator" className="footer-link" style={{ color: '#55565e' }}>Cost calculator</Link>
+            <Link href="/industries" className="footer-link" style={{ color: '#55565e' }}>By industry</Link>
+            <Link href="/compare" className="footer-link" style={{ color: '#55565e' }}>How we compare</Link>
           </div>
 
           {/* Company */}
@@ -42,10 +44,6 @@ export default async function Footer() {
             <Link href="/blog" className="footer-link" style={{ color: '#55565e' }}>Blog</Link>
             <Link href="/glossary" className="footer-link" style={{ color: '#55565e' }}>Glossary</Link>
             <Link href="/contact" className="footer-link" style={{ color: '#55565e' }}>Contact</Link>
-            <Link href="/roadmap" className="footer-link" style={{ color: '#55565e' }}>Roadmap</Link>
-            <Link href="/changelog" className="footer-link" style={{ color: '#55565e' }}>Changelog</Link>
-            <Link href="/terms" className="footer-link" style={{ color: '#55565e' }}>Terms &amp; conditions</Link>
-            <Link href="/privacy" className="footer-link" style={{ color: '#55565e' }}>Privacy</Link>
           </div>
 
           {/* My Account */}
@@ -72,7 +70,12 @@ export default async function Footer() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px 32px' }}>
         <div style={{ borderTop: '1px solid rgba(35,35,38,0.08)', paddingTop: 24, fontSize: 13, color: '#8a8b92', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <span>© 2026 UPPR Consulting. All rights reserved.</span>
-          <div style={{ display: 'flex', gap: 16 }}>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            <Link href="/roadmap" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Roadmap</Link>
+            <Link href="/changelog" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Changelog</Link>
+            <Link href="/terms" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Terms &amp; conditions</Link>
+            <Link href="/refund-policy" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Refund policy</Link>
+            <Link href="/privacy" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Privacy</Link>
             <Link href="/sitemap" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Sitemap</Link>
             <Link href="/status" className="footer-link" style={{ color: '#8a8b92', margin: 0 }}>Status</Link>
           </div>

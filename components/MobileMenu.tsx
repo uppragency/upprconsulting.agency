@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
-export default function MobileMenu() {
+export default function MobileMenu({ hasUnread = false }: { hasUnread?: boolean }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -48,8 +48,11 @@ export default function MobileMenu() {
             <div className={`mobile-menu-panel${open ? ' open' : ''}`}>
               {links.map((l) =>
                 l.internal ? (
-                  <Link key={l.href} href={l.href} className="mobile-menu-link" onClick={() => setOpen(false)}>
+                  <Link key={l.href} href={l.href} className="mobile-menu-link" onClick={() => setOpen(false)} style={{ position: 'relative' }}>
                     {l.label}
+                    {l.href === '/account' && hasUnread && (
+                      <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#e2fa5c', marginLeft: 8, verticalAlign: 'middle' }} />
+                    )}
                   </Link>
                 ) : (
                   <a key={l.href} href={l.href} className="mobile-menu-link" onClick={() => setOpen(false)}>

@@ -6,6 +6,19 @@ export const metadata = { title: 'Changelog — UPPR Consulting' };
 const ENTRIES = [
   {
     date: 'July 2026',
+    tag: 'v2.8',
+    items: [
+      'Dashboard: notification badge for unread deliverables, celebration animation on completion',
+      'Dashboard: guided first-visit tour, "email to team" shortcut on each deliverable',
+      'Admin: new "Today" page with a daily summary of orders and pending deliverables',
+      'New pages: industry-specific audits, comparison vs. alternatives, dedicated refund policy',
+      'FAQ schema markup for Google rich results',
+      'Homepage now shows recent blog posts',
+      'Refund policy clarified: personalized product, no refunds after ordering',
+    ],
+  },
+  {
+    date: 'July 2026',
     tag: 'v2.6',
     items: [
       'Fixed a crash on the account page caused by nested links',

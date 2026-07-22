@@ -8,6 +8,8 @@ import ChecklistItem from '@/components/ChecklistItem';
 import DeliverablesPanel from '@/components/DeliverablesPanel';
 import ShareCertificate from '@/components/ShareCertificate';
 import ResumePaymentButton from '@/components/ResumePaymentButton';
+import ConfettiBurst from '@/components/ConfettiBurst';
+import GuidedTour from '@/components/GuidedTour';
 import { DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
 
 export default async function AccountPage({ searchParams }: { searchParams: { order?: string } }) {
@@ -100,6 +102,8 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
   return (
     <>
       <Nav />
+      {allDelivered && <ConfettiBurst storageKey={`confetti-${client.id}`} />}
+      <GuidedTour storageKey="dashboard-tour-seen" />
       <section style={{ background: '#232326', color: '#fff' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 32px 56px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
