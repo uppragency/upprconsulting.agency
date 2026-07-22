@@ -98,6 +98,22 @@ textarea:focus {
   outline-offset: 1px;
 }
 
+.footer-columns-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+@media (max-width: 768px) {
+  .footer-columns-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 32px;
+  }
+  .footer-my-account {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 860px) {
   .grid-2-responsive {
     grid-template-columns: 1fr !important;

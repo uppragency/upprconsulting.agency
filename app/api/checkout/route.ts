@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     if (referrer) discountApplied = true;
   }
 
-  const unitAmount = discountApplied ? 4250 : 5000;
+  const unitAmount = discountApplied ? 4077 : 4797;
 
   // Create the client record, linked directly to the authenticated user
   // (this allows one account to place multiple orders over time)

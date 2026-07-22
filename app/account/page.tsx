@@ -7,6 +7,7 @@ import LogoutButton from '@/components/LogoutButton';
 import ChecklistItem from '@/components/ChecklistItem';
 import DeliverablesPanel from '@/components/DeliverablesPanel';
 import ShareCertificate from '@/components/ShareCertificate';
+import ResumePaymentButton from '@/components/ResumePaymentButton';
 import { DELIVERABLE_LABELS } from '@/components/DeliverableIcon';
 
 export default async function AccountPage({ searchParams }: { searchParams: { order?: string } }) {
@@ -123,56 +124,69 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
             </div>
           </div>
 
-          {/* PROGRESS DOTS */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 32 }}>
-            {(deliverables ?? []).map((d) => (
-              <div
-                key={d.id}
-                title={DELIVERABLE_LABELS[d.type]}
-                style={{ flex: 1, height: 8, borderRadius: 99, background: d.status === 'delivered' ? '#e2fa5c' : 'rgba(255,255,255,0.12)' }}
-              />
-            ))}
-          </div>
-          <p style={{ margin: '10px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
-            {delivered.length} of {deliverables?.length ?? 6} delivered
-          </p>
-
-          {/* TIMELINE */}
-          <div style={{ display: 'flex', gap: 24, marginTop: 32, flexWrap: 'wrap' }}>
-            {[
-              { label: 'Order placed', done: true, date: orderDate },
-              { label: 'Analysis in progress', done: true, date: null },
-              { label: 'All delivered', done: allDelivered, date: allDelivered ? delivered.map((d) => d.delivered_at).sort().reverse()[0] : null },
-            ].map((step, i) => (
-              <div key={step.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: '50%',
-                    background: step.done ? '#e2fa5c' : 'rgba(255,255,255,0.1)',
-                    color: step.done ? '#232326' : 'rgba(255,255,255,0.4)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    flexShrink: 0,
-                  }}
-                >
-                  {step.done ? '✓' : i + 1}
-                </span>
-                <div>
-                  <div style={{ fontSize: 13.5, fontWeight: 600 }}>{step.label}</div>
-                  {step.date && (
-                    <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.5)' }}>
-                      {new Date(step.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                    </div>
-                  )}
-                </div>
+          {client.status !== 'paid' ? (
+            <div style={{ marginTop: 32, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 16, padding: 28 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#e2fa5c' }}>Payment pending</span>
+              <h2 style={{ margin: '10px 0 8px', fontSize: 20, fontWeight: 600 }}>This order isn't paid yet.</h2>
+              <p style={{ margin: '0 0 20px', fontSize: 14, color: 'rgba(255,255,255,0.7)', maxWidth: 480 }}>
+                Your audit will start as soon as payment is confirmed. If you closed the payment page by mistake, you can pick up where you left off.
+              </p>
+              <ResumePaymentButton clientId={client.id} />
+            </div>
+          ) : (
+            <>
+              {/* PROGRESS DOTS */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 32 }}>
+                {(deliverables ?? []).map((d) => (
+                  <div
+                    key={d.id}
+                    title={DELIVERABLE_LABELS[d.type]}
+                    style={{ flex: 1, height: 8, borderRadius: 99, background: d.status === 'delivered' ? '#e2fa5c' : 'rgba(255,255,255,0.12)' }}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+              <p style={{ margin: '10px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
+                {delivered.length} of {deliverables?.length ?? 6} delivered
+              </p>
+
+              {/* TIMELINE */}
+              <div style={{ display: 'flex', gap: 24, marginTop: 32, flexWrap: 'wrap' }}>
+                {[
+                  { label: 'Order placed', done: true, date: orderDate },
+                  { label: 'Analysis in progress', done: true, date: null },
+                  { label: 'All delivered', done: allDelivered, date: allDelivered ? delivered.map((d) => d.delivered_at).sort().reverse()[0] : null },
+                ].map((step, i) => (
+                  <div key={step.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        background: step.done ? '#e2fa5c' : 'rgba(255,255,255,0.1)',
+                        color: step.done ? '#232326' : 'rgba(255,255,255,0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 11,
+                        fontWeight: 700,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {step.done ? '✓' : i + 1}
+                    </span>
+                    <div>
+                      <div style={{ fontSize: 13.5, fontWeight: 600 }}>{step.label}</div>
+                      {step.date && (
+                        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.5)' }}>
+                          {new Date(step.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -189,27 +203,34 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    gap: 12,
                     background: o.id === client.id ? '#fbfaf8' : '#fff',
                     border: o.id === client.id ? '1px solid #232326' : '1px solid rgba(35,35,38,0.1)',
                     borderRadius: 12,
                     padding: '12px 18px',
                     fontSize: 14,
+                    flexWrap: 'wrap',
                   }}
                 >
                   <span>
                     {o.business_name} · {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 11,
-                      padding: '4px 10px',
-                      borderRadius: 99,
-                      background: o.status === 'paid' ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
-                      color: o.status === 'paid' ? '#6a7d0a' : '#55565e',
-                    }}
-                  >
-                    {o.status === 'paid' ? 'Paid' : 'Awaiting payment'}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <Link href={`/account/orders/${o.id}`} onClick={(e) => e.stopPropagation()} style={{ fontSize: 12.5, color: '#55565e' }}>
+                      View details
+                    </Link>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 11,
+                        padding: '4px 10px',
+                        borderRadius: 99,
+                        background: o.status === 'paid' ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
+                        color: o.status === 'paid' ? '#6a7d0a' : '#55565e',
+                      }}
+                    >
+                      {o.status === 'paid' ? 'Paid' : 'Awaiting payment'}
+                    </span>
                   </span>
                 </Link>
               ))}
@@ -217,6 +238,7 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
           </div>
         )}
 
+        {client.status === 'paid' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 24 }} className="grid-2-responsive">
           {/* LEFT: deliverables */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -304,6 +326,7 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
             </div>
           </div>
         </div>
+        )}
       </section>
       <Footer />
     </>

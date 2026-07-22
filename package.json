@@ -15,7 +15,8 @@
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.4",
     "stripe": "^16.9.0",
-    "html2canvas": "^1.4.1"
+    "html2canvas": "^1.4.1",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "typescript": "^5.5.4",

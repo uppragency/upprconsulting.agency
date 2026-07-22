@@ -8,7 +8,7 @@ import LogoutButton from '@/components/LogoutButton';
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: { status?: string; sort?: string };
+  searchParams: { status?: string; sort?: string; q?: string };
 }) {
   const supabase = createClient();
   const {
@@ -35,8 +35,25 @@ export default async function AdminPage({
 
   const statusFilter = searchParams.status ?? 'all';
   const sort = searchParams.sort ?? 'date_desc';
+  const query = (searchParams.q ?? '').trim().toLowerCase();
+
+  const isOverdue = (c: { id: string; status: string; created_at: string }) => {
+    if (c.status !== 'paid') return false;
+    const progress = counts[c.id] ?? { total: 6, delivered: 0 };
+    const hoursSince = (Date.now() - new Date(c.created_at).getTime()) / 36e5;
+    return hoursSince > 48 && progress.delivered < (progress.total || 6);
+  };
 
   let clients = (clientsRaw ?? []).filter((c) => (statusFilter === 'all' ? true : c.status === statusFilter));
+
+  if (query) {
+    clients = clients.filter(
+      (c) =>
+        c.business_name?.toLowerCase().includes(query) ||
+        c.contact_name?.toLowerCase().includes(query) ||
+        c.email?.toLowerCase().includes(query)
+    );
+  }
 
   clients = clients.sort((a, b) => {
     const pa = counts[a.id] ?? { total: 6, delivered: 0 };
@@ -55,8 +72,8 @@ export default async function AdminPage({
   });
 
   const filterLink = (params: Record<string, string>) => {
-    const merged = { status: statusFilter, sort, ...params };
-    return `/admin?status=${merged.status}&sort=${merged.sort}`;
+    const merged = { status: statusFilter, sort, q: query, ...params };
+    return `/admin?status=${merged.status}&sort=${merged.sort}${merged.q ? `&q=${encodeURIComponent(merged.q)}` : ''}`;
   };
 
   const chip = (active: boolean): React.CSSProperties => ({
@@ -79,6 +96,9 @@ export default async function AdminPage({
             <h1 style={{ margin: '8px 0 0', fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>Clients</h1>
           </div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <Link href="/admin/stats" className="nav-link" style={{ border: '1px solid rgba(35,35,38,0.12)', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}>
+              Stats
+            </Link>
             <Link href="/admin/status" className="nav-link" style={{ border: '1px solid rgba(35,35,38,0.12)', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}>
               Status
             </Link>
@@ -88,6 +108,18 @@ export default async function AdminPage({
             <LogoutButton />
           </div>
         </div>
+
+        <form method="get" style={{ marginBottom: 20 }}>
+          {statusFilter !== 'all' && <input type="hidden" name="status" value={statusFilter} />}
+          {sort !== 'date_desc' && <input type="hidden" name="sort" value={sort} />}
+          <input
+            type="text"
+            name="q"
+            defaultValue={query}
+            placeholder="Search by business, contact, or email..."
+            style={{ width: '100%', maxWidth: 360, border: '1px solid rgba(35,35,38,0.12)', borderRadius: 10, padding: '10px 14px', fontSize: 14, fontFamily: 'var(--font-body)' }}
+          />
+        </form>
 
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 20, alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: 6 }}>
@@ -104,7 +136,7 @@ export default async function AdminPage({
         </div>
 
         <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 20, overflow: 'hidden', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, minWidth: 720 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, minWidth: 760 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(35,35,38,0.08)' }}>
                 <th style={{ textAlign: 'left', padding: '16px 20px', color: '#55565e', fontWeight: 600 }}>Business</th>
@@ -117,9 +149,17 @@ export default async function AdminPage({
             <tbody>
               {clients.map((c) => {
                 const progress = counts[c.id] ?? { total: 0, delivered: 0 };
+                const overdue = isOverdue(c);
                 return (
-                  <tr key={c.id} style={{ borderBottom: '1px solid rgba(35,35,38,0.06)' }}>
-                    <td style={{ padding: '16px 20px', fontWeight: 600 }}>{c.business_name}</td>
+                  <tr key={c.id} style={{ borderBottom: '1px solid rgba(35,35,38,0.06)', background: overdue ? 'rgba(192,83,63,0.05)' : 'transparent' }}>
+                    <td style={{ padding: '16px 20px', fontWeight: 600 }}>
+                      {c.business_name}
+                      {overdue && (
+                        <span style={{ marginLeft: 8, fontFamily: 'var(--font-mono)', fontSize: 10.5, background: '#c0533f', color: '#fff', padding: '2px 8px', borderRadius: 99 }}>
+                          OVERDUE
+                        </span>
+                      )}
+                    </td>
                     <td style={{ padding: '16px 20px', color: '#55565e' }}>
                       {c.contact_name}
                       <br />
@@ -140,9 +180,12 @@ export default async function AdminPage({
                       </span>
                     </td>
                     <td style={{ padding: '16px 20px', color: '#55565e' }}>{progress.delivered} / {progress.total || 6}</td>
-                    <td style={{ padding: '16px 20px' }}>
+                    <td style={{ padding: '16px 20px', display: 'flex', gap: 14 }}>
                       <Link href={`/admin/clients/${c.id}`} style={{ fontWeight: 600 }}>
                         Manage →
+                      </Link>
+                      <Link href={`/admin/clients/${c.id}/view`} style={{ color: '#55565e' }}>
+                        View as client
                       </Link>
                     </td>
                   </tr>

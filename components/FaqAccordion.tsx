@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const FAQS = [
   {
-    q: 'What exactly do I get for 50 EUR?',
+    q: 'What exactly do I get for €47.97?',
     a: 'Four complete audits (social media, visual identity, website, UI/UX) plus two personalized 30-minute videos walking you through the findings — all delivered to your client dashboard within 48 hours.',
   },
   {
@@ -21,7 +21,7 @@ const FAQS = [
   },
   {
     q: 'Is there a subscription or recurring payment?',
-    a: "No. One payment of 50 EUR, nothing recurring, nothing to cancel. We don't even store your card details — payment is handled by Stripe.",
+    a: "No. One payment of 47.97 EUR, nothing recurring, nothing to cancel. We don't even store your card details — payment is handled by Stripe.",
   },
   {
     q: "What if I'm not satisfied?",

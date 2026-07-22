@@ -42,14 +42,14 @@ const compareRows = [
   { label: 'Time to result', diy: 'Undefined', freelancer: '1–2 weeks', uppr: '48 hours' },
   { label: 'Level of detail', diy: 'Subjective', freelancer: 'Variable', uppr: '4 structured audits' },
   { label: 'Explained or just written', diy: '—', freelancer: 'Usually just text', uppr: '2 personalized videos' },
-  { label: 'Cost', diy: 'Your time', freelancer: 'Often over €200', uppr: '€50, one payment' },
+  { label: 'Cost', diy: 'Your time', freelancer: 'Often over €200', uppr: '€47.97, one payment' },
 ];
 
 const advantages = [
   { tag: '48H', title: 'Delivery, not a promise', desc: 'Order today, get your audits and videos in your account within 48 hours. No waiting weeks for a call back.' },
   { tag: '01', title: 'Real team, not templates', desc: 'Every audit is done by a person actually looking at your business, not auto-generated.' },
   { tag: '02', title: 'Actionable recommendations', desc: "You don't just get a diagnosis. You get concrete next steps, in priority order." },
-  { tag: '€50', title: 'No subscription', desc: "One payment, 50 EUR. No monthly contract just to find out what's not working." },
+  { tag: '€47.97', title: 'No subscription', desc: "One payment, 47.97 EUR. No monthly contract just to find out what's not working." },
   { tag: '03', title: 'Explained, not just written', desc: 'The 2 personalized videos show you exactly where to look and why it matters.' },
   { tag: '04', title: 'Connected to execution', desc: 'If you want it implemented too, the same team (UPPR Agency) can take over marketing and retention.' },
 ];
@@ -69,7 +69,7 @@ const audits = [
 const personas = [
   { title: 'Small business owners', desc: "You built the business, not the brand. You want to know what's actually costing you customers.", stat: '70%', statLabel: 'say they never had a proper audit before' },
   { title: 'Marketing teams', desc: "You need outside eyes on a website and socials you're too close to see clearly anymore.", stat: '48h', statLabel: 'turnaround, fits inside any sprint' },
-  { title: 'Solo founders', desc: "You're doing it all yourself, including the parts of marketing you were never trained for.", stat: '€50', statLabel: 'less than one wasted ad campaign' },
+  { title: 'Solo founders', desc: "You're doing it all yourself, including the parts of marketing you were never trained for.", stat: '€47.97', statLabel: 'less than one wasted ad campaign' },
 ];
 
 const testimonials = [
@@ -415,9 +415,10 @@ export default function HomePage() {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, background: ACCENT, color: '#232326', padding: '5px 12px', borderRadius: 99 }}>One-time payment</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-              <span style={{ fontSize: 64, fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 1 }}>€50</span>
+              <span style={{ fontSize: 64, fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 1 }}>€47.97</span>
               <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)' }}>one-time, no subscription</span>
             </div>
+            <p style={{ margin: '-14px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>≈ 250 RON · charged in EUR, exact amount depends on your bank's rate</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {included.map((i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 15 }}>
@@ -427,8 +428,12 @@ export default function HomePage() {
               ))}
             </div>
             <Link href="/order" className="btn-accent" style={{ background: ACCENT, color: '#232326', padding: 16, borderRadius: 99, fontSize: 16, fontWeight: 600, textAlign: 'center' }}>
-              Order the audit — €50
+              Order the audit — €47.97
             </Link>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, border: '1px solid rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 99, color: 'rgba(255,255,255,0.6)' }}>🔒 Secure payment via Stripe</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, border: '1px solid rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 99, color: 'rgba(255,255,255,0.6)' }}>Company card payments accepted</span>
+            </div>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>No credit card stored · No recurring charge · Nothing to cancel</span>
           </div>
         </div>
@@ -457,9 +462,9 @@ export default function HomePage() {
       <section style={{ background: '#232326', color: '#fff' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '96px 32px', display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'center', textAlign: 'center' }}>
           <h2 style={{ margin: 0, fontSize: 52, lineHeight: 1.06, letterSpacing: '-0.035em', fontWeight: 600 }}>See exactly what needs fixing.</h2>
-          <p style={{ margin: 0, fontSize: 18, color: 'rgba(255,255,255,0.7)' }}>4 audits, 2 personalized videos, 48-hour delivery — one payment of €50.</p>
+          <p style={{ margin: 0, fontSize: 18, color: 'rgba(255,255,255,0.7)' }}>4 audits, 2 personalized videos, 48-hour delivery — one payment of €47.97.</p>
           <Link href="/order" className="btn-accent" style={{ background: ACCENT, color: '#232326', padding: '16px 32px', borderRadius: 99, fontSize: 16, fontWeight: 600, marginTop: 8 }}>
-            Order the audit — €50
+            Order the audit — €47.97
           </Link>
         </div>
       </section>

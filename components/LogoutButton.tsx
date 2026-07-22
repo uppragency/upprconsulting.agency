@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
-export default function LogoutButton() {
+export default function LogoutButton({ variant = 'dark' }: { variant?: 'dark' | 'light' }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -14,6 +14,28 @@ export default function LogoutButton() {
     await supabase.auth.signOut();
     router.push('/');
     router.refresh();
+  }
+
+  if (variant === 'light') {
+    return (
+      <button
+        onClick={handleLogout}
+        disabled={loading}
+        className="footer-link"
+        style={{
+          background: 'none',
+          border: 'none',
+          color: '#55565e',
+          padding: 0,
+          fontSize: 14,
+          fontFamily: 'var(--font-body)',
+          cursor: 'pointer',
+          textAlign: 'left',
+        }}
+      >
+        {loading ? 'Signing out...' : 'Sign out'}
+      </button>
+    );
   }
 
   return (

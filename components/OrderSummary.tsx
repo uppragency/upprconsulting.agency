@@ -49,7 +49,7 @@ export default function OrderSummary({
     onCodeChange(null);
   }
 
-  const base = 50;
+  const base = 47.97;
   const discount = appliedCode ? Math.round(base * 0.15 * 100) / 100 : 0;
   const total = base - discount;
 
