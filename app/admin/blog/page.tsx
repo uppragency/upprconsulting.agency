@@ -12,11 +12,13 @@ export default async function AdminBlogPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect('/login');
-
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'admin') redirect('/account');
 
-  const { data: posts } = await supabase.from('blog_posts').select('id, title, slug, published, created_at').order('created_at', { ascending: false });
+  const { data: articles } = await supabase
+    .from('articles')
+    .select('id, title, slug, status, tags, created_at')
+    .order('created_at', { ascending: false });
 
   return (
     <>
@@ -36,28 +38,37 @@ export default async function AdminBlogPage() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {posts?.map((p) => (
+          {articles?.map((p) => (
             <Link
               key={p.id}
-              href={`/admin/blog/${p.id}/edit`}
-              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 14, padding: '16px 20px' }}
+              href={`/admin/blog/${p.id}`}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 14, padding: '16px 20px', gap: 16, flexWrap: 'wrap' }}
             >
-              <span style={{ fontWeight: 600 }}>{p.title}</span>
+              <div>
+                <span style={{ fontWeight: 600 }}>{p.title}</span>
+                {p.tags?.length > 0 && (
+                  <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
+                    {p.tags.map((t: string) => (
+                      <span key={t} className="tag-pill">{t}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
               <span
                 style={{
                   fontFamily: 'var(--font-mono)',
                   fontSize: 11,
                   padding: '4px 10px',
                   borderRadius: 99,
-                  background: p.published ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
-                  color: p.published ? '#6a7d0a' : '#55565e',
+                  background: p.status === 'published' ? 'rgba(226,250,92,0.25)' : 'rgba(35,35,38,0.06)',
+                  color: p.status === 'published' ? '#6a7d0a' : '#55565e',
                 }}
               >
-                {p.published ? 'Published' : 'Draft'}
+                {p.status === 'published' ? 'Published' : 'Draft'}
               </span>
             </Link>
           ))}
-          {!posts?.length && <p style={{ color: '#55565e' }}>No posts yet.</p>}
+          {!articles?.length && <p style={{ color: '#55565e' }}>No articles yet.</p>}
         </div>
       </section>
       <Footer />

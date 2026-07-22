@@ -300,3 +300,82 @@ textarea:focus {
     margin-right: 10px;
   }
 }
+
+/* ---- Glossary auto-links + article prose ---- */
+
+.glossary-link {
+  color: var(--violet) !important;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.article-prose p {
+  margin: 0 0 20px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #333336;
+}
+
+.article-prose h2 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 40px 0 16px;
+}
+
+.article-prose h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 32px 0 12px;
+}
+
+.article-prose ul,
+.article-prose ol {
+  margin: 0 0 20px;
+  padding-left: 22px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #333336;
+}
+
+.article-prose a:not(.glossary-link) {
+  color: var(--violet);
+  text-decoration: underline;
+}
+
+.article-prose img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 24px 0;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: rgba(35, 35, 38, 0.06);
+  color: #55565e;
+}
+
+.tag-pill.active {
+  background: #232326;
+  color: #fff;
+}
+
+/* ---- Order summary panel, mobile stacking fix ---- */
+
+.order-summary-panel {
+  border-left: 1px solid rgba(35, 35, 38, 0.08);
+  border-radius: 0 24px 24px 0;
+}
+
+@media (max-width: 860px) {
+  .order-summary-panel {
+    border-left: none;
+    border-top: 1px solid rgba(35, 35, 38, 0.08);
+    border-radius: 0 0 24px 24px;
+  }
+}

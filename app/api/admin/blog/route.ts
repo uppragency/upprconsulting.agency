@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const admin = await requireAdmin();
   if (!admin) return NextResponse.json({ error: 'Not allowed.' }, { status: 403 });
 
-  const { title, excerpt, content, published } = await request.json();
+  const { title, content, metaTitle, metaDescription, ogImage, tags, status } = await request.json();
   if (!title || !content) {
     return NextResponse.json({ error: 'Title and content are required.' }, { status: 400 });
   }
@@ -25,17 +25,27 @@ export async function POST(request: Request) {
   let slug = baseSlug;
   let i = 1;
   while (true) {
-    const { data: existing } = await service.from('blog_posts').select('id').eq('slug', slug).maybeSingle();
+    const { data: existing } = await service.from('articles').select('id').eq('slug', slug).maybeSingle();
     if (!existing) break;
     slug = `${baseSlug}-${++i}`;
   }
 
   const { data, error } = await service
-    .from('blog_posts')
-    .insert({ title, slug, excerpt: excerpt || null, content, published: published ?? true })
+    .from('articles')
+    .insert({
+      title,
+      slug,
+      content,
+      meta_title: metaTitle || null,
+      meta_description: metaDescription || null,
+      og_image: ogImage || null,
+      tags: tags ?? [],
+      status: status ?? 'draft',
+      published_at: status === 'published' ? new Date().toISOString() : null,
+    })
     .select()
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ post: data });
+  return NextResponse.json({ article: data });
 }

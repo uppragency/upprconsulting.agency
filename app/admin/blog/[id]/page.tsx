@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import BlogForm from '@/components/BlogForm';
+import ArticleForm from '@/components/ArticleForm';
 
-export default async function EditBlogPostPage({ params }: { params: { id: string } }) {
+export default async function EditArticlePage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -15,8 +15,8 @@ export default async function EditBlogPostPage({ params }: { params: { id: strin
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'admin') redirect('/account');
 
-  const { data: post } = await supabase.from('blog_posts').select('*').eq('id', params.id).single();
-  if (!post) redirect('/admin/blog');
+  const { data: article } = await supabase.from('articles').select('*').eq('id', params.id).single();
+  if (!article) redirect('/admin/blog');
 
   return (
     <>
@@ -24,7 +24,7 @@ export default async function EditBlogPostPage({ params }: { params: { id: strin
       <section style={{ maxWidth: 720, margin: '0 auto', padding: '64px 32px 96px' }}>
         <Link href="/admin/blog" style={{ fontSize: 13, color: '#55565e' }}>← Blog posts</Link>
         <h1 style={{ margin: '10px 0 32px', fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>Edit post</h1>
-        <BlogForm post={post} />
+        <ArticleForm article={article} />
       </section>
       <Footer />
     </>

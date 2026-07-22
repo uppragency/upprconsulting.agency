@@ -15,7 +15,21 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { businessName, contactName, email, phone, description, referralCode } = body;
+  const {
+    businessName,
+    contactName,
+    email,
+    websiteUrl,
+    instagramHandle,
+    tiktokHandle,
+    description,
+    referralCode,
+    payerType,
+    companyLegalName,
+    companyTaxId,
+    companyRegNumber,
+    companyAddress,
+  } = body;
 
   const admin = createServiceRoleClient();
 
@@ -35,11 +49,18 @@ export async function POST(request: Request) {
       business_name: businessName,
       contact_name: contactName,
       email,
-      phone,
-      project_description: description,
+      website_url: websiteUrl || null,
+      instagram_handle: instagramHandle || null,
+      tiktok_handle: tiktokHandle || null,
+      project_description: description || null,
       status: 'pending_payment',
       user_id: user.id,
       referred_by_code: discountApplied ? referralCode : null,
+      payer_type: payerType === 'company' ? 'company' : 'individual',
+      company_legal_name: payerType === 'company' ? companyLegalName || null : null,
+      company_tax_id: payerType === 'company' ? companyTaxId || null : null,
+      company_reg_number: payerType === 'company' ? companyRegNumber || null : null,
+      company_address: payerType === 'company' ? companyAddress || null : null,
     })
     .select()
     .single();
