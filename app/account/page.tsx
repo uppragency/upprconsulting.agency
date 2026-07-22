@@ -107,7 +107,13 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#e2fa5c' }}>Your account</span>
               <h1 style={{ margin: '10px 0 0', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>{client.business_name}</h1>
             </div>
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Link
+                href={`/account/orders/${client.id}`}
+                style={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}
+              >
+                Order details &amp; invoice
+              </Link>
               <Link
                 href="/account/settings"
                 style={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}
@@ -196,9 +202,8 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>Order history</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
               {allOrders.map((o) => (
-                <Link
+                <div
                   key={o.id}
-                  href={`/account?order=${o.id}`}
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -212,11 +217,11 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
                     flexWrap: 'wrap',
                   }}
                 >
-                  <span>
+                  <Link href={`/account?order=${o.id}`} style={{ color: '#232326' }}>
                     {o.business_name} · {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </span>
+                  </Link>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <Link href={`/account/orders/${o.id}`} onClick={(e) => e.stopPropagation()} style={{ fontSize: 12.5, color: '#55565e' }}>
+                    <Link href={`/account/orders/${o.id}`} style={{ fontSize: 12.5, color: '#55565e' }}>
                       View details
                     </Link>
                     <span
@@ -232,7 +237,7 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
                       {o.status === 'paid' ? 'Paid' : 'Awaiting payment'}
                     </span>
                   </span>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
