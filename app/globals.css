@@ -100,7 +100,7 @@ textarea:focus {
 
 .footer-columns-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: 32px;
 }
 
@@ -108,6 +108,9 @@ textarea:focus {
   .footer-columns-grid {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 32px;
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
   }
   .footer-my-account {
     grid-column: 1 / -1;

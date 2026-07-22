@@ -7,7 +7,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const base = 'https://upprconsulting.agency';
 
-  const staticRoutes = ['', '/blog', '/glossary', '/order', '/login'].map((path) => ({
+  const staticRoutes = [
+    '', '/blog', '/glossary', '/order', '/login', '/calculator',
+    '/contact', '/roadmap', '/changelog', '/sitemap', '/status', '/terms', '/privacy',
+  ].map((path) => ({
     url: `${base}${path}`,
     lastModified: new Date(),
   }));
