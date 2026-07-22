@@ -1,11 +1,13 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { GLOSSARY_TERMS } from '@/lib/glossary-terms';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Glossary — UPPR Consulting',
+export const metadata = buildMetadata({
+  title: 'Glossary',
   description: 'Plain-language definitions of the website, brand, and marketing terms we use in our audits.',
-};
+  path: '/glossary',
+});
 
 export default function GlossaryPage() {
   return (

@@ -72,7 +72,7 @@ export async function POST(request: Request) {
   // Keep profiles.client_id pointing at the most recent order, for any legacy lookups
   await admin.from('profiles').update({ client_id: client.id, role: 'client' }).eq('id', user.id);
 
-  const origin = request.headers.get('origin') ?? 'https://upprconsulting.agency';
+  const origin = request.headers.get('origin') ?? 'https://upprconsulting-agency.vercel.app';
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',

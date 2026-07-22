@@ -2,8 +2,13 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import CompetitorUrlWidget from '@/components/CompetitorUrlWidget';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'How UPPR Consulting compares — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'How UPPR Consulting compares',
+  description: 'How a UPPR Consulting audit compares to agencies, freelancers, and free automated tools.',
+  path: '/compare',
+});
 
 const CATEGORIES = [
   {

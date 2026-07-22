@@ -65,7 +65,7 @@ function DeliverableCard({ d }: { d: Deliverable }) {
             {d.status === 'delivered' && (
               <a
                 href={`mailto:?subject=${encodeURIComponent(`${DELIVERABLE_LABELS[d.type]} — UPPR Consulting`)}&body=${encodeURIComponent(
-                  `Sharing our "${DELIVERABLE_LABELS[d.type]}" audit deliverable.\n\nSign in to view it: https://upprconsulting.agency/login`
+                  `Sharing our "${DELIVERABLE_LABELS[d.type]}" audit deliverable.\n\nSign in to view it: https://upprconsulting-agency.vercel.app/login`
                 )}`}
                 style={{ fontSize: 13, color: '#55565e' }}
               >

@@ -1,7 +1,12 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Changelog — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Changelog',
+  description: 'A dated history of every update shipped to the UPPR Consulting platform.',
+  path: '/changelog',
+});
 
 const ENTRIES = [
   {

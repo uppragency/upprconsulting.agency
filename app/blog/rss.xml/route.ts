@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { SITE_URL } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -15,7 +16,7 @@ export async function GET() {
     .order('published_at', { ascending: false })
     .limit(50);
 
-  const siteUrl = 'https://upprconsulting.agency';
+  const siteUrl = SITE_URL;
 
   const items = (articles ?? [])
     .map(

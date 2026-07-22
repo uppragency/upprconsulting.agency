@@ -1,8 +1,13 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Sitemap — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Sitemap',
+  description: 'A browsable index of every public page on the UPPR Consulting website.',
+  path: '/sitemap',
+});
 
 const GROUPS: { label: string; links: { href: string; title: string }[] }[] = [
   {

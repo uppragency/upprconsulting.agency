@@ -1,7 +1,12 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Roadmap — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Roadmap',
+  description: 'What UPPR Consulting has shipped so far, what is in progress, and what is planned next.',
+  path: '/roadmap',
+});
 
 const COLUMNS = [
   {

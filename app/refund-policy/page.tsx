@@ -1,7 +1,12 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Refund Policy — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Refund Policy',
+  description: 'UPPR Consulting audits are personalized products. Read our refund policy before ordering.',
+  path: '/refund-policy',
+});
 
 export default function RefundPolicyPage() {
   return (

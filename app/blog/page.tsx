@@ -3,8 +3,15 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/server';
 import { estimateReadingTime } from '@/lib/reading-time';
+import { buildMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
+
+export const metadata = buildMetadata({
+  title: 'Blog',
+  description: 'Notes on audits, brands, and websites from UPPR Consulting.',
+  path: '/blog',
+});
 
 export default async function BlogPage({ searchParams }: { searchParams: { tag?: string } }) {
   const supabase = createClient();

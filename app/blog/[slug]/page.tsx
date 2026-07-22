@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/server';
 import { estimateReadingTime } from '@/lib/reading-time';
 import { linkifyGlossaryTerms } from '@/lib/glossary-linkify';
+import { SITE_URL, SITE_NAME } from '@/lib/seo';
 
 export const revalidate = 60;
 
@@ -22,9 +23,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: article.meta_title ?? article.title,
     description: article.meta_description ?? undefined,
+    alternates: { canonical: `${SITE_URL}/blog/${params.slug}` },
     openGraph: {
       title: article.meta_title ?? article.title,
       description: article.meta_description ?? undefined,
+      url: `${SITE_URL}/blog/${params.slug}`,
+      siteName: SITE_NAME,
+      type: 'article',
       // Only set explicitly if a custom image was uploaded — otherwise Next.js
       // automatically falls back to opengraph-image.tsx in this same route segment.
       images: article.og_image ? [article.og_image] : undefined,

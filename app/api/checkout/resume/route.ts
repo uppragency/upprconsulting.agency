@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   const unitAmount = existingOrder?.amount_cents ?? 4797;
-  const origin = request.headers.get('origin') ?? 'https://upprconsulting.agency';
+  const origin = request.headers.get('origin') ?? 'https://upprconsulting-agency.vercel.app';
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',

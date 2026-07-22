@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { INDUSTRIES, getIndustry } from '@/lib/industries';
+import { buildMetadata } from '@/lib/seo';
 
 export function generateStaticParams() {
   return INDUSTRIES.map((i) => ({ slug: i.slug }));
@@ -11,7 +12,11 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const industry = getIndustry(params.slug);
   if (!industry) return {};
-  return { title: `Website & brand audit for ${industry.name} — UPPR Consulting` };
+  return buildMetadata({
+    title: `Website & brand audit for ${industry.name}`,
+    description: industry.tagline,
+    path: `/industries/${industry.slug}`,
+  });
 }
 
 export default function IndustryPage({ params }: { params: { slug: string } }) {

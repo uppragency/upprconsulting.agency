@@ -1,9 +1,14 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 import { createClient } from '@/lib/supabase/server';
 
 export const revalidate = 30;
-export const metadata = { title: 'Status — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Status',
+  description: 'Live system status for UPPR Consulting: website, database, and payments.',
+  path: '/status',
+});
 
 async function checkDatabase(): Promise<boolean> {
   try {

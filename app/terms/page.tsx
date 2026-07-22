@@ -1,7 +1,12 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Terms & Conditions — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Terms & Conditions',
+  description: 'The terms that govern ordering and using an audit from UPPR Consulting.',
+  path: '/terms',
+});
 
 export default function TermsPage() {
   return (
@@ -14,7 +19,7 @@ export default function TermsPage() {
 
         <div className="article-prose">
           <p>
-            These terms govern your use of upprconsulting.agency and the audit service sold on it ("the Service"),
+            These terms govern your use of upprconsulting-agency.vercel.app and the audit service sold on it ("the Service"),
             operated by UPPR Consulting. By ordering the Service, you agree to these terms.
           </p>
 

@@ -1,8 +1,13 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Contact — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Contact',
+  description: 'Reach UPPR Consulting directly by email or WhatsApp, no contact form required.',
+  path: '/contact',
+});
 
 function ContactCard({ icon, label, value, href }: { icon: string; label: string; value: string; href: string }) {
   return (

@@ -2,8 +2,14 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import AuditDemoTabs from '@/components/AuditDemoTabs';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'See a sample audit — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'See a sample audit',
+  description: 'A real preview of the findings and the client dashboard you get from a UPPR Consulting audit, no signup required.',
+  path: '/demo',
+  noIndex: true,
+});
 
 const WHAT_YOU_GET = [
   { icon: '📱', title: 'Social media audit', desc: "What's working and what's costing you engagement." },

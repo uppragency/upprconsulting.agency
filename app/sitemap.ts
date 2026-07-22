@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server';
 import { INDUSTRIES } from '@/lib/industries';
+import { SITE_URL } from '@/lib/seo';
 import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createClient();
   const { data: articles } = await supabase.from('articles').select('slug, updated_at').eq('status', 'published');
 
-  const base = 'https://upprconsulting.agency';
+  const base = SITE_URL;
 
   const staticRoutes = [
     '', '/blog', '/glossary', '/order', '/login', '/calculator',

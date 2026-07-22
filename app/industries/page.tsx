@@ -2,8 +2,13 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { INDUSTRIES } from '@/lib/industries';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Audits by industry — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Audits by industry',
+  description: 'Common website, brand, and social media issues we find by business type.',
+  path: '/industries',
+});
 
 export default function IndustriesPage() {
   return (

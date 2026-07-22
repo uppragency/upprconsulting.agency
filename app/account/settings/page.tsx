@@ -26,7 +26,7 @@ export default async function SettingsPage() {
     await service.from('profiles').update({ referral_code: referralCode }).eq('id', user.id);
   }
 
-  const referralLink = `https://upprconsulting.agency/order?ref=${referralCode}`;
+  const referralLink = `https://upprconsulting-agency.vercel.app/order?ref=${referralCode}`;
 
   return (
     <>

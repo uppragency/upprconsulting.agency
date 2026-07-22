@@ -1,8 +1,13 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import CalculatorQuiz from '@/components/CalculatorQuiz';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: "What's slowness costing you? — UPPR Consulting" };
+export const metadata = buildMetadata({
+  title: "What's slowness costing you?",
+  description: 'A quick 4-question estimate of what an outdated website or inconsistent brand could be costing your business.',
+  path: '/calculator',
+});
 
 export default function CalculatorPage() {
   return (

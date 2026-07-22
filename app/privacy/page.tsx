@@ -1,7 +1,12 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = { title: 'Privacy Policy — UPPR Consulting' };
+export const metadata = buildMetadata({
+  title: 'Privacy Policy',
+  description: 'How UPPR Consulting collects, uses, and protects your personal data.',
+  path: '/privacy',
+});
 
 export default function PrivacyPage() {
   return (
