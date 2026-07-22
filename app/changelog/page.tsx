@@ -11,6 +11,24 @@ export const metadata = buildMetadata({
 const ENTRIES = [
   {
     date: 'July 2026',
+    tag: 'v3.2',
+    items: [
+      'Full SEO overhaul: metadata, Open Graph, Twitter cards, and canonical URLs on every page',
+      '65 new blog articles, covering audits, industries, and website fundamentals',
+      'Blog: collapsible tag filter, pagination, cover images with proper alt text',
+      'Newsletter signup removed (replaced by TheMarketer after the domain switch)',
+      'Order page: exit-intent reassurance message, two-step form with a progress bar',
+      'Client testimonial requests after full delivery, with admin approval workflow',
+      'Dedicated FAQ page, separate from the homepage section',
+      'Smarter related articles: manual picks first, then shared tags, then most recent',
+      'Performance pass: public pages render statically again (moved auth checks client-side)',
+      'Homepage "Recent in blog" section removed',
+      'New pages: "How it works" process guide, Resources hub',
+      'Romanian-language landing page and a keyword-focused audit page for local search',
+    ],
+  },
+  {
+    date: 'July 2026',
     tag: 'v2.8',
     items: [
       'Dashboard: notification badge for unread deliverables, celebration animation on completion',
@@ -18,7 +36,6 @@ const ENTRIES = [
       'Admin: new "Today" page with a daily summary of orders and pending deliverables',
       'New pages: industry-specific audits, comparison vs. alternatives, dedicated refund policy',
       'FAQ schema markup for Google rich results',
-      'Homepage now shows recent blog posts',
       'Refund policy clarified: personalized product, no refunds after ordering',
     ],
   },

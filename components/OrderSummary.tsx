@@ -70,8 +70,23 @@ export default function OrderSummary({
 
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
         <div>
-          <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600 }}>UPPR Consulting — Full Audit</p>
-          <p style={{ margin: '4px 0 0', fontSize: 12.5, color: '#8a8b92' }}>4 audits + 2 personalized videos</p>
+          <p style={{ margin: '0 0 10px', fontSize: 14.5, fontWeight: 600 }}>UPPR Consulting — Full Audit</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {[
+              'Social media audit',
+              'Visual identity audit',
+              'Website audit',
+              'UI/UX audit',
+              '2 personalized videos, 30 min each',
+              'Delivered within 48 hours',
+              'Access to your own client dashboard',
+            ].map((item) => (
+              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#3a3a40' }}>
+                <span style={{ color: '#6a7d0a', fontFamily: 'var(--font-mono)', fontSize: 12 }}>✓</span>
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
         <span style={{ fontSize: 14.5, fontWeight: 600, whiteSpace: 'nowrap' }}>€{base.toFixed(2)}</span>
       </div>

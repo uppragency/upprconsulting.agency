@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import OrderSummary from '@/components/OrderSummary';
@@ -16,6 +16,8 @@ function OrderForm() {
   const [payerType, setPayerType] = useState<'individual' | 'company'>('individual');
   const [discountCode, setDiscountCode] = useState<string | null>(null);
   const [showNudge, setShowNudge] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
+  const step1Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/track/order-view', { method: 'POST' }).catch(() => {});
@@ -53,6 +55,17 @@ function OrderForm() {
       setCheckingSession(false);
     });
   }, []);
+
+  function goToStep2() {
+    const inputs = step1Ref.current?.querySelectorAll<HTMLInputElement>('input, textarea');
+    if (inputs) {
+      for (const input of Array.from(inputs)) {
+        if (!input.reportValidity()) return;
+      }
+    }
+    setStep(2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -171,128 +184,156 @@ function OrderForm() {
             <h2 style={{ margin: 0, fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>
               {loggedIn ? 'A new order' : 'Your details'}
             </h2>
-            <p style={{ margin: '10px 0 32px', fontSize: 15, lineHeight: 1.55, color: '#55565e' }}>
+            <p style={{ margin: '10px 0 20px', fontSize: 15, lineHeight: 1.55, color: '#55565e' }}>
               {loggedIn
                 ? `Ordering as ${userEmail}. This will appear as a new order in your account.`
                 : 'After payment, you get instant access to your account. Delivery within 48 hours.'}
             </p>
 
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#55565e', whiteSpace: 'nowrap' }}>Step {step} of 2</span>
+              <div style={{ flex: 1, display: 'flex', gap: 6 }}>
+                <div style={{ flex: 1, height: 6, borderRadius: 99, background: '#232326' }} />
+                <div style={{ flex: 1, height: 6, borderRadius: 99, background: step === 2 ? '#232326' : 'rgba(35,35,38,0.1)' }} />
+              </div>
+            </div>
+
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
-              <label style={labelStyle}>
-                Your name
-                <input name="contact_name" type="text" required style={inputStyle} placeholder="Jane Doe" />
-              </label>
+              <div ref={step1Ref} style={{ display: step === 1 ? 'flex' : 'none', flexDirection: 'column', gap: 22 }}>
+                <label style={labelStyle}>
+                  Your name
+                  <input name="contact_name" type="text" required style={inputStyle} placeholder="Jane Doe" />
+                </label>
 
-              {!loggedIn && (
-                <>
-                  <label style={labelStyle}>
-                    Email
-                    <input name="email" type="email" required style={inputStyle} placeholder="jane@yourbusiness.com" />
-                  </label>
-                  <label style={labelStyle}>
-                    Account password
-                    <input name="password" type="password" minLength={8} required style={inputStyle} placeholder="At least 8 characters" />
-                  </label>
-                </>
-              )}
+                {!loggedIn && (
+                  <>
+                    <label style={labelStyle}>
+                      Email
+                      <input name="email" type="email" required style={inputStyle} placeholder="jane@yourbusiness.com" />
+                    </label>
+                    <label style={labelStyle}>
+                      Account password
+                      <input name="password" type="password" minLength={8} required style={inputStyle} placeholder="At least 8 characters" />
+                    </label>
+                  </>
+                )}
 
-              <div style={{ height: 1, background: 'rgba(35,35,38,0.08)', margin: '4px 0' }} />
+                <div style={{ height: 1, background: 'rgba(35,35,38,0.08)', margin: '4px 0' }} />
 
-              <label style={labelStyle}>
-                Business name
-                <input name="business_name" type="text" required style={inputStyle} placeholder="e.g. Uppr Agency" />
-              </label>
-              <label style={labelStyle}>
-                Website link
-                <input name="website_url" type="text" style={inputStyle} placeholder="e.g. www.uppr.agency" />
-              </label>
-              <label style={labelStyle}>
-                Instagram handle
-                <input name="instagram_handle" type="text" style={inputStyle} placeholder="e.g. @uppr.agency" />
-              </label>
-              <label style={labelStyle}>
-                Tiktok handle
-                <input name="tiktok_handle" type="text" style={inputStyle} placeholder="e.g. @uppr.agency" />
-              </label>
-              <label style={labelStyle}>
-                Tell us briefly about your business — optional
-                <textarea name="description" rows={4} style={inputStyle} />
-              </label>
+                <label style={labelStyle}>
+                  Business name
+                  <input name="business_name" type="text" required style={inputStyle} placeholder="e.g. Uppr Agency" />
+                </label>
+                <label style={labelStyle}>
+                  Website link
+                  <input name="website_url" type="text" style={inputStyle} placeholder="e.g. www.uppr.agency" />
+                </label>
+                <label style={labelStyle}>
+                  Instagram handle
+                  <input name="instagram_handle" type="text" style={inputStyle} placeholder="e.g. @uppr.agency" />
+                </label>
+                <label style={labelStyle}>
+                  Tiktok handle
+                  <input name="tiktok_handle" type="text" style={inputStyle} placeholder="e.g. @uppr.agency" />
+                </label>
+                <label style={labelStyle}>
+                  Tell us briefly about your business — optional
+                  <textarea name="description" rows={4} style={inputStyle} />
+                </label>
 
-              <div style={{ height: 1, background: 'rgba(35,35,38,0.08)', margin: '4px 0' }} />
+                <button
+                  type="button"
+                  onClick={goToStep2}
+                  className="btn-dark"
+                  style={{ marginTop: 8, width: '100%', background: '#232326', color: '#fff', border: 'none', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-body)' }}
+                >
+                  Continue to billing
+                </button>
+              </div>
 
-              <div style={labelStyle}>
-                Billing as
-                <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: step === 2 ? 'flex' : 'none', flexDirection: 'column', gap: 22 }}>
+                <div style={labelStyle}>
+                  Billing as
+                  <div style={{ display: 'flex', gap: 10 }}>
+                    <button
+                      type="button"
+                      onClick={() => setPayerType('individual')}
+                      style={{
+                        flex: 1,
+                        padding: '11px 0',
+                        borderRadius: 10,
+                        border: payerType === 'individual' ? '1.5px solid #232326' : '1px solid rgba(35,35,38,0.12)',
+                        background: payerType === 'individual' ? '#fbfaf8' : '#fff',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: '#232326',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Individual
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPayerType('company')}
+                      style={{
+                        flex: 1,
+                        padding: '11px 0',
+                        borderRadius: 10,
+                        border: payerType === 'company' ? '1.5px solid #232326' : '1px solid rgba(35,35,38,0.12)',
+                        background: payerType === 'company' ? '#fbfaf8' : '#fff',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: '#232326',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Company (invoice)
+                    </button>
+                  </div>
+                </div>
+
+                {payerType === 'company' && (
+                  <div style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 12, padding: 18, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <span style={{ fontSize: 13, color: '#55565e' }}>Invoicing details</span>
+                    <label style={labelStyle}>
+                      Legal company name
+                      <input name="company_legal_name" type="text" required={payerType === 'company' && step === 2} style={inputStyle} placeholder="e.g. Uppr Marketing S.R.L." />
+                    </label>
+                    <label style={labelStyle}>
+                      Tax ID / CUI
+                      <input name="company_tax_id" type="text" required={payerType === 'company' && step === 2} style={inputStyle} placeholder="e.g. RO12345678" />
+                    </label>
+                    <label style={labelStyle}>
+                      Registration number (Reg. Com.)
+                      <input name="company_reg_number" type="text" style={inputStyle} placeholder="e.g. J40/1234/2024" />
+                    </label>
+                    <label style={labelStyle}>
+                      Registered address
+                      <input name="company_address" type="text" required={payerType === 'company' && step === 2} style={inputStyle} placeholder="Street, number, city, country" />
+                    </label>
+                  </div>
+                )}
+
+                {error && <p style={{ color: '#c0533f', fontSize: 14 }}>{error}</p>}
+
+                <div style={{ display: 'flex', gap: 12 }}>
                   <button
                     type="button"
-                    onClick={() => setPayerType('individual')}
-                    style={{
-                      flex: 1,
-                      padding: '11px 0',
-                      borderRadius: 10,
-                      border: payerType === 'individual' ? '1.5px solid #232326' : '1px solid rgba(35,35,38,0.12)',
-                      background: payerType === 'individual' ? '#fbfaf8' : '#fff',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: '#232326',
-                      cursor: 'pointer',
-                    }}
+                    onClick={() => setStep(1)}
+                    style={{ padding: '15px 22px', borderRadius: 99, fontSize: 15, fontWeight: 500, border: '1px solid rgba(35,35,38,0.15)', background: '#fff', color: '#232326', cursor: 'pointer', fontFamily: 'var(--font-body)' }}
                   >
-                    Individual
+                    Back
                   </button>
                   <button
-                    type="button"
-                    onClick={() => setPayerType('company')}
-                    style={{
-                      flex: 1,
-                      padding: '11px 0',
-                      borderRadius: 10,
-                      border: payerType === 'company' ? '1.5px solid #232326' : '1px solid rgba(35,35,38,0.12)',
-                      background: payerType === 'company' ? '#fbfaf8' : '#fff',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: '#232326',
-                      cursor: 'pointer',
-                    }}
+                    type="submit"
+                    disabled={loading}
+                    className="btn-dark"
+                    style={{ flex: 1, background: '#232326', color: '#fff', border: 'none', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-body)' }}
                   >
-                    Company (invoice)
+                    {loading ? 'Processing...' : 'Continue to payment'}
                   </button>
                 </div>
               </div>
-
-              {payerType === 'company' && (
-                <div style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 12, padding: 18, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  <span style={{ fontSize: 13, color: '#55565e' }}>Invoicing details</span>
-                  <label style={labelStyle}>
-                    Legal company name
-                    <input name="company_legal_name" type="text" required={payerType === 'company'} style={inputStyle} placeholder="e.g. Uppr Marketing S.R.L." />
-                  </label>
-                  <label style={labelStyle}>
-                    Tax ID / CUI
-                    <input name="company_tax_id" type="text" required={payerType === 'company'} style={inputStyle} placeholder="e.g. RO12345678" />
-                  </label>
-                  <label style={labelStyle}>
-                    Registration number (Reg. Com.)
-                    <input name="company_reg_number" type="text" style={inputStyle} placeholder="e.g. J40/1234/2024" />
-                  </label>
-                  <label style={labelStyle}>
-                    Registered address
-                    <input name="company_address" type="text" required={payerType === 'company'} style={inputStyle} placeholder="Street, number, city, country" />
-                  </label>
-                </div>
-              )}
-
-              {error && <p style={{ color: '#c0533f', fontSize: 14 }}>{error}</p>}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-dark"
-                style={{ marginTop: 8, width: '100%', background: '#232326', color: '#fff', border: 'none', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-body)' }}
-              >
-                {loading ? 'Processing...' : 'Continue to payment'}
-              </button>
             </form>
 
             {!loggedIn && (

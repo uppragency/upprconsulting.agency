@@ -17,6 +17,8 @@ export default function Footer() {
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: '#55565e', maxWidth: 460 }}>
               The audit that shows you exactly what's not working in your website, brand, and social media, before it costs you your audience.
             </p>
+            <Link href="/ro" className="footer-link" style={{ color: '#55565e', fontSize: 13 }}>🇷🇴 Versiune în română</Link>
+            <Link href="/audit-website-romania" className="footer-link" style={{ color: '#55565e', fontSize: 13 }}>Audit website România</Link>
           </div>
 
           {/* Services */}
@@ -29,6 +31,8 @@ export default function Footer() {
             <Link href="/calculator" className="footer-link" style={{ color: '#55565e' }}>Cost calculator</Link>
             <Link href="/industries" className="footer-link" style={{ color: '#55565e' }}>By industry</Link>
             <Link href="/compare" className="footer-link" style={{ color: '#55565e' }}>How we compare</Link>
+            <Link href="/process" className="footer-link" style={{ color: '#55565e' }}>How it works</Link>
+            <Link href="/resources" className="footer-link" style={{ color: '#55565e' }}>Resources</Link>
           </div>
 
           {/* Company */}
