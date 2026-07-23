@@ -96,6 +96,15 @@ export default async function AdminPage({
             <h1 style={{ margin: '8px 0 0', fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em' }}>Clients</h1>
           </div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <Link href="/admin/analytics" className="nav-link" style={{ border: '1px solid rgba(35,35,38,0.12)', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}>
+              Analytics
+            </Link>
+            <Link href="/admin/security" className="nav-link" style={{ border: '1px solid rgba(35,35,38,0.12)', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}>
+              Security
+            </Link>
+            <Link href="/admin/discount-codes" className="nav-link" style={{ border: '1px solid rgba(35,35,38,0.12)', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}>
+              Discounts
+            </Link>
             <Link href="/admin/testimonials" className="nav-link" style={{ border: '1px solid rgba(35,35,38,0.12)', padding: '9px 18px', borderRadius: 99, fontSize: 14 }}>
               Testimonials
             </Link>

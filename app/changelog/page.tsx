@@ -11,6 +11,19 @@ export const metadata = buildMetadata({
 const ENTRIES = [
   {
     date: 'July 2026',
+    tag: 'v3.6',
+    items: [
+      'Fixed a security gap where discount and referral codes silently failed for anonymous visitors',
+      'New admin pages: discount codes (create/manage/track usage), analytics, and security',
+      'Login now requires a simple verification question after repeated failed attempts',
+      'Blog: category filters (by audit type), checklist items now link to relevant articles',
+      'New "Quick guide" page for clients',
+      'Homepage visual polish: icons, color-coded sections, connected step indicators, scroll-in animations',
+      'Admin "Today" page now shows today vs. yesterday comparisons',
+    ],
+  },
+  {
+    date: 'July 2026',
     tag: 'v3.2',
     items: [
       'Full SEO overhaul: metadata, Open Graph, Twitter cards, and canonical URLs on every page',

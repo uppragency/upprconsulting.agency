@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { SITE_URL, SITE_NAME, DEFAULT_OG_DESCRIPTION } from '@/lib/seo';
+import PageViewTracker from '@/components/PageViewTracker';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+        <PageViewTracker />
         {children}
       </body>
     </html>

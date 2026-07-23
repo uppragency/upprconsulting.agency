@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import OrderSummary from '@/components/OrderSummary';
+import { getSessionId } from '@/lib/session-id';
 
 function OrderForm() {
   const searchParams = useSearchParams();
@@ -118,6 +119,7 @@ function OrderForm() {
           companyTaxId,
           companyRegNumber,
           companyAddress,
+          sessionId: getSessionId(),
         }),
       });
 

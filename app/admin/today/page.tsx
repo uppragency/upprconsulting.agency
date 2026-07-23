@@ -17,11 +17,23 @@ export default async function AdminTodayPage() {
 
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
+  const startOfYesterday = new Date(startOfDay);
+  startOfYesterday.setDate(startOfYesterday.getDate() - 1);
 
   const { data: clients } = await supabase.from('clients').select('id, business_name, status, created_at');
   const { data: deliverables } = await supabase.from('deliverables').select('id, client_id, type, status, delivered_at');
 
   const newToday = (clients ?? []).filter((c) => new Date(c.created_at) >= startOfDay);
+  const newYesterday = (clients ?? []).filter((c) => {
+    const d = new Date(c.created_at);
+    return d >= startOfYesterday && d < startOfDay;
+  });
+  const sentToday = (deliverables ?? []).filter((d) => d.delivered_at && new Date(d.delivered_at) >= startOfDay);
+  const sentYesterday = (deliverables ?? []).filter((d) => {
+    if (!d.delivered_at) return false;
+    const dt = new Date(d.delivered_at);
+    return dt >= startOfYesterday && dt < startOfDay;
+  });
   const paidClients = (clients ?? []).filter((c) => c.status === 'paid');
   const clientById = Object.fromEntries((clients ?? []).map((c) => [c.id, c]));
 
@@ -39,6 +51,23 @@ export default async function AdminTodayPage() {
     </div>
   );
 
+  const compareCard = (label: string, today: number, yesterday: number) => {
+    const diff = today - yesterday;
+    const diffColor = diff > 0 ? '#6a7d0a' : diff < 0 ? '#c0533f' : '#8a8b92';
+    return (
+      <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 22 }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92' }}>{label}</span>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
+          <span style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-0.02em' }}>{today}</span>
+          <span style={{ fontSize: 12.5, color: diffColor, fontFamily: 'var(--font-mono)' }}>
+            {diff > 0 ? '+' : ''}{diff} vs yesterday
+          </span>
+        </div>
+        <p style={{ margin: '4px 0 0', fontSize: 11.5, color: '#8a8b92' }}>Yesterday: {yesterday}</p>
+      </div>
+    );
+  };
+
   return (
     <>
       <Nav />
@@ -55,10 +84,10 @@ export default async function AdminTodayPage() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16, marginBottom: 40 }}>
-          {statCard('New orders today', newToday.length)}
+          {compareCard('New orders today', newToday.length, newYesterday.length)}
+          {compareCard('Delivered today', sentToday.length, sentYesterday.length)}
           {statCard('Deliverables to send', pendingDeliverables.length)}
           {statCard('Overdue (48h+)', overduePending.length)}
-          {statCard('Total paid clients', paidClients.length)}
         </div>
 
         {newToday.length > 0 && (

@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [requiresCaptcha, setRequiresCaptcha] = useState(false);
+  const [captcha] = useState(() => ({ a: Math.floor(Math.random() * 8) + 1, b: Math.floor(Math.random() * 8) + 1 }));
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,15 +19,30 @@ export default function LoginForm() {
     const password = String(formData.get('password'));
 
     try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          ...(requiresCaptcha ? { captchaA: captcha.a, captchaB: captcha.b, captchaAnswer } : {}),
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? 'Incorrect email or password.');
+        if (data.requiresCaptcha) setRequiresCaptcha(true);
+        setLoading(false);
+        return;
+      }
+
       // A full page navigation (not router.push) avoids a race where the
       // middleware's session check runs before the auth cookie has fully
       // propagated, which was causing a redirect loop back to /login.
       window.location.href = '/account';
     } catch {
-      setError('Incorrect email or password.');
+      setError('Something went wrong. Please try again.');
       setLoading(false);
     }
   }
@@ -61,6 +78,20 @@ export default function LoginForm() {
             Password
             <input name="password" type="password" required style={inputStyle} />
           </label>
+
+          {requiresCaptcha && (
+            <label style={labelStyle}>
+              Quick check: what is {captcha.a} + {captcha.b}?
+              <input
+                type="number"
+                required
+                value={captchaAnswer}
+                onChange={(e) => setCaptchaAnswer(e.target.value)}
+                style={inputStyle}
+                placeholder="Your answer"
+              />
+            </label>
+          )}
 
           {error && <p style={{ color: '#c0533f', fontSize: 14 }}>{error}</p>}
 

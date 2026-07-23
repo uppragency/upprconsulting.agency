@@ -6,6 +6,7 @@ import Pagination from '@/components/Pagination';
 import { createClient } from '@/lib/supabase/server';
 import { estimateReadingTime } from '@/lib/reading-time';
 import { buildMetadata } from '@/lib/seo';
+import { BLOG_CATEGORIES, categoryForTags } from '@/lib/blog-categories';
 
 export const revalidate = 60;
 
@@ -17,7 +18,7 @@ export const metadata = buildMetadata({
 
 const POSTS_PER_PAGE = 9;
 
-export default async function BlogPage({ searchParams }: { searchParams: { tag?: string; page?: string } }) {
+export default async function BlogPage({ searchParams }: { searchParams: { tag?: string; page?: string; category?: string } }) {
   const supabase = createClient();
   const { data: articles } = await supabase
     .from('articles')
@@ -27,7 +28,15 @@ export default async function BlogPage({ searchParams }: { searchParams: { tag?:
 
   const allTags = Array.from(new Set((articles ?? []).flatMap((a) => a.tags ?? []))).sort();
   const activeTag = searchParams.tag;
-  const filtered = activeTag ? (articles ?? []).filter((a) => a.tags?.includes(activeTag)) : articles ?? [];
+  const activeCategory = searchParams.category;
+
+  let filtered = articles ?? [];
+  if (activeCategory) {
+    filtered = filtered.filter((a) => categoryForTags(a.tags ?? []) === activeCategory);
+  }
+  if (activeTag) {
+    filtered = filtered.filter((a) => a.tags?.includes(activeTag));
+  }
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / POSTS_PER_PAGE));
   const currentPage = Math.min(Math.max(1, Number(searchParams.page) || 1), totalPages);
@@ -38,7 +47,48 @@ export default async function BlogPage({ searchParams }: { searchParams: { tag?:
       <Nav />
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '80px 32px 100px' }}>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>Blog</span>
-        <h1 style={{ margin: '12px 0 32px', fontSize: 42, fontWeight: 600, letterSpacing: '-0.03em' }}>Notes on audits, brands, and websites.</h1>
+        <h1 style={{ margin: '12px 0 24px', fontSize: 42, fontWeight: 600, letterSpacing: '-0.03em' }}>Notes on audits, brands, and websites.</h1>
+
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+          <Link
+            href="/blog"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13.5,
+              fontWeight: 600,
+              padding: '8px 16px',
+              borderRadius: 99,
+              background: !activeCategory ? '#232326' : '#fff',
+              color: !activeCategory ? '#fff' : '#55565e',
+              border: !activeCategory ? 'none' : '1px solid rgba(35,35,38,0.1)',
+            }}
+          >
+            All categories
+          </Link>
+          {BLOG_CATEGORIES.map((cat) => (
+            <Link
+              key={cat.key}
+              href={`/blog?category=${cat.key}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 13.5,
+                fontWeight: 600,
+                padding: '8px 16px',
+                borderRadius: 99,
+                background: activeCategory === cat.key ? '#232326' : '#fff',
+                color: activeCategory === cat.key ? '#fff' : '#55565e',
+                border: activeCategory === cat.key ? 'none' : '1px solid rgba(35,35,38,0.1)',
+              }}
+            >
+              <span>{cat.icon}</span>
+              {cat.label}
+            </Link>
+          ))}
+        </div>
 
         {allTags.length > 0 && <TagFilter tags={allTags} activeTag={activeTag} />}
 

@@ -29,6 +29,7 @@ export async function POST(request: Request) {
     companyTaxId,
     companyRegNumber,
     companyAddress,
+    sessionId,
   } = body;
 
   const admin = createServiceRoleClient();
@@ -38,10 +39,11 @@ export async function POST(request: Request) {
   if (referralCode) {
     const normalized = referralCode.trim().toUpperCase();
 
-    const { data: fixedCode } = await admin.from('discount_codes').select('percent_off').eq('code', normalized).eq('active', true).maybeSingle();
+    const { data: fixedCode } = await admin.from('discount_codes').select('id, percent_off, times_used').eq('code', normalized).eq('active', true).maybeSingle();
     if (fixedCode) {
       discountApplied = true;
       discountPercent = fixedCode.percent_off;
+      await admin.from('discount_codes').update({ times_used: fixedCode.times_used + 1 }).eq('id', fixedCode.id);
     } else {
       const { data: hasReferrer } = await admin.rpc('check_referral_code', { p_code: normalized });
       if (hasReferrer) {
@@ -67,6 +69,7 @@ export async function POST(request: Request) {
       tiktok_handle: tiktokHandle || null,
       project_description: description || null,
       status: 'pending_payment',
+      session_id: sessionId || null,
       user_id: user.id,
       referred_by_code: discountApplied ? referralCode : null,
       payer_type: payerType === 'company' ? 'company' : 'individual',
