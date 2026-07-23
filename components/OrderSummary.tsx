@@ -11,6 +11,7 @@ export default function OrderSummary({
 }) {
   const [codeInput, setCodeInput] = useState(initialCode ?? '');
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [discountPercent, setDiscountPercent] = useState(0);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,10 +28,12 @@ export default function OrderSummary({
       const data = await res.json();
       if (data.valid) {
         setAppliedCode(code.toUpperCase());
+        setDiscountPercent(data.discountPercent ?? 0);
         onCodeChange(code.toUpperCase());
       } else {
         setError('That code is not valid.');
         setAppliedCode(null);
+        setDiscountPercent(0);
         onCodeChange(null);
       }
     } finally {
@@ -45,12 +48,13 @@ export default function OrderSummary({
 
   function removeCode() {
     setAppliedCode(null);
+    setDiscountPercent(0);
     setCodeInput('');
     onCodeChange(null);
   }
 
   const base = 47.97;
-  const discount = appliedCode ? Math.round(base * 0.15 * 100) / 100 : 0;
+  const discount = appliedCode ? Math.round(base * (discountPercent / 100) * 100) / 100 : 0;
   const total = base - discount;
 
   const inputStyle: React.CSSProperties = {

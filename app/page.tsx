@@ -42,10 +42,10 @@ const steps = [
 ];
 
 const compareRows = [
-  { label: 'Time to result', diy: 'Undefined', freelancer: '1–2 weeks', uppr: '48 hours' },
-  { label: 'Level of detail', diy: 'Subjective', freelancer: 'Variable', uppr: '4 structured audits' },
-  { label: 'Explained or just written', diy: '—', freelancer: 'Usually just text', uppr: '2 personalized videos' },
-  { label: 'Cost', diy: 'Your time', freelancer: 'Often over €200', uppr: '€47.97, one payment' },
+  { icon: '⏱', label: 'Time to result', diy: 'Undefined', freelancer: '1–2 weeks', uppr: '48 hours' },
+  { icon: '📋', label: 'Level of detail', diy: 'Subjective', freelancer: 'Variable', uppr: '4 structured audits' },
+  { icon: '🎥', label: 'Explained or just written', diy: '—', freelancer: 'Usually just text', uppr: '2 personalized videos' },
+  { icon: '💳', label: 'Cost', diy: 'Your time', freelancer: 'Often over €200', uppr: '€47.97, one payment' },
 ];
 
 const advantages = [
@@ -70,9 +70,9 @@ const audits = [
 ];
 
 const personas = [
-  { title: 'Small business owners', desc: "You built the business, not the brand. You want to know what's actually costing you customers.", stat: '70%', statLabel: 'say they never had a proper audit before' },
-  { title: 'Marketing teams', desc: "You need outside eyes on a website and socials you're too close to see clearly anymore.", stat: '48h', statLabel: 'turnaround, fits inside any sprint' },
-  { title: 'Solo founders', desc: "You're doing it all yourself, including the parts of marketing you were never trained for.", stat: '€47.97', statLabel: 'less than one wasted ad campaign' },
+  { icon: '🏪', title: 'Small business owners', desc: "You built the business, not the brand. You want to know what's actually costing you customers.", stat: '70%', statLabel: 'say they never had a proper audit before' },
+  { icon: '📊', title: 'Marketing teams', desc: "You need outside eyes on a website and socials you're too close to see clearly anymore.", stat: '48h', statLabel: 'turnaround, fits inside any sprint' },
+  { icon: '🚀', title: 'Solo founders', desc: "You're doing it all yourself, including the parts of marketing you were never trained for.", stat: '€47.97', statLabel: 'less than one wasted ad campaign' },
 ];
 
 const testimonials = [
@@ -295,17 +295,20 @@ export default function HomePage() {
             <div style={{ padding: '20px 24px' }} />
             <div style={{ padding: '20px 24px', fontSize: 14, fontWeight: 600, color: '#55565e' }}>You figure it out yourself</div>
             <div style={{ padding: '20px 24px', fontSize: 14, fontWeight: 600, color: '#55565e' }}>Random freelancer</div>
-            <div style={{ padding: '20px 24px', fontSize: 14, fontWeight: 600, background: '#232326', color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ padding: '20px 24px', fontSize: 14, fontWeight: 600, background: '#232326', color: '#fff', display: 'flex', alignItems: 'center', gap: 8, boxShadow: `inset 3px 0 0 ${ACCENT}` }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: ACCENT }} />
               UPPR Consulting
             </div>
           </div>
           {compareRows.map((r) => (
             <div key={r.label} className="compare-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr', borderBottom: '1px solid rgba(35,35,38,0.06)', minWidth: 640 }}>
-              <div style={{ padding: '18px 24px', fontSize: 14, fontWeight: 600 }}>{r.label}</div>
+              <div style={{ padding: '18px 24px', fontSize: 14, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: 15 }}>{r.icon}</span>
+                {r.label}
+              </div>
               <div data-label="You figure it out yourself" style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.diy}</div>
               <div data-label="Random freelancer" style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.freelancer}</div>
-              <div data-label="UPPR Consulting" style={{ padding: '18px 24px', fontSize: 14, fontWeight: 500, background: '#232326', color: '#fff' }}>{r.uppr}</div>
+              <div data-label="UPPR Consulting" style={{ padding: '18px 24px', fontSize: 14, fontWeight: 500, background: '#232326', color: '#fff', boxShadow: `inset 3px 0 0 ${ACCENT}, inset 0 0 24px -12px ${ACCENT}` }}>{r.uppr}</div>
             </div>
           ))}
         </div>
@@ -395,17 +398,18 @@ export default function HomePage() {
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>What you get</span>
             <h2 style={{ margin: 0, fontSize: 42, lineHeight: 1.08, letterSpacing: '-0.03em', fontWeight: 600 }}>Four complete audits, one price.</h2>
           </div>
-          {/* Connected stepper track */}
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }} className="grid-4-responsive">
-            {audits.map((au, i) => (
-              <div key={au.num} style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+          {/* Connected stepper track — same grid as the cards below, so circles align exactly */}
+          <div className="grid-4-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, position: 'relative' }}>
+            <div className="stepper-line" style={{ position: 'absolute', top: 17, left: 'calc(12.5% - 10px)', right: 'calc(12.5% - 10px)', height: 1, background: 'rgba(35,35,38,0.12)', zIndex: 0 }} />
+            {audits.map((au) => (
+              <div key={au.num} style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
                 <span
                   style={{
                     width: 34,
                     height: 34,
                     borderRadius: '50%',
                     border: `1.5px solid ${au.color}`,
-                    background: '#fff',
+                    background: '#fbfaf8',
                     color: au.color,
                     fontFamily: 'var(--font-mono)',
                     fontSize: 12,
@@ -414,12 +418,10 @@ export default function HomePage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    zIndex: 1,
                   }}
                 >
                   {au.num}
                 </span>
-                {i < audits.length - 1 && <div style={{ flex: 1, height: 1, background: 'rgba(35,35,38,0.12)' }} />}
               </div>
             ))}
           </div>
@@ -476,6 +478,7 @@ export default function HomePage() {
         <div className="grid-3-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
           {personas.map((p) => (
             <div key={p.title} style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 32, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <span style={{ fontSize: 26 }}>{p.icon}</span>
               <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.01em' }}>{p.title}</span>
               <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: '#55565e', flex: 1 }}>{p.desc}</p>
               <div style={{ borderTop: '1px solid rgba(35,35,38,0.08)', paddingTop: 16, display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -525,8 +528,20 @@ export default function HomePage() {
           </div>
         </div>
         <div className="grid-2-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 20 }}>
-          {testimonials.map((t) => (
-            <div key={t.name} style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {testimonials.map((t, i) => (
+            <div
+              key={t.name}
+              style={{
+                background: '#fff',
+                border: '1px solid rgba(35,35,38,0.1)',
+                borderLeft: `3px solid ${['#f2994a', '#9b6bf2', '#4a90e2', '#4caf7d'][i % 4]}`,
+                borderRadius: 16,
+                padding: 32,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 18,
+              }}
+            >
               <span style={{ color: '#232326', fontSize: 14, letterSpacing: 2 }}>★★★★★</span>
               <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: '#232326', flex: 1 }}>"{t.quote}"</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

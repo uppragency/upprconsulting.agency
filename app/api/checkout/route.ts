@@ -34,12 +34,25 @@ export async function POST(request: Request) {
   const admin = createServiceRoleClient();
 
   let discountApplied = false;
+  let discountPercent = 0;
   if (referralCode) {
-    const { data: referrer } = await admin.from('profiles').select('id').eq('referral_code', referralCode).maybeSingle();
-    if (referrer) discountApplied = true;
+    const normalized = referralCode.trim().toUpperCase();
+
+    const { data: fixedCode } = await admin.from('discount_codes').select('percent_off').eq('code', normalized).eq('active', true).maybeSingle();
+    if (fixedCode) {
+      discountApplied = true;
+      discountPercent = fixedCode.percent_off;
+    } else {
+      const { data: referrer } = await admin.from('profiles').select('id').eq('referral_code', normalized).maybeSingle();
+      if (referrer) {
+        discountApplied = true;
+        discountPercent = 15;
+      }
+    }
   }
 
-  const unitAmount = discountApplied ? 4077 : 4797;
+  const BASE_CENTS = 4797;
+  const unitAmount = discountApplied ? Math.round(BASE_CENTS * (1 - discountPercent / 100)) : BASE_CENTS;
 
   // Create the client record, linked directly to the authenticated user
   // (this allows one account to place multiple orders over time)
