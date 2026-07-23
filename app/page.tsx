@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import FaqAccordion from '@/components/FaqAccordion';
+import ScrollReveal from '@/components/ScrollReveal';
+import AuditIllustration from '@/components/AuditIllustration';
 import { FAQS } from '@/lib/faqs';
 
 const ACCENT = '#e2fa5c';
@@ -34,9 +36,9 @@ const aiCosts = [
 ];
 
 const steps = [
-  { num: '01', title: 'Send us your links', desc: "Your website URL and social accounts. That's all we need to get started — no calls, no forms." },
-  { num: '02', title: 'We analyze everything by hand', desc: 'Every page, every post, checked by a person, not a script. Human-reviewed, end to end.' },
-  { num: '03', title: 'You get the full report', desc: 'Four structured audits and two personalized videos, prioritized and ready to act on, in your dashboard within 48 hours.' },
+  { num: '01', icon: '🔗', title: 'Send us your links', desc: "Your website URL and social accounts. That's all we need to get started — no calls, no forms." },
+  { num: '02', icon: '🔍', title: 'We analyze everything by hand', desc: 'Every page, every post, checked by a person, not a script. Human-reviewed, end to end.' },
+  { num: '03', icon: '📋', title: 'You get the full report', desc: 'Four structured audits and two personalized videos, prioritized and ready to act on, in your dashboard within 48 hours.' },
 ];
 
 const compareRows = [
@@ -47,12 +49,12 @@ const compareRows = [
 ];
 
 const advantages = [
-  { tag: '48H', title: 'Delivery, not a promise', desc: 'Order today, get your audits and videos in your account within 48 hours. No waiting weeks for a call back.' },
-  { tag: '01', title: 'Real team, not templates', desc: 'Every audit is done by a person actually looking at your business, not auto-generated.' },
-  { tag: '02', title: 'Actionable recommendations', desc: "You don't just get a diagnosis. You get concrete next steps, in priority order." },
-  { tag: '€47.97', title: 'No subscription', desc: "One payment, 47.97 EUR. No monthly contract just to find out what's not working." },
-  { tag: '03', title: 'Explained, not just written', desc: 'The 2 personalized videos show you exactly where to look and why it matters.' },
-  { tag: '04', title: 'Connected to execution', desc: 'If you want it implemented too, the same team (UPPR Agency) can take over marketing and retention.' },
+  { tag: '48H', icon: '⚡', title: 'Delivery, not a promise', desc: 'Order today, get your audits and videos in your account within 48 hours. No waiting weeks for a call back.' },
+  { tag: '01', icon: '👤', title: 'Real team, not templates', desc: 'Every audit is done by a person actually looking at your business, not auto-generated.' },
+  { tag: '02', icon: '✅', title: 'Actionable recommendations', desc: "You don't just get a diagnosis. You get concrete next steps, in priority order." },
+  { tag: '€47.97', icon: '💳', title: 'No subscription', desc: "One payment, 47.97 EUR. No monthly contract just to find out what's not working." },
+  { tag: '03', icon: '🎥', title: 'Explained, not just written', desc: 'The 2 personalized videos show you exactly where to look and why it matters.' },
+  { tag: '04', icon: '🔗', title: 'Connected to execution', desc: 'If you want it implemented too, the same team (UPPR Agency) can take over marketing and retention.' },
 ];
 
 const videos = [
@@ -61,10 +63,10 @@ const videos = [
 ];
 
 const audits = [
-  { num: '01', title: 'Social media audit', desc: "What's working and what's costing you engagement, with concrete content recommendations." },
-  { num: '02', title: 'Visual identity audit', desc: 'Consistency, perception, and weak points in your logo, colors, and typography, applied across all your materials.' },
-  { num: '03', title: 'Website audit', desc: "Structure, speed, conversion, and what's stopping visitors from buying or contacting you." },
-  { num: '04', title: 'UI/UX audit', desc: 'Friction points in the navigation experience, from homepage to form or checkout.' },
+  { num: '01', color: '#f2994a', title: 'Social media audit', desc: "What's working and what's costing you engagement, with concrete content recommendations." },
+  { num: '02', color: '#9b6bf2', title: 'Visual identity audit', desc: 'Consistency, perception, and weak points in your logo, colors, and typography, applied across all your materials.' },
+  { num: '03', color: '#4a90e2', title: 'Website audit', desc: "Structure, speed, conversion, and what's stopping visitors from buying or contacting you." },
+  { num: '04', color: '#4caf7d', title: 'UI/UX audit', desc: 'Friction points in the navigation experience, from homepage to form or checkout.' },
 ];
 
 const personas = [
@@ -182,6 +184,13 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+            <Link
+              href="/order"
+              className="btn-accent"
+              style={{ background: ACCENT, color: '#232326', padding: '14px 26px', borderRadius: 99, fontSize: 15, fontWeight: 600, alignSelf: 'flex-start', marginTop: 8 }}
+            >
+              Order the audit — €47.97
+            </Link>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="grid-2-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -230,10 +239,43 @@ export default function HomePage() {
           </div>
           <div className="grid-3-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
             {steps.map((s) => (
-              <div key={s.num} style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 16, padding: 32, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#55565e' }}>Step {s.num}</span>
-                <span style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em' }}>{s.title}</span>
-                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: '#55565e' }}>{s.desc}</p>
+              <div
+                key={s.num}
+                className="step-card"
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: '#fbfaf8',
+                  border: '1px solid rgba(35,35,38,0.08)',
+                  borderLeft: '3px solid #e2fa5c',
+                  borderRadius: 16,
+                  padding: 32,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 14,
+                }}
+              >
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: -18,
+                    right: 4,
+                    fontSize: 90,
+                    fontWeight: 700,
+                    color: 'rgba(35,35,38,0.05)',
+                    lineHeight: 1,
+                    pointerEvents: 'none',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                >
+                  {s.num}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}>
+                  <span style={{ fontSize: 20 }}>{s.icon}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#55565e' }}>Step {s.num}</span>
+                </div>
+                <span style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em', position: 'relative' }}>{s.title}</span>
+                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: '#55565e', position: 'relative' }}>{s.desc}</p>
               </div>
             ))}
           </div>
@@ -277,14 +319,49 @@ export default function HomePage() {
             <h2 style={{ margin: 0, fontSize: 42, lineHeight: 1.08, letterSpacing: '-0.03em', fontWeight: 600 }}>The UPPR advantage.</h2>
           </div>
           <div className="grid-3-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-            {advantages.map((a) => (
-              <div key={a.title} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: ACCENT }}>{a.tag}</span>
-                <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.01em' }}>{a.title}</span>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: 'rgba(255,255,255,0.7)' }}>{a.desc}</p>
-              </div>
+            {advantages.map((a, i) => (
+              <ScrollReveal key={a.title} delay={i * 60}>
+                <div
+                  className={`advantage-card${(i + 1) % 3 !== 0 ? ' advantage-separator' : ''}`}
+                  style={{
+                    background: 'linear-gradient(165deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03))',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: 16,
+                    padding: 32,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 12,
+                    height: '100%',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: 18 }}>{a.icon}</span>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 12,
+                        color: ACCENT,
+                        background: 'rgba(226,250,92,0.1)',
+                        padding: '3px 10px',
+                        borderRadius: 99,
+                      }}
+                    >
+                      {a.tag}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.01em' }}>{a.title}</span>
+                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: 'rgba(255,255,255,0.7)' }}>{a.desc}</p>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
+          <Link
+            href="/order"
+            className="btn-accent"
+            style={{ background: ACCENT, color: '#232326', padding: '15px 30px', borderRadius: 99, fontSize: 15, fontWeight: 600, alignSelf: 'center' }}
+          >
+            Order the audit — €47.97
+          </Link>
         </div>
       </section>
 
@@ -318,12 +395,72 @@ export default function HomePage() {
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>What you get</span>
             <h2 style={{ margin: 0, fontSize: 42, lineHeight: 1.08, letterSpacing: '-0.03em', fontWeight: 600 }}>Four complete audits, one price.</h2>
           </div>
+          {/* Connected stepper track */}
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }} className="grid-4-responsive">
+            {audits.map((au, i) => (
+              <div key={au.num} style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                <span
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    border: `1.5px solid ${au.color}`,
+                    background: '#fff',
+                    color: au.color,
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  {au.num}
+                </span>
+                {i < audits.length - 1 && <div style={{ flex: 1, height: 1, background: 'rgba(35,35,38,0.12)' }} />}
+              </div>
+            ))}
+          </div>
+
           <div className="grid-4-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
-            {audits.map((au) => (
-              <div key={au.num} style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.08)', borderRadius: 16, padding: 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#55565e' }}>{au.num}</span>
-                <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.01em' }}>{au.title}</span>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: '#55565e' }}>{au.desc}</p>
+            {audits.map((au, i) => (
+              <div
+                key={au.num}
+                style={{
+                  position: 'relative',
+                  background: i % 2 === 1 ? '#f5f4f0' : '#fbfaf8',
+                  border: '1px solid rgba(35,35,38,0.08)',
+                  borderRadius: 16,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                }}
+              >
+                <div style={{ height: 3, background: au.color }} />
+                <div style={{ padding: '24px 28px 28px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <AuditIllustration num={au.num} color={au.color} />
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 10,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: '#6a7d0a',
+                        background: 'rgba(226,250,92,0.25)',
+                        padding: '3px 9px',
+                        borderRadius: 99,
+                      }}
+                    >
+                      Included
+                    </span>
+                  </div>
+                  <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.01em' }}>{au.title}</span>
+                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: '#55565e' }}>{au.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -359,6 +496,13 @@ export default function HomePage() {
             <p style={{ margin: 0, fontSize: 17, lineHeight: 1.6, color: 'rgba(255,255,255,0.7)' }}>
               Deliverables show up as they're ready, you don't have to wait for all 6 at once.
             </p>
+            <Link
+              href="/order"
+              className="btn-accent"
+              style={{ background: ACCENT, color: '#232326', padding: '14px 26px', borderRadius: 99, fontSize: 15, fontWeight: 600, alignSelf: 'flex-start', marginTop: 8 }}
+            >
+              Order the audit — €47.97
+            </Link>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 8 }}>
             {accountItems.map((d) => (
