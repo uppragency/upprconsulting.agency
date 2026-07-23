@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   }
 
   // Otherwise, check if it's a user's referral code
-  const { data: referrer } = await service.from('profiles').select('id').eq('referral_code', normalized).maybeSingle();
+  const { data: hasReferrer } = await service.rpc('check_referral_code', { p_code: normalized });
 
-  return NextResponse.json({ valid: !!referrer, discountPercent: referrer ? 15 : 0 });
+  return NextResponse.json({ valid: !!hasReferrer, discountPercent: hasReferrer ? 15 : 0 });
 }

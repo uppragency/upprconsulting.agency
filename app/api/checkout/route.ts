@@ -43,8 +43,8 @@ export async function POST(request: Request) {
       discountApplied = true;
       discountPercent = fixedCode.percent_off;
     } else {
-      const { data: referrer } = await admin.from('profiles').select('id').eq('referral_code', normalized).maybeSingle();
-      if (referrer) {
+      const { data: hasReferrer } = await admin.rpc('check_referral_code', { p_code: normalized });
+      if (hasReferrer) {
         discountApplied = true;
         discountPercent = 15;
       }
