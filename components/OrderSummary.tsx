@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 
 export default function OrderSummary({
   initialCode,
+  forceApplyCode,
   onCodeChange,
 }: {
   initialCode?: string | null;
+  forceApplyCode?: string | null;
   onCodeChange: (code: string | null) => void;
 }) {
   const [codeInput, setCodeInput] = useState(initialCode ?? '');
@@ -45,6 +47,11 @@ export default function OrderSummary({
     if (initialCode) applyCode(initialCode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialCode]);
+
+  useEffect(() => {
+    if (forceApplyCode) applyCode(forceApplyCode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceApplyCode]);
 
   function removeCode() {
     setAppliedCode(null);
@@ -114,7 +121,7 @@ export default function OrderSummary({
           </button>
         </div>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <span className="tag-pill active" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             🏷 {appliedCode}
             <button
@@ -125,6 +132,9 @@ export default function OrderSummary({
             >
               ×
             </button>
+          </span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: '#6a7d0a', background: 'rgba(226,250,92,0.3)', padding: '5px 12px', borderRadius: 99 }}>
+            You save €{discount.toFixed(2)}
           </span>
         </div>
       )}
@@ -147,6 +157,9 @@ export default function OrderSummary({
         <span style={{ fontSize: 15, fontWeight: 700 }}>Total</span>
         <span style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>€{total.toFixed(2)}</span>
       </div>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: '#55565e' }}>
+        <span style={{ color: '#6a7d0a' }}>✓</span> No hidden costs, no recurring charges
+      </span>
     </div>
   );
 }

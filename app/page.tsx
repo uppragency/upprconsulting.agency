@@ -4,6 +4,8 @@ import Footer from '@/components/Footer';
 import FaqAccordion from '@/components/FaqAccordion';
 import ScrollReveal from '@/components/ScrollReveal';
 import AuditIllustration from '@/components/AuditIllustration';
+import ABHeadline from '@/components/ABHeadline';
+import ABCTAButton from '@/components/ABCTAButton';
 import { FAQS } from '@/lib/faqs';
 
 const ACCENT = '#e2fa5c';
@@ -123,17 +125,13 @@ export default function HomePage() {
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: ACCENT, display: 'inline-block' }} />
               The audit that shows you what slow is costing you
             </div>
-            <h1 style={{ margin: 0, fontSize: 60, lineHeight: 1.04, letterSpacing: '-0.035em', fontWeight: 600 }}>
-              AI makes your website cheap. It kills your business slowly.
-            </h1>
+            <ABHeadline />
             <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: '#55565e', maxWidth: 480 }}>
               Auto-generated content, a website built fast with AI, posts written by an algorithm. Costs little today.
               You lose visitors, audience, and followers, month after month, until there's nothing left to save.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8 }}>
-              <Link href="/order" className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500 }}>
-                Order audit
-              </Link>
+              <ABCTAButton className="btn-dark" style={{ background: '#232326', color: '#fff', padding: '15px 28px', borderRadius: 99, fontSize: 15, fontWeight: 500 }} />
               <span style={{ fontSize: 14, color: '#55565e' }}>One payment, no subscription</span>
             </div>
           </div>

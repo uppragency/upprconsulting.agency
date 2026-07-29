@@ -16,9 +16,19 @@ function OrderForm() {
   const [error, setError] = useState<string | null>(null);
   const [payerType, setPayerType] = useState<'individual' | 'company'>('individual');
   const [discountCode, setDiscountCode] = useState<string | null>(null);
-  const [showNudge, setShowNudge] = useState(false);
+  const [voucherCodeToApply, setVoucherCodeToApply] = useState<string | null>(null);
+  const [activeBanner, setActiveBanner] = useState<'reassurance' | 'voucher' | null>(null);
   const [step, setStep] = useState<1 | 2>(1);
   const step1Ref = useRef<HTMLDivElement>(null);
+
+  const [capacity, setCapacity] = useState<{ todayRemaining: number; weekRemaining: number } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/order-capacity')
+      .then((r) => r.json())
+      .then(setCapacity)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch('/api/track/order-view', { method: 'POST' }).catch(() => {});
@@ -29,7 +39,7 @@ function OrderForm() {
 
     function handleMouseLeave(e: MouseEvent) {
       if (e.clientY <= 0) {
-        setShowNudge(true);
+        setActiveBanner((current) => current ?? 'reassurance');
         sessionStorage.setItem('order-nudge-shown', '1');
         document.removeEventListener('mouseleave', handleMouseLeave);
       }
@@ -44,6 +54,17 @@ function OrderForm() {
       clearTimeout(timer);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
+  }, []);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('order-voucher-shown')) return;
+
+    const timer = setTimeout(() => {
+      setActiveBanner((current) => current ?? 'voucher');
+      sessionStorage.setItem('order-voucher-shown', '1');
+    }, 3 * 60 * 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -68,6 +89,64 @@ function OrderForm() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  const formRef = useRef<HTMLFormElement>(null);
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  const DRAFT_KEY = 'order-form-draft';
+  const DRAFT_FIELDS = ['contact_name', 'business_name', 'website_url', 'instagram_handle', 'tiktok_handle', 'description'];
+
+  useEffect(() => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (!saved || !formRef.current) return;
+    try {
+      const draft = JSON.parse(saved);
+      let restoredAny = false;
+      DRAFT_FIELDS.forEach((name) => {
+        const input = formRef.current?.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null;
+        if (input && draft[name]) {
+          input.value = draft[name];
+          restoredAny = true;
+        }
+      });
+      if (restoredAny) setDraftRestored(true);
+    } catch {}
+  }, []);
+
+  function suggestBusinessNameFromUrl() {
+    if (!formRef.current) return;
+    const businessInput = formRef.current.elements.namedItem('business_name') as HTMLInputElement | null;
+    const websiteInput = formRef.current.elements.namedItem('website_url') as HTMLInputElement | null;
+    if (!businessInput || !websiteInput || businessInput.value.trim()) return; // don't override what they already typed
+
+    const raw = websiteInput.value.trim();
+    if (!raw) return;
+    try {
+      const withProtocol = raw.startsWith('http') ? raw : `https://${raw}`;
+      const hostname = new URL(withProtocol).hostname.replace(/^www\./, '');
+      const domainPart = hostname.split('.')[0];
+      if (!domainPart) return;
+      const suggested = domainPart
+        .replace(/[-_]/g, ' ')
+        .split(' ')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
+      businessInput.value = suggested;
+      handleDraftInput();
+    } catch {
+      // Not a parseable URL, skip silently
+    }
+  }
+
+  function handleDraftInput() {
+    if (!formRef.current) return;
+    const draft: Record<string, string> = {};
+    DRAFT_FIELDS.forEach((name) => {
+      const input = formRef.current?.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null;
+      if (input?.value) draft[name] = input.value;
+    });
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -77,8 +156,10 @@ function OrderForm() {
     const contactName = String(formData.get('contact_name'));
     const businessName = String(formData.get('business_name'));
     const websiteUrl = String(formData.get('website_url') || '');
-    const instagramHandle = String(formData.get('instagram_handle') || '');
-    const tiktokHandle = String(formData.get('tiktok_handle') || '');
+    let instagramHandle = String(formData.get('instagram_handle') || '');
+    let tiktokHandle = String(formData.get('tiktok_handle') || '');
+    if (instagramHandle && !instagramHandle.startsWith('@')) instagramHandle = `@${instagramHandle}`;
+    if (tiktokHandle && !tiktokHandle.startsWith('@')) tiktokHandle = `@${tiktokHandle}`;
     const description = String(formData.get('description') || '');
 
     const companyLegalName = String(formData.get('company_legal_name') || '');
@@ -124,6 +205,7 @@ function OrderForm() {
       });
 
       const data = await res.json();
+      localStorage.removeItem(DRAFT_KEY);
       if (!res.ok) throw new Error(data.error || 'Error starting payment.');
 
       window.location.href = data.url;
@@ -150,17 +232,35 @@ function OrderForm() {
 
   return (
     <>
-      {showNudge && (
+      {activeBanner && (
         <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 150, width: 'min(420px, calc(100vw - 32px))' }}>
           <div style={{ background: '#232326', color: '#fff', borderRadius: 14, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 20px 50px -12px rgba(0,0,0,0.4)' }}>
-            <span style={{ fontSize: 20 }}>👋</span>
-            <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.5, color: 'rgba(255,255,255,0.85)', flex: 1 }}>
-              No rush, nothing is charged until you actually submit payment. Feel free to look around first.
-            </p>
+            <span style={{ fontSize: 20 }}>{activeBanner === 'voucher' ? '🎁' : '👋'}</span>
+            {activeBanner === 'voucher' ? (
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: '0 0 8px', fontSize: 13.5, lineHeight: 1.5, color: 'rgba(255,255,255,0.9)' }}>
+                  Still deciding? Here's 5% off if you order now.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVoucherCodeToApply('STAY5');
+                    setActiveBanner(null);
+                  }}
+                  style={{ background: 'var(--accent)', color: '#232326', border: 'none', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Apply 5% off
+                </button>
+              </div>
+            ) : (
+              <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.5, color: 'rgba(255,255,255,0.85)', flex: 1 }}>
+                No rush, nothing is charged until you actually submit payment. Feel free to look around first.
+              </p>
+            )}
             <button
-              onClick={() => setShowNudge(false)}
+              onClick={() => setActiveBanner(null)}
               aria-label="Dismiss"
-              style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: 16, padding: 0, flexShrink: 0 }}
+              style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: 16, padding: 0, flexShrink: 0, alignSelf: 'flex-start' }}
             >
               ×
             </button>
@@ -192,6 +292,44 @@ function OrderForm() {
                 : 'After payment, you get instant access to your account. Delivery within 48 hours.'}
             </p>
 
+            {capacity && (capacity.todayRemaining > 0 || capacity.weekRemaining > 0) && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  fontSize: 13,
+                  color: '#8a5a1f',
+                  background: 'rgba(242,153,74,0.12)',
+                  border: '1px solid rgba(242,153,74,0.25)',
+                  padding: '8px 14px',
+                  borderRadius: 99,
+                  marginBottom: 20,
+                }}
+              >
+                🕐{' '}
+                {capacity.todayRemaining > 0
+                  ? `${capacity.todayRemaining} slot${capacity.todayRemaining > 1 ? 's' : ''} left today`
+                  : `Fully booked today · ${capacity.weekRemaining} left this week`}
+              </div>
+            )}
+            {capacity && capacity.todayRemaining === 0 && capacity.weekRemaining === 0 && (
+              <div
+                style={{
+                  fontSize: 13,
+                  color: '#c0533f',
+                  background: 'rgba(192,83,63,0.08)',
+                  border: '1px solid rgba(192,83,63,0.2)',
+                  padding: '8px 14px',
+                  borderRadius: 99,
+                  marginBottom: 20,
+                  display: 'inline-block',
+                }}
+              >
+                Fully booked this week, orders placed now queue for next week
+              </div>
+            )}
+
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#55565e', whiteSpace: 'nowrap' }}>Step {step} of 2</span>
               <div style={{ flex: 1, display: 'flex', gap: 6 }}>
@@ -199,9 +337,17 @@ function OrderForm() {
                 <div style={{ flex: 1, height: 6, borderRadius: 99, background: step === 2 ? '#232326' : 'rgba(35,35,38,0.1)' }} />
               </div>
             </div>
+            {draftRestored && (
+              <p style={{ margin: '-14px 0 22px', fontSize: 12.5, color: '#6a7d0a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                💾 We restored your progress from earlier.
+              </p>
+            )}
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+            <form ref={formRef} onSubmit={handleSubmit} onInput={handleDraftInput} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
               <div ref={step1Ref} style={{ display: step === 1 ? 'flex' : 'none', flexDirection: 'column', gap: 22 }}>
+                <p style={{ margin: '-8px 0 4px', fontSize: 12, color: '#8a8b92' }}>
+                  💾 Your progress is saved automatically, feel free to come back to this later.
+                </p>
                 <label style={labelStyle}>
                   Your name
                   <input name="contact_name" type="text" required style={inputStyle} placeholder="Jane Doe" />
@@ -228,7 +374,7 @@ function OrderForm() {
                 </label>
                 <label style={labelStyle}>
                   Website link
-                  <input name="website_url" type="text" style={inputStyle} placeholder="e.g. www.uppr.agency" />
+                  <input name="website_url" type="text" style={inputStyle} placeholder="e.g. www.uppr.agency" onBlur={suggestBusinessNameFromUrl} />
                 </label>
                 <label style={labelStyle}>
                   Instagram handle
@@ -335,6 +481,9 @@ function OrderForm() {
                     {loading ? 'Processing...' : 'Continue to payment'}
                   </button>
                 </div>
+                <p style={{ margin: '4px 0 0', fontSize: 12.5, color: '#8a8b92', textAlign: 'center' }}>
+                  🔒 Secure payment via Stripe, no recurring charges. Company cards accepted.
+                </p>
               </div>
             </form>
 
@@ -346,7 +495,7 @@ function OrderForm() {
           </div>
 
           <div className="order-summary-panel" style={{ padding: 44, background: '#fbfaf8' }}>
-            <OrderSummary initialCode={refCode} onCodeChange={setDiscountCode} />
+            <OrderSummary initialCode={refCode} forceApplyCode={voucherCodeToApply} onCodeChange={setDiscountCode} />
           </div>
         </div>
       </section>

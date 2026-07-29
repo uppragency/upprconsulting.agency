@@ -11,6 +11,22 @@ export const metadata = buildMetadata({
 const ENTRIES = [
   {
     date: 'July 2026',
+    tag: 'v3.7',
+    items: [
+      'Order page: shows real "You save €X" when a discount code is applied',
+      'Order page: live 5% voucher (STAY5) offered after 3 minutes on the form',
+      'Order page: form progress is now saved automatically and restored if you leave and come back',
+      '"No hidden costs" and secure-payment reassurance shown near checkout, including company card support',
+      'Instagram/TikTok handles now auto-prefixed with @ if typed without it',
+      'Homepage headline and main CTA now A/B tested, with results visible in admin analytics',
+      'Admin: draft reminder emails for abandoned (unpaid) orders, sent manually from /admin/today',
+      'Business name auto-suggested from the website URL on the order form',
+      'Order page shows real remaining weekly capacity (1/day, 7/week)',
+      'Clients now get a personal 10% "welcome back" discount code in their account after full delivery',
+    ],
+  },
+  {
+    date: 'July 2026',
     tag: 'v3.6',
     items: [
       'Fixed a security gap where discount and referral codes silently failed for anonymous visitors',

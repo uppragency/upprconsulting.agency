@@ -28,6 +28,17 @@ export default async function AdminAnalyticsPage() {
 
   const { data: clients } = await supabase.from('clients').select('id, session_id, status, created_at');
 
+  const { data: abEvents } = await supabase.from('ab_test_events').select('test_key, variant, session_id');
+  const paidSessionSet = new Set((clients ?? []).filter((c) => c.status === 'paid' && c.session_id).map((c) => c.session_id));
+
+  const abResults: Record<string, Record<string, { views: number; conversions: number }>> = {};
+  (abEvents ?? []).forEach((e) => {
+    if (!abResults[e.test_key]) abResults[e.test_key] = {};
+    if (!abResults[e.test_key][e.variant]) abResults[e.test_key][e.variant] = { views: 0, conversions: 0 };
+    abResults[e.test_key][e.variant].views += 1;
+    if (paidSessionSet.has(e.session_id)) abResults[e.test_key][e.variant].conversions += 1;
+  });
+
   const pageViews = (events ?? []).filter((e) => e.event_type === 'page_view');
   const thisWeek = pageViews.filter((e) => new Date(e.created_at) >= startThisWeek);
   const lastWeek = pageViews.filter((e) => new Date(e.created_at) < startThisWeek && new Date(e.created_at) >= startLastWeek);
@@ -173,6 +184,43 @@ export default async function AdminAnalyticsPage() {
             </table>
           </div>
         </div>
+
+        {Object.keys(abResults).length > 0 && (
+          <div style={{ marginTop: 40 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92', display: 'block', marginBottom: 12 }}>
+              A/B test results
+            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {Object.entries(abResults).map(([testKey, variants]) => (
+                <div key={testKey} style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, overflow: 'hidden' }}>
+                  <div style={{ padding: '12px 20px', borderBottom: '1px solid rgba(35,35,38,0.08)', fontWeight: 600, fontSize: 14, textTransform: 'capitalize' }}>{testKey}</div>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid rgba(35,35,38,0.08)' }}>
+                        <th style={{ textAlign: 'left', padding: '10px 20px', color: '#55565e', fontSize: 13 }}>Variant</th>
+                        <th style={{ textAlign: 'left', padding: '10px 20px', color: '#55565e', fontSize: 13 }}>Views</th>
+                        <th style={{ textAlign: 'left', padding: '10px 20px', color: '#55565e', fontSize: 13 }}>Conversions</th>
+                        <th style={{ textAlign: 'left', padding: '10px 20px', color: '#55565e', fontSize: 13 }}>Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(variants).map(([variant, v]) => (
+                        <tr key={variant} style={{ borderBottom: '1px solid rgba(35,35,38,0.06)' }}>
+                          <td style={{ padding: '10px 20px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>{variant}</td>
+                          <td style={{ padding: '10px 20px' }}>{v.views}</td>
+                          <td style={{ padding: '10px 20px' }}>{v.conversions}</td>
+                          <td style={{ padding: '10px 20px', fontWeight: 600, color: v.conversions > 0 ? '#6a7d0a' : '#8a8b92' }}>
+                            {v.views ? Math.round((v.conversions / v.views) * 100) : 0}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
       <Footer />
     </>

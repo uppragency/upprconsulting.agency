@@ -20,7 +20,7 @@ export default async function AdminTodayPage() {
   const startOfYesterday = new Date(startOfDay);
   startOfYesterday.setDate(startOfYesterday.getDate() - 1);
 
-  const { data: clients } = await supabase.from('clients').select('id, business_name, status, created_at');
+  const { data: clients } = await supabase.from('clients').select('id, business_name, contact_name, email, status, created_at');
   const { data: deliverables } = await supabase.from('deliverables').select('id, client_id, type, status, delivered_at');
 
   const newToday = (clients ?? []).filter((c) => new Date(c.created_at) >= startOfDay);
@@ -35,6 +35,10 @@ export default async function AdminTodayPage() {
     return dt >= startOfYesterday && dt < startOfDay;
   });
   const paidClients = (clients ?? []).filter((c) => c.status === 'paid');
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const abandonedOrders = (clients ?? []).filter(
+    (c) => c.status === 'pending_payment' && c.email && new Date(c.created_at) < oneHourAgo
+  );
   const clientById = Object.fromEntries((clients ?? []).map((c) => [c.id, c]));
 
   const pendingDeliverables = (deliverables ?? [])
@@ -89,6 +93,29 @@ export default async function AdminTodayPage() {
           {statCard('Deliverables to send', pendingDeliverables.length)}
           {statCard('Overdue (48h+)', overduePending.length)}
         </div>
+
+        {abandonedOrders.length > 0 && (
+          <div style={{ marginBottom: 32 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8a8b92', display: 'block', marginBottom: 10 }}>
+              Abandoned orders (started, never paid)
+            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {abandonedOrders.map((c) => {
+                const subject = `Finishing your UPPR Consulting audit order?`;
+                const body = `Hi ${c.contact_name ?? 'there'},\n\nI noticed you started an order for ${c.business_name} but didn't complete payment. Happy to answer any questions, or you can pick up right where you left off here: https://upprconsulting-agency.vercel.app/order\n\nBest,\nUPPR Consulting`;
+                const mailto = `mailto:${c.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                return (
+                  <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 12, padding: '12px 16px', fontSize: 14, flexWrap: 'wrap', gap: 8 }}>
+                    <span>{c.business_name} <span style={{ color: '#8a8b92' }}>· {c.email}</span></span>
+                    <a href={mailto} style={{ fontSize: 12.5, fontFamily: 'var(--font-mono)', border: '1px solid rgba(35,35,38,0.12)', padding: '5px 12px', borderRadius: 99 }}>
+                      ✉️ Draft reminder
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {newToday.length > 0 && (
           <div style={{ marginBottom: 32 }}>

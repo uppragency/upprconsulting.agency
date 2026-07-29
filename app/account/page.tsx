@@ -99,9 +99,20 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
   const amount = order ? (order.amount_cents / 100).toFixed(0) : '50';
 
   let hasTestimonial = false;
+  let returningCustomerCode: string | null = null;
   if (allDelivered) {
     const { data: existingTestimonial } = await supabase.from('testimonials').select('id').eq('client_id', client.id).maybeSingle();
     hasTestimonial = !!existingTestimonial;
+
+    const { data: existingCode } = await supabase.from('discount_codes').select('code').eq('client_id', client.id).maybeSingle();
+    if (existingCode) {
+      returningCustomerCode = existingCode.code;
+    } else {
+      const generatedCode = `BACK${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+      const service = createServiceRoleClient();
+      const { error: codeError } = await service.from('discount_codes').insert({ code: generatedCode, percent_off: 10, client_id: client.id });
+      if (!codeError) returningCustomerCode = generatedCode;
+    }
   }
 
   const doneChecklist = checklist?.filter((c) => c.done).length ?? 0;
@@ -282,6 +293,19 @@ export default async function AccountPage({ searchParams }: { searchParams: { or
             {allDelivered && !hasTestimonial && (
               <div style={{ marginTop: 12 }}>
                 <TestimonialPrompt clientId={client.id} />
+              </div>
+            )}
+
+            {returningCustomerCode && (
+              <div style={{ background: '#fbfaf8', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 24, marginTop: 12 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6a7d0a' }}>Thanks for ordering</span>
+                <h3 style={{ margin: '10px 0 8px', fontSize: 19, fontWeight: 600 }}>10% off your next audit</h3>
+                <p style={{ margin: '0 0 16px', fontSize: 14, color: '#55565e', lineHeight: 1.55 }}>
+                  Use this code any time you order again, an early-detection audit after implementing changes, or for a different part of your business.
+                </p>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 16, fontWeight: 700, background: 'rgba(226,250,92,0.25)', color: '#232326', padding: '8px 18px', borderRadius: 10, letterSpacing: '0.05em' }}>
+                  {returningCustomerCode}
+                </span>
               </div>
             )}
 
