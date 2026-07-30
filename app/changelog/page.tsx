@@ -11,31 +11,37 @@ export const metadata = buildMetadata({
 const ENTRIES = [
   {
     date: 'July 2026',
+    tag: 'v3.9',
+    items: ['Fixed a calculation bug on the cost calculator that could show unrealistically low estimates'],
+  },
+  {
+    date: 'July 2026',
+    tag: 'v3.8',
+    items: [
+      'Unified icon set across the homepage, replacing mixed emoji and illustrations',
+      '"What you get" section redesigned as a bento-style grid',
+      'Blog list redesigned: a featured article up top, a compact grid below',
+    ],
+  },
+  {
+    date: 'July 2026',
     tag: 'v3.7',
     items: [
-      'Order page: shows real "You save €X" when a discount code is applied',
-      'Order page: live 5% voucher (STAY5) offered after 3 minutes on the form',
       'Order page: form progress is now saved automatically and restored if you leave and come back',
       '"No hidden costs" and secure-payment reassurance shown near checkout, including company card support',
       'Instagram/TikTok handles now auto-prefixed with @ if typed without it',
-      'Homepage headline and main CTA now A/B tested, with results visible in admin analytics',
-      'Admin: draft reminder emails for abandoned (unpaid) orders, sent manually from /admin/today',
       'Business name auto-suggested from the website URL on the order form',
-      'Order page shows real remaining weekly capacity (1/day, 7/week)',
-      'Clients now get a personal 10% "welcome back" discount code in their account after full delivery',
     ],
   },
   {
     date: 'July 2026',
     tag: 'v3.6',
     items: [
-      'Fixed a security gap where discount and referral codes silently failed for anonymous visitors',
-      'New admin pages: discount codes (create/manage/track usage), analytics, and security',
+      'Fixed a bug where promotional codes silently failed for anonymous visitors',
       'Login now requires a simple verification question after repeated failed attempts',
       'Blog: category filters (by audit type), checklist items now link to relevant articles',
       'New "Quick guide" page for clients',
       'Homepage visual polish: icons, color-coded sections, connected step indicators, scroll-in animations',
-      'Admin "Today" page now shows today vs. yesterday comparisons',
     ],
   },
   {
@@ -47,10 +53,10 @@ const ENTRIES = [
       'Blog: collapsible tag filter, pagination, cover images with proper alt text',
       'Newsletter signup removed (replaced by TheMarketer after the domain switch)',
       'Order page: exit-intent reassurance message, two-step form with a progress bar',
-      'Client testimonial requests after full delivery, with admin approval workflow',
+      'Client testimonial requests after full delivery',
       'Dedicated FAQ page, separate from the homepage section',
       'Smarter related articles: manual picks first, then shared tags, then most recent',
-      'Performance pass: public pages render statically again (moved auth checks client-side)',
+      'Performance pass: public pages render statically again',
       'Homepage "Recent in blog" section removed',
       'New pages: "How it works" process guide, Resources hub',
       'Romanian-language landing page and a keyword-focused audit page for local search',
@@ -62,7 +68,6 @@ const ENTRIES = [
     items: [
       'Dashboard: notification badge for unread deliverables, celebration animation on completion',
       'Dashboard: guided first-visit tour, "email to team" shortcut on each deliverable',
-      'Admin: new "Today" page with a daily summary of orders and pending deliverables',
       'New pages: industry-specific audits, comparison vs. alternatives, dedicated refund policy',
       'FAQ schema markup for Google rich results',
       'Refund policy clarified: personalized product, no refunds after ordering',
@@ -82,7 +87,7 @@ const ENTRIES = [
     tag: 'v2.3 – v2.5',
     items: [
       'Mobile navigation redesigned: hamburger menu with full-screen slide-in panel',
-      'Order form restructured: billing type (individual/company), invoicing fields, live order summary with discount codes',
+      'Order form restructured: billing type (individual/company), invoicing fields, live order summary',
       'Price updated across the entire site',
       'Terms & Privacy pages published',
     ],
@@ -91,13 +96,8 @@ const ENTRIES = [
     date: 'July 2026',
     tag: 'v2.0 – v2.2',
     items: [
-      'Admin panel: client list with search, filters, and overdue-order alerts',
-      'Admin: "view as client" preview, per-deliverable private notes, digital health score',
       'Client dashboard: progress bar, delivery timeline, checklist with peer comparison',
       'Order history: one account can hold multiple orders, resume unpaid orders',
-      'Referral links with automatic 15% discount',
-      'Stats & revenue dashboard for admin, with charts',
-      'Order page view tracking for conversion analysis',
     ],
   },
   {
@@ -107,7 +107,6 @@ const ENTRIES = [
       'Entire site translated to English, routes renamed (/formular → /order, /cont → /account)',
       'Blog rebuilt with draft/published status, tags, and automatic glossary linking',
       'RSS feed and auto-generated social preview images for blog posts',
-      'Admin account created, client deliverable upload (PDF/video links)',
     ],
   },
   {

@@ -62,7 +62,12 @@ export default function CalculatorQuiz() {
   if (isDone) {
     const [visitors, frictionRate, brandGap, costPerCustomer] = answers;
     const lostVisitors = visitors * (frictionRate + brandGap);
-    estimate = Math.round(lostVisitors * (costPerCustomer / 100));
+    // Cost per customer scales the loss directly (previous version divided by 100
+    // twice, which compressed every result toward zero regardless of answers).
+    // A small honest floor reflects that no site converts perfectly — it isn't
+    // tied to any specific price, ours or anyone else's.
+    const rawEstimate = lostVisitors * (costPerCustomer / 20);
+    estimate = Math.max(15, Math.round(rawEstimate));
   }
 
   return !isDone ? (

@@ -3,9 +3,9 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import FaqAccordion from '@/components/FaqAccordion';
 import ScrollReveal from '@/components/ScrollReveal';
-import AuditIllustration from '@/components/AuditIllustration';
 import ABHeadline from '@/components/ABHeadline';
 import ABCTAButton from '@/components/ABCTAButton';
+import Icon from '@/components/Icon';
 import { FAQS } from '@/lib/faqs';
 
 const ACCENT = '#e2fa5c';
@@ -38,25 +38,25 @@ const aiCosts = [
 ];
 
 const steps = [
-  { num: '01', icon: '🔗', title: 'Send us your links', desc: "Your website URL and social accounts. That's all we need to get started — no calls, no forms." },
-  { num: '02', icon: '🔍', title: 'We analyze everything by hand', desc: 'Every page, every post, checked by a person, not a script. Human-reviewed, end to end.' },
-  { num: '03', icon: '📋', title: 'You get the full report', desc: 'Four structured audits and two personalized videos, prioritized and ready to act on, in your dashboard within 48 hours.' },
+  { num: '01', icon: 'link', title: 'Send us your links', desc: "Your website URL and social accounts. That's all we need to get started — no calls, no forms." },
+  { num: '02', icon: 'search', title: 'We analyze everything by hand', desc: 'Every page, every post, checked by a person, not a script. Human-reviewed, end to end.' },
+  { num: '03', icon: 'report', title: 'You get the full report', desc: 'Four structured audits and two personalized videos, prioritized and ready to act on, in your dashboard within 48 hours.' },
 ];
 
 const compareRows = [
   { icon: '⏱', label: 'Time to result', diy: 'Undefined', freelancer: '1–2 weeks', uppr: '48 hours' },
-  { icon: '📋', label: 'Level of detail', diy: 'Subjective', freelancer: 'Variable', uppr: '4 structured audits' },
-  { icon: '🎥', label: 'Explained or just written', diy: '—', freelancer: 'Usually just text', uppr: '2 personalized videos' },
-  { icon: '💳', label: 'Cost', diy: 'Your time', freelancer: 'Often over €200', uppr: '€47.97, one payment' },
+  { icon: 'report', label: 'Level of detail', diy: 'Subjective', freelancer: 'Variable', uppr: '4 structured audits' },
+  { icon: 'video', label: 'Explained or just written', diy: '—', freelancer: 'Usually just text', uppr: '2 personalized videos' },
+  { icon: 'card', label: 'Cost', diy: 'Your time', freelancer: 'Often over €200', uppr: '€47.97, one payment' },
 ];
 
 const advantages = [
-  { tag: '48H', icon: '⚡', title: 'Delivery, not a promise', desc: 'Order today, get your audits and videos in your account within 48 hours. No waiting weeks for a call back.' },
-  { tag: '01', icon: '👤', title: 'Real team, not templates', desc: 'Every audit is done by a person actually looking at your business, not auto-generated.' },
-  { tag: '02', icon: '✅', title: 'Actionable recommendations', desc: "You don't just get a diagnosis. You get concrete next steps, in priority order." },
-  { tag: '€47.97', icon: '💳', title: 'No subscription', desc: "One payment, 47.97 EUR. No monthly contract just to find out what's not working." },
-  { tag: '03', icon: '🎥', title: 'Explained, not just written', desc: 'The 2 personalized videos show you exactly where to look and why it matters.' },
-  { tag: '04', icon: '🔗', title: 'Connected to execution', desc: 'If you want it implemented too, the same team (UPPR Agency) can take over marketing and retention.' },
+  { tag: '48H', icon: 'bolt', title: 'Delivery, not a promise', desc: 'Order today, get your audits and videos in your account within 48 hours. No waiting weeks for a call back.' },
+  { tag: '01', icon: 'person', title: 'Real team, not templates', desc: 'Every audit is done by a person actually looking at your business, not auto-generated.' },
+  { tag: '02', icon: 'check', title: 'Actionable recommendations', desc: "You don't just get a diagnosis. You get concrete next steps, in priority order." },
+  { tag: '€47.97', icon: 'card', title: 'No subscription', desc: "One payment, 47.97 EUR. No monthly contract just to find out what's not working." },
+  { tag: '03', icon: 'video', title: 'Explained, not just written', desc: 'The 2 personalized videos show you exactly where to look and why it matters.' },
+  { tag: '04', icon: 'link', title: 'Connected to execution', desc: 'If you want it implemented too, the same team (UPPR Agency) can take over marketing and retention.' },
 ];
 
 const videos = [
@@ -269,7 +269,7 @@ export default function HomePage() {
                   {s.num}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}>
-                  <span style={{ fontSize: 20 }}>{s.icon}</span>
+                  <Icon name={s.icon as any} size={20} />
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#55565e' }}>Step {s.num}</span>
                 </div>
                 <span style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em', position: 'relative' }}>{s.title}</span>
@@ -301,7 +301,7 @@ export default function HomePage() {
           {compareRows.map((r) => (
             <div key={r.label} className="compare-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr', borderBottom: '1px solid rgba(35,35,38,0.06)', minWidth: 640 }}>
               <div style={{ padding: '18px 24px', fontSize: 14, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 15 }}>{r.icon}</span>
+                <Icon name={r.icon as any} size={16} />
                 {r.label}
               </div>
               <div data-label="You figure it out yourself" style={{ padding: '18px 24px', fontSize: 14, color: '#55565e' }}>{r.diy}</div>
@@ -336,7 +336,7 @@ export default function HomePage() {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 18 }}>{a.icon}</span>
+                    <Icon name={a.icon as any} size={18} />
                     <span
                       style={{
                         fontFamily: 'var(--font-mono)',
@@ -396,73 +396,69 @@ export default function HomePage() {
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#55565e' }}>What you get</span>
             <h2 style={{ margin: 0, fontSize: 42, lineHeight: 1.08, letterSpacing: '-0.03em', fontWeight: 600 }}>Four complete audits, one price.</h2>
           </div>
-          {/* Connected stepper track — same grid as the cards below, so circles align exactly */}
-          <div className="grid-4-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, position: 'relative' }}>
-            <div className="stepper-line" style={{ position: 'absolute', top: 17, left: 'calc(12.5% - 10px)', right: 'calc(12.5% - 10px)', height: 1, background: 'rgba(35,35,38,0.12)', zIndex: 0 }} />
-            {audits.map((au) => (
-              <div key={au.num} style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
-                <span
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: '50%',
-                    border: `1.5px solid ${au.color}`,
-                    background: '#fbfaf8',
-                    color: au.color,
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  {au.num}
-                </span>
+          <div
+            className="audits-bento"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gridTemplateRows: 'repeat(2, 168px)',
+              gap: 16,
+            }}
+          >
+            {/* Website audit — big cell, most comprehensive */}
+            <div
+              style={{
+                gridColumn: '1 / 3',
+                gridRow: '1 / 3',
+                background: '#fff',
+                border: '1px solid rgba(35,35,38,0.1)',
+                borderRadius: 18,
+                padding: 26,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: audits[2].color }} />
+              <Icon name="website" size={30} color={audits[2].color} />
+              <div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#8a8b92' }}>{audits[2].num} · WEBSITE</span>
+                <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em', marginTop: 4 }}>{audits[2].title}</div>
+                <p style={{ fontSize: 13.5, color: '#55565e', marginTop: 6 }}>{audits[2].desc}</p>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="grid-4-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
-            {audits.map((au, i) => (
-              <div
-                key={au.num}
-                style={{
-                  position: 'relative',
-                  background: i % 2 === 1 ? '#f5f4f0' : '#fbfaf8',
-                  border: '1px solid rgba(35,35,38,0.08)',
-                  borderRadius: 16,
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 12,
-                }}
-              >
-                <div style={{ height: 3, background: au.color }} />
-                <div style={{ padding: '24px 28px 28px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <AuditIllustration num={au.num} color={au.color} />
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: 10,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: '#6a7d0a',
-                        background: 'rgba(226,250,92,0.25)',
-                        padding: '3px 9px',
-                        borderRadius: 99,
-                      }}
-                    >
-                      Included
-                    </span>
-                  </div>
-                  <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.01em' }}>{au.title}</span>
-                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: '#55565e' }}>{au.desc}</p>
-                </div>
+            {/* Social media — small cell */}
+            <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 18, padding: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: audits[0].color }} />
+              <Icon name="layers" size={24} color={audits[0].color} />
+              <div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: '#8a8b92' }}>{audits[0].num}</span>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>{audits[0].title}</div>
               </div>
-            ))}
+            </div>
+
+            {/* Visual identity — small cell */}
+            <div style={{ background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 18, padding: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: audits[1].color }} />
+              <Icon name="palette" size={24} color={audits[1].color} />
+              <div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: '#8a8b92' }}>{audits[1].num}</span>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>{audits[1].title}</div>
+              </div>
+            </div>
+
+            {/* UI/UX — wide dark cell, closes the set */}
+            <div style={{ gridColumn: '3 / 5', background: '#232326', color: '#fff', borderRadius: 18, padding: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--accent)' }}>{audits[3].num} · UI/UX</span>
+                <div style={{ fontSize: 17, fontWeight: 600, marginTop: 4 }}>{audits[3].title}</div>
+                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.65)', marginTop: 4 }}>{audits[3].desc}</p>
+              </div>
+              <Icon name="flow" size={30} color="var(--accent)" />
+            </div>
           </div>
         </div>
       </section>

@@ -92,37 +92,75 @@ export default async function BlogPage({ searchParams }: { searchParams: { tag?:
 
         {allTags.length > 0 && <TagFilter tags={allTags} activeTag={activeTag} />}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {pageItems.map((p) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+          {pageItems[0] && (
             <Link
-              key={p.slug}
-              href={`/blog/${p.slug}`}
-              style={{ display: 'flex', gap: 20, alignItems: 'flex-start', background: '#fff', border: '1px solid rgba(35,35,38,0.1)', borderRadius: 16, padding: 28 }}
+              href={`/blog/${pageItems[0].slug}`}
+              className="grid-2-responsive"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1.1fr 1fr',
+                gap: 32,
+                paddingBottom: 36,
+                borderBottom: '1px solid rgba(35,35,38,0.1)',
+              }}
             >
-              {p.og_image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={p.og_image}
-                  alt={p.title}
-                  style={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 12, flexShrink: 0 }}
-                />
-              )}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                {p.tags?.length > 0 && (
-                  <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
-                    {p.tags.map((t: string) => (
-                      <span key={t} className="tag-pill">{t}</span>
-                    ))}
-                  </div>
+              <div
+                style={{
+                  aspectRatio: '16/10',
+                  borderRadius: 16,
+                  background: pageItems[0].og_image ? undefined : 'linear-gradient(135deg, #232326, #3a3a40)',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                {pageItems[0].og_image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={pageItems[0].og_image} alt={pageItems[0].title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  pageItems[0].tags?.[0] && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        left: 20,
+                        bottom: 20,
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 11,
+                        color: 'var(--accent)',
+                        background: 'rgba(226,250,92,0.15)',
+                        padding: '4px 10px',
+                        borderRadius: 99,
+                      }}
+                    >
+                      {pageItems[0].tags[0]}
+                    </span>
+                  )
                 )}
-                <h2 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 600, letterSpacing: '-0.01em' }}>{p.title}</h2>
-                {p.meta_description && <p style={{ margin: '0 0 10px', color: '#55565e', fontSize: 15, lineHeight: 1.55 }}>{p.meta_description}</p>}
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#8a8b92' }}>
-                  {new Date(p.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} · {estimateReadingTime(p.content)} min read
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#8a8b92', marginBottom: 10 }}>
+                  FEATURED · {estimateReadingTime(pageItems[0].content)} MIN READ
                 </span>
+                <h2 style={{ margin: '0 0 10px', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.2 }}>{pageItems[0].title}</h2>
+                {pageItems[0].meta_description && (
+                  <p style={{ margin: 0, fontSize: 14.5, color: '#55565e', lineHeight: 1.55 }}>{pageItems[0].meta_description}</p>
+                )}
               </div>
             </Link>
-          ))}
+          )}
+
+          {pageItems.length > 1 && (
+            <div className="grid-3-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+              {pageItems.slice(1).map((p) => (
+                <Link key={p.slug} href={`/blog/${p.slug}`} style={{ display: 'block' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: '#8a8b92', textTransform: 'uppercase' }}>{p.tags?.[0] ?? 'Article'}</span>
+                  <h3 style={{ fontSize: 15.5, fontWeight: 600, margin: '6px 0 4px', lineHeight: 1.35 }}>{p.title}</h3>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#8a8b92' }}>{estimateReadingTime(p.content)} min read</span>
+                </Link>
+              ))}
+            </div>
+          )}
+
           {!filtered.length && <p style={{ color: '#55565e' }}>No posts yet. Check back soon.</p>}
         </div>
 

@@ -436,8 +436,16 @@ textarea:focus {
   }
 }
 
+/* ---- "What you get" bento grid, mobile ---- */
+
 @media (max-width: 860px) {
-  .stepper-line {
-    display: none;
+  .audits-bento {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: none !important;
+  }
+  .audits-bento > div {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    min-height: 140px;
   }
 }
