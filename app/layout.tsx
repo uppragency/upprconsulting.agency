@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { SITE_URL, SITE_NAME, DEFAULT_OG_DESCRIPTION } from '@/lib/seo';
 import PageViewTracker from '@/components/PageViewTracker';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <PageViewTracker />
         {children}
+        <Analytics />
       </body>
     </html>
   );

@@ -9,19 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "@vercel/analytics": "^2.0.1",
+    "html2canvas": "^1.4.1",
     "next": "^14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@supabase/ssr": "^0.5.1",
-    "@supabase/supabase-js": "^2.45.4",
-    "stripe": "^16.9.0",
-    "html2canvas": "^1.4.1",
-    "recharts": "^2.12.7"
+    "recharts": "^2.12.7",
+    "stripe": "^16.9.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.4",
     "@types/node": "^20.14.15",
     "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0"
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.4"
   }
 }
